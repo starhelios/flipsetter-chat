@@ -12,6 +12,9 @@ import simplify from 'simplify-js';
 import uuid from "react-native-uuid";
 // import Api from "../service/Api";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import {Friends} from "../reducers/actions";
+import {connect} from "react-redux";
+import {withNavigationFocus} from "react-navigation";
 
 const screenWidth = (Math.round(Dimensions.get('window').width)) ? Math.round(Dimensions.get('window').width) : 0;
 const screenHeight = (Math.round(Dimensions.get('window').height)) ? Math.round(Dimensions.get('window').height) : 0;
@@ -37,9 +40,11 @@ class Whiteboard extends React.Component{
 
     constructor(props){
         super(props);
+        console.log("socket", this.props.socket);
         this.echo = this.props.socket.socket;
-        this.call = this.echo.join('call_'+this.props.thread_id+'_'+this.props.call_id);
-
+        // this.call = this.echo.join('call_'+this.props.thread_id+'_'+this.props.call_id);
+        this.call = this.echo.join('whiteboard_demo');
+        console.log("Call", this.call);
         this._panResponder = PanResponder.create({
             // Ask to be the responder:
             onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -116,10 +121,11 @@ class Whiteboard extends React.Component{
     }
 
     componentWillUnmount(){
-        let route = 'thread/'+this.props.thread_id+'/update';
-        let response = Api.post(route, JSON.stringify({
-            type: 'leave_call'
-        }));
+        // let route = 'thread/'+this.props.thread_id+'/update';
+        // let response = Api.post(route, JSON.stringify({
+        //     type: 'leave_call'
+        // }));
+        this.call.unsubscribe();
     }
 
     listeners(){
@@ -309,7 +315,7 @@ class Whiteboard extends React.Component{
             id: uuid.v1(),
             timestamp: (new Date).getTime(),
             user: {
-                id: this.props.user.user_id,
+                id: this.props.user.id,
                 name: this.props.user.first + " " + this.props.user.last,
                 type: 1,
             },
@@ -430,7 +436,7 @@ class Whiteboard extends React.Component{
 
     //Whisper Functions
     startDraw = (data) => {
-        // console.log(data);
+        console.log("start draw", data);
         this.setState({
             users: [...this.state.users, {
                 id: data.user.id,
@@ -473,4 +479,18 @@ class Whiteboard extends React.Component{
 
 }
 
-export default withSocketContext(Whiteboard);
+
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth,
+        app: state.app,
+        user: state.user,
+        friends: state.friends
+    }
+}
+
+const mapDispatchToProps = {
+    getList: Friends.getList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(Whiteboard)))

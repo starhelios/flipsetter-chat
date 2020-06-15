@@ -28,7 +28,7 @@ export default function(state=initialState, action){
         case Call.actionTypes.SET_CALLER_NAME:
             return {...state, callerName: action.payload};
         case Call.actionTypes.SET_CALL_THREAD_ID:
-            return {...(delete state.callType), threadId: action.payload};
+            return {...state, threadId: action.payload};
         default:
             return state;
     }

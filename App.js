@@ -16,10 +16,6 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 import { enableScreens } from 'react-native-screens';
 import {StyleProvider} from "native-base";
 import {App, Auth, User, Threads, Messages, Call} from "./src/reducers/actions";
-YellowBox.ignoreWarnings([
-    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
-]);
-YellowBox.ignoreWarnings(['Require cycle:']);
 
 import {store, persistor} from "./src/Store";
 import Services from "./src/components/Services";
@@ -29,7 +25,7 @@ import NavigationService from "./src/services/NavigationService";
 import getTheme from './src/native-base-theme/components';
 import material from "./src/native-base-theme/variables/material";
 import appActions from "./src/reducers/actions/appActions";
-
+import Analytics from 'appcenter-analytics';
 let socket;
 enableScreens();
 
@@ -57,7 +53,13 @@ class Main extends Component<Props> {
 
     }
 
-    async componentDidMount(){
+    async componentDidMount(): void{
+        await Analytics.setEnabled(true);
+
+        await Analytics.trackEvent("Analytics Started")
+
+        let appState = await AppState.currentState;
+        if(appState === 'active' && (this.props.app.appState === 'inactive' || this.props.app.appState === 'background')) this._handleAppStateChange('active');
         AppState.addEventListener("change", this._handleAppStateChange);
         if(this.props.user.id && this.props.auth.isLoggedIn && this.props.auth.accessToken){
             this.setState({
@@ -118,6 +120,7 @@ class Main extends Component<Props> {
 
     _handleAppStateChange = (nextAppState) => {
         this.props.setAppState(nextAppState);
+        // console.log("AppState", AppState.currentState);
     }
 
     _updateRoute = async (route) => {

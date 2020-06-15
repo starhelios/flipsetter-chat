@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Container, Header, Icon, Content, View, List, ListItem, Left, Body, Right, Thumbnail, Text, Title, Button} from 'native-base';
 import { withNavigationFocus} from 'react-navigation';
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo, {hasNotch} from 'react-native-device-info';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { GiftedChat } from 'react-native-gifted-chat';
 import Lightbox from 'react-native-lightbox';
@@ -53,7 +53,6 @@ class MessagesScreen extends Component<Props>{
         this.echo = this.props.socket;
         this.typeInterval = 0;
         if(this.props.messages.messages.hasOwnProperty(this.props.navigation.getParam('thread'))){
-            this.state.isLoading = false;
             this.state.messages = this.props.messages.messages[this.props.navigation.getParam('thread')];
         }
     }
@@ -61,11 +60,7 @@ class MessagesScreen extends Component<Props>{
     async componentDidMount(){
         // const fetchUser = await this.props.getUser();
         // this.user = await fetchUser.payload.data;
-        if(this.state.messages){
-            this.setState({
-                isLoading:false,
-            })
-        }
+
         this.props.setActiveThread(this.activeThread);
         let update = await this.props.getMessages(this.activeThread);
         //Move this into redux!!
@@ -81,13 +76,18 @@ class MessagesScreen extends Component<Props>{
         }
         this.typeInterval = setInterval(this._updateTypers, 2000);
 
+        //Are Messages loaded && are bobbles updated?
+        if(this.state.messages && update){
+            this.setState({
+                isLoading:false,
+            })
+        }
         // AppState.addEventListener('change', this._handleAppStateChange);
-
 
     }
 
     async componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        // console.log("echo", this.echo);
+        // console.log("echo", this.state.participants);
         if(prevProps.navigation.getParam('thread') !== this.props.navigation.getParam('thread')){
             this.props.navigation.navigate("Threads", {
                 newMessage: this.props.navigation.getParam("thread")
@@ -113,7 +113,12 @@ class MessagesScreen extends Component<Props>{
     componentWillUnmount() {
         clearInterval(this.typeInterval);
         if(this.echo.privateChannel){
-            this.echo.privateChannel.stopListening('.message_received');
+            this.echo.privateChannel.stopListening('.new_message')
+                .stopListening('.thread_joined')
+                .stopListening('.message_purged')
+                .stopListening('.call_started')
+                .stopListening('.thread_kicked')
+                .stopListening('.knock_knock');
             // this.thread.stopListening();
         }
         if(this.thread){
@@ -312,13 +317,13 @@ class MessagesScreen extends Component<Props>{
                 //get current message user is in
                 // let currentMessage = this.state.bobbles[this.state.bobbles.participants[data.owner_id].message_id]
                 this.setState(prevState => ({
-                    bobbles: {
-                        ...(prevState.bobbles.hasOwnProperty(prevState.participants[data.owner_id].message_id)) ?? delete prevState.bobbles[prevState.participants[data.owner_id].message_id][data.owner_id],
-                        // ...delete prevState.bobbles[this.state.participants[data.owner_id].message_id][data.owner_id],
-                        [data.message_id]: {
-                            ...prevState.bobbles[data.message_id], [data.owner_id]: (prevState.participants[data.owner_id].avatar) ? prevState.participants[data.owner_id].avatar : null,
-                        }
-                    },
+                    // bobbles: {
+                    //     ...(prevState.bobbles.hasOwnProperty(prevState.participants[data.owner_id].message_id)) ?? delete prevState.bobbles[prevState.participants[data.owner_id].message_id][data.owner_id],
+                    //     // ...delete prevState.bobbles[this.state.participants[data.owner_id].message_id][data.owner_id],
+                    //     [data.message_id]: {
+                    //         ...prevState.bobbles[data.message_id], [data.owner_id]: (prevState.participants[data.owner_id].avatar) ? prevState.participants[data.owner_id].avatar : null,
+                    //     }
+                    // },
                     participants: {
                         ...prevState.participants,
                         [data.owner_id]: {
@@ -326,7 +331,7 @@ class MessagesScreen extends Component<Props>{
                             message_id: data.message_id,
                         }
                     },
-                    renderMessages: true,
+                    // renderMessages: true,
                 }));
             })
             // .listenForWhisper('send_message_setting', data => { 
@@ -347,7 +352,7 @@ class MessagesScreen extends Component<Props>{
             renderMessages: true,
             startedTyping: null,
         }), async() => {
-            console.log(this.state.messages);
+            // console.log(this.state.messages);
             //Set the message fast, we can update later
 
             let response = await this.props.sendMessage(this.props.navigation.getParam('thread'), message);
@@ -425,8 +430,6 @@ class MessagesScreen extends Component<Props>{
             };
         });
         this.setState({
-            messages: this.props.messages.messages[this.activeThread],
-            isLoading: false,
             participants: list,
             bobbles: bobbles,
             renderMessages: true,
@@ -521,7 +524,7 @@ class MessagesScreen extends Component<Props>{
                         renderBubble={this.renderBubble}
                         renderMessageImage={this.renderImage}
                         renderFooter={this.renderFooter}
-                        bottomOffset={40}
+                        // bottomOffset={(DeviceInfo.hasNotch() && Platform.OS === 'ios') ? 0:}
                     />
                     {/*<KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={48} enabled={(Platform.OS === 'android')}/>*/}
                 </View>
@@ -604,13 +607,13 @@ class MessagesScreen extends Component<Props>{
                         }}
                     />
                     <View style={{flexDirection: (props.position === "left")? 'row' : 'row-reverse', alignItems: 'center'}}>
-                    {(this.state.bobbles.hasOwnProperty(props.currentMessage._id) && props.currentMessage._id !== this.state.messages[0]._id) &&
-                        Object.entries(this.state.bobbles[props.currentMessage._id]).map((bobble, index, arr) => {
-                            if(index <= 5){
+                    {(props.currentMessage._id !== this.state.messages[0]._id) &&
+                        Object.entries(this.state.participants).map((participant, index, arr) => {
+                            if(index <= 5 && (props.currentMessage._id === participant.message_id)){
                                 return <FastImage
-                                    key={`${bobble[0]}_bobble_${props.currentMessage._id}`}
+                                    key={`${participant[0]}_bobble_${props.currentMessage._id}`}
                                     source={{
-                                        uri: `${config.api.uri}${bobble[1]}`,
+                                        uri: `${config.api.uri}${participant[1].avatar}`,
                                         // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                                         headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                         // priority: FastImage.priority.high
@@ -620,7 +623,7 @@ class MessagesScreen extends Component<Props>{
                                         width: 14,
                                         // marginRight:-8,
                                         borderRadius:7,
-                                        opacity: (this.state.participants[bobble[0]].online === 1) ? 1:.5,
+                                        opacity: (participant[1].online === 1) ? 1:.5,
                                         // marginTop:-6, //fix for avatar being 36x36
                                     }}
                                 />
@@ -658,13 +661,13 @@ class MessagesScreen extends Component<Props>{
                 }}
                 />
                 <View style={{flexDirection: (props.position === "left")? 'row' : 'row-reverse',alignItems: 'center'}}>
-                {(this.state.bobbles.hasOwnProperty(props.currentMessage._id) && props.currentMessage._id !== this.state.messages[0]._id) &&
-                Object.entries(this.state.bobbles[props.currentMessage._id]).map((bobble, index, arr) => {
-                    if(index <= 5){
+                {(props.currentMessage._id !== this.state.messages[0]._id) &&
+                Object.entries(this.state.participants).map((participant, index, arr) => {
+                    if(index <= 5 && participant[0] !== props.currentMessage.user._id && (props.currentMessage._id === participant.message_id)){
                         return <FastImage
-                            key={`${bobble[0]}_bobble`}
+                            key={`${participant[0]}_bobble`}
                             source={{
-                                uri: `${config.api.uri}${bobble[1]}`,
+                                uri: `${config.api.uri}${participant[1].avatar}`,
                                 headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                 // priority: FastImage.priority.high
                             }}
@@ -674,13 +677,12 @@ class MessagesScreen extends Component<Props>{
                                 // marginRight:-8,
                                 borderRadius:7,
                                 // borderWidth:1,
-                                opacity: (this.state.participants[bobble[0]].online === 1) ? 1:.5,
+                                opacity: (participant[1].online === 1) ? 1:.5,
                                 // marginTop:-6, //fix for avatar being 36x36
                             }}
                         />
                     }
                     else if(index === 6){
-
                         let overflow = arr.length - 6;
                         return <Text key={`overflow_${props.currentMessage._id}`} style={{backgroundColor: "#b5a8a8" , color: "#FFF", marginLeft:4,}}>+{overflow}</Text>
                     }
@@ -718,66 +720,69 @@ class MessagesScreen extends Component<Props>{
     }
 
     renderFooter = (props) => {
-        let typers = Object.values(this.state.participants).filter((participant, index, arr) => {
-            if(participant.typing){
-                return true;
-            }
-        });
-        return(
-            <View style={{flexDirection: 'row', alignItems: 'center', height: 25, width: config.layout.window.width}}>
-                <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-                    {
-                        (this.state.messages.length > 0 && this.state.bobbles.hasOwnProperty(this.state.messages[0]._id)) &&
-                        (Object.entries(this.state.bobbles[this.state.messages[0]._id]).map((bobble, index, arr) => {
-                            
-                            if(index <= 5 && !this.state.typers.hasOwnProperty(bobble[0])){
+        // if(props.currentMessage){
+            let typers = Object.values(this.state.participants).filter((participant, index, arr) => {
+                if(participant.typing){
+                    return true;
+                }
+            });
+            return(
+                <View style={{flexDirection: 'row', alignItems: 'center', height: 25, width: config.layout.window.width}}>
+                    <View style={{flex: 1, flexDirection: 'row-reverse'}}>
+                        {
+                            (this.state.messages.length > 0) &&
+                            (Object.entries(this.state.participants).map((participant, index, arr) => {
+                                let self = false;
+                                Object.entries(this.state.messages).map(message => {
+                                    if(message[1]._id === participant[1].message_id) self = true;
+                                })
+                                if((index <= 5 && !participant[1].typing && this.state.messages[0]._id === participant[1].message_id) || self){
+                                    return <FastImage
+                                        key={`${participant[0]}_bobble`}
+                                        source={{
+                                            uri: `${config.api.uri}${participant[1].avatar}`,
+                                            // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
+                                            headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
+                                            // priority: FastImage.priority.high
+                                        }}
+                                        style={{
+                                            height: 14,
+                                            width: 14,
+                                            // marginRight:-8,
+                                            borderRadius:7,
+                                            // borderWidth:1,
+                                            opacity: (participant[1].online === 1) ? 1:.5,
+                                            // marginTop:-6, //fix for avatar being 36x36
+                                        }}
+                                    />
+                                }
+                                else if(index === 6 && !this.state.typers.hasOwnProperty(participant[0]) && props.currentMessage){
+                                    let overflow = arr.length - 6;
+                                    return <Text key={(props.currentMessage) ? `overflow_${props.currentMessage._id}` : ''} style={{backgroundColor: "#b5a8a8" , color: "#FFF", marginLeft:4,}}>+{overflow}</Text>
+                                }
+                            }))
+                        }
+                    </View>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                        {   (Object.values(this.state.typers).length > 0) &&
+                        typers.map((typer, index, arr) => {
+                            if(index <= 5){
                                 return <FastImage
-                                    key={`${bobble[0]}_bobble`}
+                                    style={{height: 14, width: 14, borderRadius: 7}}
+                                    key={`${typer.id}_typer_${index}`}
                                     source={{
-                                        uri: `${config.api.uri}${bobble[1]}`,
-                                        // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
-                                        headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
-                                        // priority: FastImage.priority.high
-                                    }}
-                                    style={{
-                                        height: 14,
-                                        width: 14,
-                                        // marginRight:-8,
-                                        borderRadius:7,
-                                        // borderWidth:1,
-                                        opacity: (this.state.participants[bobble[0]].online === 1) ? 1:.5,
-                                        // marginTop:-6, //fix for avatar being 36x36
+                                        uri: `${config.api.uri}${typer.avatar}`,
+                                        headers: {
+                                            Authorization: `Bearer ${this.props.auth.accessToken}`,
+                                        },
+                                        priority: FastImage.priority.high
                                     }}
                                 />
                             }
-                            else if(index === 6 && !this.state.typers.hasOwnProperty(bobble[0])){
-
-                                let overflow = arr.length - 6;
-                                return <Text key={`overflow_${props.currentMessage._id}`} style={{backgroundColor: "#b5a8a8" , color: "#FFF", marginLeft:4,}}>+{overflow}</Text>
-                            }
-                        }))
-                    }
-                </View>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                    {   (Object.values(this.state.typers).length > 0) &&
-                    typers.map((typer, index, arr) => {
-                        if(index <= 5){
-                            return <FastImage
-                                style={{height: 14, width: 14, borderRadius: 7}}
-                                key={`${typer.id}_typer_${index}`}
-                                source={{
-                                    uri: `${config.api.uri}${typer.avatar}`,
-                                    headers: {
-                                        Authorization: `Bearer ${this.props.auth.accessToken}`,
-                                    },
-                                    priority: FastImage.priority.high
-                                }}
-                            />
+                        })
                         }
-                    })
-                    }
-                    {
-                        (Object.values(this.state.typers).length > 0) &&
+                        {
+                            (Object.values(this.state.typers).length > 0) &&
                             <View style={{marginLeft: 5,}}>
                                 <DotsLoader
                                     size={5}
@@ -785,12 +790,15 @@ class MessagesScreen extends Component<Props>{
                                     betweenSpace={2.5}
                                 />
                             </View>
-                    }
+                        }
+                    </View>
                 </View>
-            </View>
-        );
-
-
+            );
+        // }
+        // return (
+        //     <View style={{flexDirection: 'row', alignItems: 'center', height: 25, width: config.layout.window.width}}>
+        //     </View>
+        // );
     }
 }
 

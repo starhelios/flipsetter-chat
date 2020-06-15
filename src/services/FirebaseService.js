@@ -5,21 +5,20 @@ import firebase, {notifications} from "react-native-firebase";
 import VoipPushNotification from 'react-native-voip-push-notification'
 import {App, Auth, Threads, Messages, Call} from "../reducers/actions";
 import DeviceInfo from "react-native-device-info";
-import RNCallKeep from "react-native-callkeep";
+import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import NavigationService from "./NavigationService";
 import {emojify} from 'react-emojione';
 import {AllHtmlEntities as entities} from 'html-entities';
 import config from "../config";
-import RNFetchBlob from "rn-fetch-blob";
 
 
 class FirebaseService extends Component<Props> {
 
     state = {
         lastThreadId: null,
-        init: null,
+        init: false,
     }
     constructor(props) {
         super(props);
@@ -31,8 +30,8 @@ class FirebaseService extends Component<Props> {
 
     async componentDidMount(): void {
 
-        const fcmToken = await firebase.messaging().getToken();
-        this.props.setFCMToken(fcmToken);
+        const device_token = await firebase.messaging().getToken();
+        this.props.setDeviceToken(device_token);
         this.props.setDeviceID(await DeviceInfo.getUniqueId());
 
 
@@ -74,21 +73,25 @@ class FirebaseService extends Component<Props> {
     }
 
     async componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        if(prevProps.app.fcm_token !== this.props.app.fcm_token || prevProps.app.voip_token !== this.props.app.voip_token || prevProps.app.device_id !== this.props.app.device_id){
-            await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)
-        }
-
-        if(prevProps.auth.isLoggedIn !== this.props.auth.isLoggedIn && this.props.auth.isLoggedIn && this.props.auth.accessToken && !this.state.init){
-            this.setState({
-                init: true,
-            }, async() => {await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)});
-        }
-
-        // if(this.props.auth.isLoggedIn && !this.state.init){
+        // if(prevProps.app.fcm_token !== this.props.app.fcm_token || prevProps.app.voip_token !== this.props.app.voip_token || prevProps.app.device_id !== this.props.app.device_id){
+        //     await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)
+        // }
+        //
+        // if(prevProps.auth.isLoggedIn !== this.props.auth.isLoggedIn && this.props.auth.isLoggedIn && this.props.auth.accessToken && !this.state.init){
         //     this.setState({
         //         init: true,
         //     }, async() => {await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)});
         // }
+
+        if(!this.state.init && this.props.auth.isLoggedIn){
+            this.setState( {
+                init: true,
+            }, async () => {
+                //First App Load let's link device to user account
+                await this.props.joinDevice(this.props.app.device_id, this.props.app.device_token, this.props.app.voip_token);
+            })
+        }
+
     }
 
     _checkPermission = async () => {
@@ -116,7 +119,8 @@ class FirebaseService extends Component<Props> {
 
     async _listeners(){
         this.fcmTokenListener = firebase.messaging().onTokenRefresh( fcmToken => {
-            this.props.setFCMToken(fcmToken);
+
+            this.props.setDeviceToken(fcmToken);
         });
         this.messageListener = firebase.messaging().onMessage((message) => {
             // console.log("Message", message);
@@ -124,10 +128,12 @@ class FirebaseService extends Component<Props> {
         });
         //notification received
         this.removeNotificationListener = notifications().onNotification(async (notification: Notification) => {
-            console.log("notification", notification);
-            switch(JSON.parse(notification._data.extraPayload).notification_type){
+            console.log("Notification", notification);
+            let data = JSON.parse(notification._data.extraPayload)
+            switch(data.notification_type){
                 case 0: this.messageReceived(notification); break;
-                case "new_call": this.newCall(notification); break;
+                case 2: this.newCall(notification, data); break;
+                case 7: this.joinedCall(notification, data); break;
                 default: console.log("caught", notification);
             }
             // console.log("badges", notification)
@@ -177,24 +183,34 @@ class FirebaseService extends Component<Props> {
                 this.props.setVOIPToken(token);
             });
             VoipPushNotification.addEventListener('notification', (notification) => {
-                // console.log("VOIP", notification);
-                this.newCall(notification);
+                console.log("VOIP", notification);
+                let data = notification._data.extraPayload;
+                this.newCall(notification, data);
 
             });
         }
     };
 
-    newCall = (notification) => {
-        let data = notification._data.extraPayLoad;
-        // console.log("newCall", notification._data);
+    newCall = (notification, data) => {
+        console.log("newCall",data);
         this.props.setCallType(data.call_type);
         this.props.setCallRoom(data.room_id);
         this.props.setCallRoomPin(data.room_pin);
         this.props.setCallerName(data.sender_name);
         this.props.setCallThreadId(data.thread_id);
         if(Platform.OS === "android"){
-            console.log("android call", notification);
+            console.log("android call", notification, this.props.call);
         }
+    }
+
+    joinedCall = (notification, data) => {
+        // console.log("joinedCall", data);
+        // if(this.props.call.status !== 'active'){
+        //     console.log("end Call answered on another device");
+        //     RNCallKeep.reportEndCallWithUUID(data.call_id, CONSTANTS.END_CALL_REASONS.ANSWERED_ELSEWHERE);
+        // }
+
+
     }
 
     messageReceived = async(notification) => {
@@ -202,7 +218,7 @@ class FirebaseService extends Component<Props> {
         let body;
 
         // console.log(channel.channelId);
-        let data = JSON.parse(notification.data.extraPayload);
+        let data = JSON.parse(notification._data.extraPayload);
         console.log("notif data", data);
         switch(data.message_type){
             case 0:
@@ -407,7 +423,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    setFCMToken: App.setFCMToken,
+    setDeviceToken: App.setDeviceToken,
     setVOIPToken: App.setVOIPToken,
     setDeviceID: App.setDeviceID,
     setLastNotification: App.setLastNotification,
@@ -416,11 +432,13 @@ const mapDispatchToProps = {
     storeThreads: Threads.storeThreads,
     setActiveThread: Threads.setActiveThread,
     addMessage: Messages.addMessage,
+    setCallId: Call.setCallId,
     setCallType: Call.setCallType,
     setCallRoom: Call.setCallRoom,
     setCallRoomPin: Call.setCallRoomPin,
     setCallerName: Call.setCallerName,
     setCallThreadId: Call.setCallThreadId,
+    setCallStatus: Call.setCallStatus,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FirebaseService)

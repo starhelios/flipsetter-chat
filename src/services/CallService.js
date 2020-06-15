@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import RNCallKeep from "react-native-callkeep";
+import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
 import {PermissionsAndroid} from 'react-native';
 import {Call} from "../reducers/actions/";
 import NavigationService from "./NavigationService";
@@ -44,6 +44,10 @@ class CallService extends Component<Props> {
         if(!this.props.call.status && this.props.app.route === "Call"){
             NavigationService.navigate("Threads");
         }
+        console.log("call",this.props.call);
+        if(this.props.call.status === 'declined'){
+            this.reportEndCallWithUUID(this.props.call.id, CONSTANTS.END_CALL_REASONS.ANSWERED_ELSEWHERE);
+        }
     }
 
     _listeners(){
@@ -79,7 +83,7 @@ class CallService extends Component<Props> {
 
     onAnswerCallAction = (data) => {
         let { callUUID } = data;
-        // console.log("Answered", callUUID);
+        console.log("Answered", data);
         this.props.setCallId(callUUID);
         this.props.setCallStatus("active");
         NavigationService.navigate('Call');
@@ -93,7 +97,7 @@ class CallService extends Component<Props> {
         console.log("end_call");
         this.props.setCallId(null);
         this.props.setCallStatus(null);
-        this.props.setCallType(null);
+        this.props.setCallType(0);
         this.props.setCallRoom(null);
         this.props.setCallRoomPin(null);
         this.props.setCallerName(null);

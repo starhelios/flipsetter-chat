@@ -25,6 +25,11 @@
 #import "RNFirebaseMessaging.h"
 //SplashScreen
 #import "RNSplashScreen.h"
+//AppCenter Analytics
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
+
 
 @implementation AppDelegate
 
@@ -33,9 +38,23 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
   [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
 }
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
-   fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
-  [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+  
+  NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[[userInfo objectForKey:@"extraPayload"] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+  NSNumber *type = [data valueForKey:@"notification_type"];
+  NSNumber *check = @7;
+  NSLog(@"Is Equal: %d", [type isEqualToNumber:@7]);
+  NSLog(@"%@", [data valueForKey:@"call_id"]);
+  if([type isEqualToNumber:check]){
+    if(![RNCallKeep checkIfBusy]){
+      [RNCallKeep endCallWithUUID:[data valueForKey:@"call_id"] reason:4];
+    }
+    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+    
+  }
+  else{
+    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+  }
 }
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
   [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
@@ -59,21 +78,26 @@
 // Process the received push
 [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
   
-// Retrieve information like handle and callerName here
-NSString *uuid = [payload.dictionaryPayload valueForKeyPath:@"extraPayLoad.call_id"];
-NSString *callerName = [payload.dictionaryPayload valueForKeyPath:@"extraPayLoad.sender_name"];
- NSString *handle = @"generic";
-  
-  
-  [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES];
-
+    // Retrieve information like handle and callerName here
+    NSString *uuid = [payload.dictionaryPayload valueForKeyPath:@"extraPayload.call_id"];
+    NSString *callerName = [payload.dictionaryPayload valueForKeyPath:@"extraPayload.sender_name"];
+    NSString *handle = @"generic";
+      
+      
+    //  [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES];
+    [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit:YES payload:payload.dictionaryPayload];
+      
+      
 completion();
 }
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  
+  [application registerForRemoteNotifications];
+  [AppCenterReactNative register];
+  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
   [FIRApp configure];
   [RNFirebaseNotifications configure];
   

@@ -9,7 +9,7 @@ export default function(state =initialState, action) {
         case Friends.actionTypes.GET_LIST:
             return {...state};
         case Friends.actionTypes.GET_LIST_SUCCESS:
-            console.log({...action.payload.data.friends});
+            // console.log({...action.payload.data.friends});
             return {...state, list: {...action.payload.data.friends}};
         default:
             return state;

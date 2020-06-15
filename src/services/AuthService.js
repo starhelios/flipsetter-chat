@@ -42,9 +42,7 @@ class AuthService extends Component{
     }
 
     async checkUser(){
-
-            this.props.getUser();
-
+        this.props.getUser();
     }
 
 

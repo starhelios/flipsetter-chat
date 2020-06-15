@@ -34,11 +34,12 @@ class SocketProvider extends React.Component {
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+        // console.log("socket", this.state.socket);
         if(!this.state.socket && this.props.auth.isLoggedIn){
            this.connectSocket();
         }
 
-        if(this.state.socket && this.state.socket.connector.socket.connected && !this.state.listeners){
+        if(this.state.socket && this.state.socket.connector.socket.io.readyState === 'open' && !this.state.listeners){
             this._listeners();
             this.setState({
                 listeners: true,
@@ -46,7 +47,7 @@ class SocketProvider extends React.Component {
         }
         //User Logged In
         if(this.props.auth.isLoggedIn){
-            if(this.props.user.id && this.state.socket && !this.state.privateChannel){
+            if(this.props.user.id && this.state.socket.connector.socket.io.readyState === "open" && !this.state.privateChannel){
                 this.setState({
                     privateChannel: this.state.socket.private(`user_notify_${this.props.user.id}`)
                 })
@@ -96,24 +97,13 @@ class SocketProvider extends React.Component {
                 },
                 timeout: 10000,
                 jsonp: false,
-                transports: ["websocket"],
-                autoConnect: true,
-                reconnection: true,
-                agent: false,
-                upgrade: true,
-                pfx: "-",
-                key: token,
-                cert: "-",
-                ca: "-",
-                ciphers: "-",
-                rejectUnauthorized: "-",
-                perMessageDeflate: "-"
+
             });
+
             this.setState({
                 socket: connect,
-                privateChannel: (this.props.user.id) ? connect.private(`user_notify_${this.props.user.id}`) : null,
-            });
-            return true;
+            }, () => {return true});
+
         }
         return false;
 
@@ -122,12 +112,12 @@ class SocketProvider extends React.Component {
     _listeners = () => {
         this.state.socket.connector.socket.on('connect', () => {
             // console.log('connected', this.state.socket.socketId());
-        });
-        this.state.socket.connector.socket.on('disconnect', () => {
-
+        }).on('disconnect', (data) => {
+            console.log("disconnected", data);
             this.connectSocket();
-        });
-        this.state.socket.connector.socket.on('reconnect', (attempt) => {
+        }).on('reconnecting', (data) => {
+            console.log('reconnecting', data);
+        }).on('reconnect', (attempt) => {
             console.log('connecting', attempt);
             //add in if too many attempts, flag in app
         });
@@ -136,7 +126,7 @@ class SocketProvider extends React.Component {
     render() {
 
         return (
-            <SocketContext.Provider value={{socket: (this.props.auth.isLoggedIn) ? this.state.socket : null, privateChannel: (this.props.auth.isLoggedIn && this.state.socket) ? this.state.privateChannel : null}}>
+            <SocketContext.Provider value={{socket: this.state.socket, privateChannel: this.state.privateChannel}}>
                 {this.props.children}
             </SocketContext.Provider>
         );

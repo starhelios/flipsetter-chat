@@ -12,6 +12,7 @@ const actionTypes = {
     SET_CALLER_NAME:"SET_CALLER_NAME",
     SET_CALL_THREAD_ID:"SET_CALL_THREAD_ID",
     JOIN_CALL:"JOIN_CALL",
+    LEAVE_CALL:"LEAVE_CALL",
     START_AUDIO_CALL:"START_AUDIO_CALL",
     START_VIDEO_CALL:"START_VIDEO_CALL",
     START_WHITEBOARD:"START_WHITEBOARD",
@@ -41,7 +42,7 @@ function setCallerName(name){
 function setCallThreadId(thread){
     return {type: actionTypes.SET_CALL_THREAD_ID, payload:thread}
 }
-function joinCall(){
+function joinCall(id){
     return {
         type: actionTypes.JOIN_CALL,
         payload: {
@@ -62,7 +63,28 @@ function joinCall(){
     }
 }
 
-function startAudioCall(){
+function leaveCall(id){
+    return {
+        type: actionTypes.LEAVE_CALL,
+        payload: {
+            request: {
+                method: 'POST',
+                // url: `${config.prefix}/thread/${id}/message`,
+                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                data: {
+                    type: "leave_call",
+                },
+                headers:{
+                    Authorization: null,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }
+        }
+    }
+}
+
+function startAudioCall(id){
     return {
         type: actionTypes.START_AUDIO_CALL,
         payload: {
@@ -125,5 +147,5 @@ function startWhiteboard(){
 }
 
 export default {
-    actionTypes, setCallId, setCallStatus, setCallType, setCallRoom, setCallRoomPin, setCallerName, setCallThreadId, joinCall, startAudioCall, startVideoCall, startWhiteboard,
+    actionTypes, setCallId, setCallStatus, setCallType, setCallRoom, setCallRoomPin, setCallerName, setCallThreadId, joinCall, leaveCall, startAudioCall, startVideoCall, startWhiteboard,
 };

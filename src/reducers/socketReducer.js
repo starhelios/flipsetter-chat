@@ -1,4 +1,4 @@
-import {App} from './actions';
+import {Socket} from './actions';
 
 const initialState = {
     appState: null,

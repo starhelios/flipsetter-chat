@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="notification">#24422e</color>
+    <color name="launch_background">#24422e</color>
     <color name="primary_dark">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="status_bar_color">#24422e</color>

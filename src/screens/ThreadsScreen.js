@@ -253,9 +253,9 @@ class ThreadsScreen extends Component<Props>{
         return (
             <Container>
                 <Header onLayout={(event) => this.headerHeight}>
-                    <Left></Left>
-                    <Body><Title>Threads</Title></Body>
-                    <Right style={{marginRight: 25}}>
+                    <Left style={{flex: 1}}><Title>Threads</Title></Left>
+                    <Body style={{flex: 1}}></Body>
+                    <Right style={{flex: 1, marginRight: 0}}>
                         <TouchableOpacity onPress={() => this.showSearch("toggle")} style={{width:30}}>
                             <FontAwesome5
                                 name={"search"}

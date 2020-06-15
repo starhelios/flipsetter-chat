@@ -21,7 +21,8 @@ export default function(state =initialState, action){
             let messages = [];
             data.recent_messages.map( (message) => {
                 // console.log("message_reducer", message);
-                let newMessage = {};
+                let newMessage;
+                // console.log("message_reducer", message.message_type);
                 switch(message.message_type){
                     case 0:
                         newMessage =
@@ -67,11 +68,21 @@ export default function(state =initialState, action){
                                 system: true,
                             }
                         break;
+                    case 99:
+                        newMessage =
+                            {
+                                _id:message.message_id,
+                                text: `${message.name} ${message.body}`,
+                                createdAt: message.created_at,
+                                system: true,
+                            }
                 }
-                messages = [
-                    newMessage,
-                    ...messages
-                ];
+                if(newMessage){
+                    messages = [
+                        newMessage,
+                        ...messages
+                    ];
+                }
 
             });
 

@@ -23,7 +23,6 @@ class ContactsScreen extends Component<Props> {
     }
 
     _renderItem = ({item}) => {
-        console.log(item);
         return(
             <ListItem thumbnail>
                 <Left>
