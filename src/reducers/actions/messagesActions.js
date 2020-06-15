@@ -9,6 +9,7 @@ const actionTypes = {
     SEND_MESSAGE: "SEND_MESSAGE",
     SEND_MESSAGE_SUCCESS: "SEND_MESSAGE_SUCCESS",
     ADD_MESSAGE:"ADD_MESSAGE",
+    UPDATE_MESSAGE:"UPDATE_MESSAGE",
     ADD_MESSAGES:"ADD_MESSAGES",
     MARK_READ: "MARK_READ",
     MARK_READ_SUCCESS: "MARK_READ_SUCCESS",
@@ -25,9 +26,8 @@ export function getMessages(id){
         payload: {
             request: {
                 method: 'GET',
-                url: `${config.prefix}/fetch/${id}/initiate_thread`,
+                url: `${config.api.messenger.get.getMessages(id, 'initiate_thread')}`,
                 headers:{
-                    Authorization: null,
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 }
@@ -42,7 +42,7 @@ export function sendMessage(id, message){
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
                     type: "store_message",
                     temp_id: message._id,
@@ -63,13 +63,16 @@ export function markRead(id){
         payload: {
             request: {
                 method: "GET",
-                url: `${config.api.prefix}/${config.api.messenger.get.getMessages(id, "mark_read")}`,
+                url: `${config.api.messenger.get.getMessages(id, "mark_read")}`,
             }
         }
     }
 }
 export function addMessage(thread, message){
     return{ type: actionTypes.ADD_MESSAGE, payload:{thread, message}}
+}
+export function updateMessage(thread, message){
+    return{ type: actionTypes.UPDATE_MESSAGE, payload: {thread, message}}
 }
 export function addMessages(thread, messages){
     return{ type: actionTypes.ADD_MESSAGES, payload:{thread, messages}}
@@ -80,5 +83,5 @@ function clearMessages(){
 
 
 export default {
-    actionTypes, getMessages, sendMessage, markRead, addMessage, addMessages, clearMessages
+    actionTypes, getMessages, sendMessage, markRead, addMessage, updateMessage, addMessages, clearMessages
 };

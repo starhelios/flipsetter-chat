@@ -4,6 +4,7 @@ import config from "../../config";
  * action types
  */
 const actionTypes = {
+    CALL_HEARTBEAT:"CALL_HEARTBEAT",
     SET_CALL_ID:"SET_CALL_ID",
     SET_CALL_STATUS:"SET_CALL_STATUS",
     SET_CALL_TYPE:"SET_CALL_TYPE",
@@ -15,7 +16,11 @@ const actionTypes = {
     LEAVE_CALL:"LEAVE_CALL",
     START_AUDIO_CALL:"START_AUDIO_CALL",
     START_VIDEO_CALL:"START_VIDEO_CALL",
+    START_VIDEO_CALL_SUCCESS:"START_VIDEO_CALL_SUCCESS",
     START_WHITEBOARD:"START_WHITEBOARD",
+    START_WHITEBOARD_SUCCESS:"START_WHITEBOARD_SUCCESS",
+    SAVE_PATH: "SAVE_PATH",
+    GET_WHITEBOARD:"GET_WHITEBOARD",
 };
 
 /*
@@ -49,7 +54,7 @@ function joinCall(id){
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
                     type: "join_call",
                 },
@@ -70,7 +75,7 @@ function leaveCall(id){
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
                     type: "leave_call",
                 },
@@ -91,7 +96,7 @@ function startAudioCall(id){
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
                     type: "initiate_call",
                 },
@@ -105,14 +110,14 @@ function startAudioCall(id){
     }
 }
 
-function startVideoCall(){
+function startVideoCall(id){
     return {
         type: actionTypes.START_VIDEO_CALL,
         payload: {
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
                     type: "initiate_call",
                 },
@@ -125,16 +130,16 @@ function startVideoCall(){
         }
     }
 }
-function startWhiteboard(){
+function startWhiteboard(id){
     return {
         type: actionTypes.START_WHITEBOARD,
         payload: {
             request: {
                 method: 'POST',
                 // url: `${config.prefix}/thread/${id}/message`,
-                url: `${config.api.prefix}/${config.api.messenger.post.saveThread(id)}`,
+                url: `${config.api.messenger.post.saveThread(id)}`,
                 data: {
-                    type: "initiate_call",
+                    type: "initiate_whiteboard",
                 },
                 headers:{
                     Authorization: null,
@@ -145,7 +150,35 @@ function startWhiteboard(){
         }
     }
 }
+function callHeartbeat(threadId, callId, type){
+    return {
+        type: actionTypes.CALL_HEARTBEAT,
+        payload: {
+            request: {
+                method: 'GET',
+                url: `${config.api.messenger.get.fetchCall(threadId, callId, type)}`
+            }
+        }
+    }
+}
+
+function savePath(threadId, callId, path){
+    return {
+        type: actionTypes.SAVE_PATH,
+        payload: {
+            request: {
+                method: 'POST',
+                url: `${config.api.messenger.post.saveCall(threadId, callId)}`,
+                data: {
+                    action: "quick_save",
+                    timeline_item: path,
+                },
+                fail_alert: true,
+            }
+        }
+    }
+}
 
 export default {
-    actionTypes, setCallId, setCallStatus, setCallType, setCallRoom, setCallRoomPin, setCallerName, setCallThreadId, joinCall, leaveCall, startAudioCall, startVideoCall, startWhiteboard,
+    actionTypes, callHeartbeat, setCallId, setCallStatus, setCallType, setCallRoom, setCallRoomPin, setCallerName, setCallThreadId, joinCall, leaveCall, startAudioCall, startVideoCall, startWhiteboard, savePath
 };

@@ -38,7 +38,7 @@ function getThreads(){
             request: {
                 method: 'GET',
                 // url: `${config.prefix}/threads`,
-                url: `${config.api.prefix}/${config.api.messenger.get.type('threads')}`,
+                url: `${config.api.messenger.get.type('threads')}`,
                 headers:{
                     Authorization: null,
                     Accept: 'application/json',

@@ -14,7 +14,7 @@ export function getList(){
         payload: {
             request: {
                 method: 'GET',
-                url: `${config.api.prefix}/${config.api.friends.get.list}`,
+                url: `${config.api.friends.get.list}`,
                 headers:{
                     Accept: 'application/json',
                     'Content-Type': 'application/json',

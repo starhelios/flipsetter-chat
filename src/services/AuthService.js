@@ -18,7 +18,7 @@ class AuthService extends Component{
 
     async componentDidMount(): void {
         this.checkAuth();
-        if(!this.props.user.id  && this.props.auth.isLoggedIn){
+        if(!this.props.user.id  && this.props.auth.isLoggedIn && this.props.auth.accessToken){
             // console.log();
             this.checkUser();
             this.setState({
@@ -29,9 +29,20 @@ class AuthService extends Component{
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
         this.checkAuth();
-        if(!this.props.user.id && this.props.auth.isLoggedIn && this.state.auth){
-            // console.log();
-            this.checkUser();
+        //check if we logged in but don't have app info for whatever reason
+
+        //Did we login yet?
+
+        if(!this.state.auth && this.props.auth.isLoggedIn && this.props.auth.accessToken){
+            this.setState({
+                auth:true,
+            }, () => {this.checkUser()});
+        }
+
+        if(this.props.auth.isLoggedIn !== prevProps.auth.isLoggedIn && !this.props.auth.isLoggedIn){
+            this.setState({
+                auth: true,
+            });
         }
     }
 

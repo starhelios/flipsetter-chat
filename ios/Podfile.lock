@@ -1,12 +1,12 @@
 PODS:
-  - appcenter-analytics (3.0.0):
+  - appcenter-analytics (3.0.1):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
     - React
-  - appcenter-core (3.0.0):
+  - appcenter-core (3.0.1):
     - AppCenterReactNativeShared
     - React
-  - appcenter-crashes (3.0.0):
+  - appcenter-crashes (3.0.1):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React
@@ -321,17 +321,17 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
-  - ReactNativeART (1.1.2):
+  - ReactNativeART (1.2.0):
     - React
   - ReactNativeIncallManager (3.2.7):
     - React
-  - RNCallKeep (3.0.10):
+  - RNCallKeep (3.0.12):
     - React
-  - RNCAsyncStorage (1.8.0):
+  - RNCAsyncStorage (1.9.0):
     - React
-  - RNCMaskedView (0.1.6):
+  - RNCMaskedView (0.1.7):
     - React
-  - RNDeviceInfo (5.5.3):
+  - RNDeviceInfo (5.5.4):
     - React
   - RNFastImage (7.0.2):
     - React
@@ -346,11 +346,11 @@ PODS:
     - Fabric
     - Firebase/Core
     - React
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.2.0):
+  - RNScreens (2.4.0):
     - React
   - RNSVG (11.0.1):
     - React
@@ -539,9 +539,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: 7a0bbe928d07467ac8b2d7f6f2a675872a6471d8
-  appcenter-analytics: 2eba9da53aa3efbfa625fc1ab9dd9ccebba18b24
-  appcenter-core: 98c617ae028c90020e404f020c37d7cb189adf4c
-  appcenter-crashes: add23a3c3cf0403e1f54c39d85e9b3c5db7279e7
+  appcenter-analytics: 46b4bb2832834a198ba6c4058b4eb335386c1063
+  appcenter-core: 765878f5c300907bb70dbb8e956c5a74df7ca23d
+  appcenter-crashes: 66b533f4e2a2278ddbd9369614fe18f0d7f58e47
   AppCenterReactNativeShared: 48a905fe90071696748e3def60199546167cdb86
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
@@ -586,17 +586,17 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  ReactNativeART: c580fba2f7d188d8fa4418ce78db8130654ed10f
+  ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   ReactNativeIncallManager: 352f4a3cbe9385edf7eff57be3fe6bd1ab64fe7f
-  RNCallKeep: 26b7f999575c42d6e325a89368a7157c0f3f2be6
-  RNCAsyncStorage: 5d83b49070d41fd72906a116c5e7bdac4ea3a814
-  RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
-  RNDeviceInfo: 310c1f43d418d950a193c7650de2f9559c906048
+  RNCallKeep: 99a56dc650bba1af3eaad0ab9bbc83ce0bc58e32
+  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
+  RNCMaskedView: 76c40a1d41c3e2535df09246a2b5487f04de0814
+  RNDeviceInfo: 6a3d16fce033f6979c4a6a41e62244d183e8c765
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
+  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RNVoipPushNotification: 065208b32273ba5901ae0f102b2d28a11e0a0373

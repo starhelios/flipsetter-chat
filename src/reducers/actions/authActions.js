@@ -46,11 +46,11 @@ function login(email, pass){
         type: actionTypes.LOGIN,
         payload: {
             request: {
-                url: 'oauth/token',
+                url: `${(config.env === "dev") ? `https://${config.dev.uri}/`:`https://${config.prod.uri}/`}oauth/token`,
                 data: {
                     grant_type: 'password',
-                    client_id: config.dev.client_id,
-                    client_secret: config.dev.client_secret,
+                    client_id: (config.env === "dev") ? config.dev.client_id : config.prod.client_id,
+                    client_secret: (config.env === "dev") ? config.dev.client_secret : config.prod.client_secret,
                     username: email,
                     password: pass,
                     scope: '',

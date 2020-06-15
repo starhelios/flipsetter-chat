@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
+import InCallManager from 'react-native-incall-manager';
 import {PermissionsAndroid} from 'react-native';
-import {Call} from "../reducers/actions/";
+import {Call, App} from "../reducers/actions/";
 import NavigationService from "./NavigationService";
 
 class CallService extends Component<Props> {
@@ -13,7 +14,7 @@ class CallService extends Component<Props> {
 
     }
 
-    async  componentDidMount(): void {
+    async  componentDidMount(){
         this._listeners();
         await RNCallKeep.setup({
            ios: {
@@ -27,6 +28,8 @@ class CallService extends Component<Props> {
                okButton: 'ok',
                additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
            }
+        }).then( accepted => {
+            console.log("RNCALLKEEPSETUP", accepted)
         });
         RNCallKeep.setAvailable(true);
         // console.log(this.props.navigator.mediaDevices.enumerateDevices())
@@ -41,10 +44,26 @@ class CallService extends Component<Props> {
             // console.log(this.props.call);
             // We're in a call
         }
+
+        if(this.props.call.status === "joining"){
+            console.log("JOINING", this.props);
+
+            this.startCall({handle: (this.props.call.callerName) ? this.props.call.callerName : `${this.props.user.first} ${this.props.user.last}`, localizedCallerName: (this.props.call.callerName) ? this.props.call.callerName : `${this.props.user.first} ${this.props.user.last}`});
+            NavigationService.navigate("Call");
+            this.props.setCallStatus("active");
+        }
+        if(this.props.call.status === "initiated"){
+            console.log("initiated", this.props);
+
+            this.startCall({handle: (this.props.call.callerName) ? this.props.call.callerName : `${this.props.user.first} ${this.props.user.last}`, localizedCallerName: (this.props.call.callerName) ? this.props.call.callerName : `${this.props.user.first} ${this.props.user.last}`});
+            NavigationService.navigate("Call");
+            this.props.setCallStatus("active");
+        }
+
         if(!this.props.call.status && this.props.app.route === "Call"){
             NavigationService.navigate("Threads");
         }
-        console.log("call",this.props.call);
+
         if(this.props.call.status === 'declined'){
             this.reportEndCallWithUUID(this.props.call.id, CONSTANTS.END_CALL_REASONS.ANSWERED_ELSEWHERE);
         }
@@ -64,8 +83,9 @@ class CallService extends Component<Props> {
 
     // Use startCall to ask the system to start a call - Initiate an outgoing call from this point
     startCall = ({ handle, localizedCallerName }) => {
+        console.log("Start", handle, localizedCallerName);
         // Your normal start call action
-        RNCallKeep.startCall(this.props.calls.id, handle, localizedCallerName);
+        RNCallKeep.startCall(this.props.call.id, handle, localizedCallerName, 'generic', true);
     };
 
     reportEndCallWithUUID = (callUUID, reason) => {
@@ -79,6 +99,7 @@ class CallService extends Component<Props> {
         console.log("ReceiveStartCallAction", data);
         // Get this event after the system decides you can start a call
         // You can now start a call from within your app
+        InCallManager.start({media: "video"});
     };
 
     onAnswerCallAction = (data) => {
@@ -96,13 +117,13 @@ class CallService extends Component<Props> {
         // RNCallKeep.endCall(this.props.calls.id);
         console.log("end_call");
         this.props.setCallId(null);
-        this.props.setCallStatus(null);
+        this.props.setCallStatus("left");
         this.props.setCallType(0);
         this.props.setCallRoom(null);
         this.props.setCallRoomPin(null);
         this.props.setCallerName(null);
         this.props.setCallThreadId(null);
-        NavigationService.navigate('Threads');
+        this.props.appHeartbeat();
     };
 
     // Currently iOS only
@@ -142,6 +163,7 @@ const mapStateToProps = (state) => {
         auth: state.auth,
         app: state.app,
         call: state.call,
+        user: state.user,
     }
 };
 
@@ -153,6 +175,7 @@ const mapDispatchToProps = {
     setCallRoomPin: Call.setCallRoomPin,
     setCallerName: Call.setCallerName,
     setCallThreadId: Call.setCallThreadId,
+    appHeartbeat: App.appHeartbeat,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CallService)

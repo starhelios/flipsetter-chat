@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {StyleSheet, Platform, Image, FlatList, TouchableOpacity} from 'react-native';
+import {Alert, StyleSheet, Platform, Image, FlatList, TouchableOpacity} from 'react-native';
 import { Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title} from 'native-base';
 
 import moment from 'moment';
@@ -9,23 +9,64 @@ import {withSocketContext} from "../Socket";
 import FastImage from "react-native-fast-image";
 import {emojify} from 'react-emojione';
 import NavigationService from "../../services/NavigationService";
+import config from '../../config';
 
 class ThreadList extends React.PureComponent {
+    state = {
+        activeCall: false,
+    }
 
     constructor(props){
         super(props);
         // console.log("threadList", this.props.thread.recent_message.message_type, this.props.thread);
-        // console.log(this.props.avatar);
+        // console.log("TLIST", this.props);
         // console.log(this.props.thread.thread_type);
         // console.log(this.props.thread.name)
         // console.log((this.props.thread.thread_type === 1) ? `https://tippinweb.com/${this.props.avatar}` : `https://tippinweb.com/api/v1${this.props.thread.avatar}`);
     }
 
+    componentDidMount(): void {
+        // console.log("Thread",  this.props.app.heartbeat.data.states.active_calls);
+        this.activeCall = (this.props.app.heartbeat && typeof this.props.app.heartbeat.data.states.active_calls !== "undefined") ? this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.props.thread.thread_id)[0] : null;
+        // console.log("Call", this.activeCall);
+        if(this.activeCall){
+            this.setState({
+                activeCall: true,
+            });
+        }
+    }
+
+    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+        if(this.props.app.route === "Threads"){
+            if(typeof this.props.app.heartbeat !== "undefined" && this.props.app.heartbeat !== null) {
+
+                let check = this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.props.thread.thread_id)[0];
+                // console.log(check);
+                // if (check.length === 1) {
+                //     this.activeCall = check;
+                //     this.setState({
+                //         activeCall: true,
+                //     });
+                // } else if (check.length === 0) {
+                //     this.activeCall = null;
+                //     this.setState({
+                //         activeCall: false,
+                //     })
+                // }
+
+            }
+        }
+    }
 
     _onPress = () => {
-
+        // NavigationService.navigate("Messages", {
+        //     thread: this.props.thread_id,
+        // })
         //Still set active Thread JIC
         this.props.onPressItem(this.props.thread_id);
+        // this.props.navigation.navigate("Messages", {
+        //     thread: this.props.thread_id,
+        // })
 
     };
 
@@ -37,7 +78,7 @@ class ThreadList extends React.PureComponent {
                 <Left>
                     <FastImage
                         source={{
-                            uri: `https://tippinweb.com/api/v0${this.props.thread.avatar}`,
+                            uri: `https://${config.api.uri}${this.props.thread.avatar}`,
                             headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                             priority: FastImage.priority.normal,
                         }}
@@ -46,10 +87,16 @@ class ThreadList extends React.PureComponent {
                 </Left>
                 <Body>
                     <Text style={{fontWeight: (this.props.thread.unread) ? '700' : 'normal', }}>{this.props.name}</Text>
-                    <Text note numberOfLines={2} style={{fontWeight: (this.props.thread.unread) ? '700' : 'normal', color:"#000"}}>
-                        {(this.props.thread.thread_type === 2 && this.props.thread.recent_message.message_type !== 89 && this.props.thread.recent_message.message_type !== 90) && `${this.props.thread.recent_message.name}: `}
-                        {(this.props.latest_message) ?? emojify(this.props.latest_message, {output: 'unicode'})}
-                    </Text>
+                    {   this.state.activeCall ?
+                        <Text>
+                            There is an active {(this.activeCall.call_type === 1) ? "video call" : "whiteboard session"}
+                        </Text>
+                        :
+                        <Text note numberOfLines={2} style={{fontWeight: (this.props.thread.unread) ? '700' : 'normal', color:"#000"}}>
+                            {(this.props.thread.thread_type === 2 && this.props.thread.recent_message.message_type !== 89 && this.props.thread.recent_message.message_type !== 90) && `${this.props.thread.recent_message.name}: `}
+                            {(this.props.latest_message) ?? emojify(this.props.latest_message, {output: 'unicode'})}
+                        </Text>
+                    }
                 </Body>
                 <Right>
                     <Text note>{date}</Text>

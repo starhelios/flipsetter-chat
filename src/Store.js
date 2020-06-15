@@ -8,11 +8,11 @@ import thunk from "redux-thunk";
 import { appReducer, authReducer, userReducer, threadsReducer, messagesReducer, searchReducer, friendsReducer, callReducer} from "./reducers";
 import axios from 'axios';
 import axiosMiddleware from "redux-axios-middleware";
-
+import config from './config';
 
 /*** Axios Client and Config ****/
 const client = axios.create({
-    baseURL:'https://tippinweb.com',
+    baseURL: `https://${config.api.uri}`,
     responseType: 'json',
     headers:{
         Accept: 'application/json',

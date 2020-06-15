@@ -3,12 +3,18 @@ let config = {
     env: (__DEV__) ? "dev" : "prod",
     prefix: `/api/v1`,
     prod: {
-        http: "https://flipsetter.com",
-        wss: "wss://flipsetter.com/janus"
+        uri: "flipsetter.com",
+        janus: "/janus",
+        janusws: "/janus-ws",
+        echo: "/socket",
+        client_id: '10',
+        client_secret: '4HGLGxFAeX8aAYUreGH862QwO5oU4JPtGFjIhoLo',
     },
     dev: {
-        http: "https://tippinweb.com",
-        wss: "wss://tippinweb.com/janus-ws",
+        uri: "tippinweb.com",
+        janus: "/janus",
+        janusws: "/janus-ws",
+        echo: "/socket",
         client_id: '5',
         client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
     },

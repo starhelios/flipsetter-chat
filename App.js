@@ -59,27 +59,36 @@ class Main extends Component<Props> {
         await Analytics.trackEvent("Analytics Started")
 
         let appState = await AppState.currentState;
-        if(appState === 'active' && (this.props.app.appState === 'inactive' || this.props.app.appState === 'background')) this._handleAppStateChange('active');
+        if(appState === 'active' && (this.props.app.appState === 'inactive' || this.props.app.appState === 'background' || this.props.app.appState !== "callDisplayed")) this._handleAppStateChange('active');
         AppState.addEventListener("change", this._handleAppStateChange);
-        if(this.props.user.id && this.props.auth.isLoggedIn && this.props.auth.accessToken){
+        if(this.props.user.id && this.props.auth.isLoggedIn){
             this.setState({
                 heartbeat: Date.now(),
-            }, async() => await this.props.appHeartbeat())
+            }, () => this.props.appHeartbeat());
         }
         this.Heartbeat = setInterval(async() => {
             if(this.props.user.id && this.props.auth.isLoggedIn){
                 this.setState({
                     heartbeat: Date.now(),
-                }, async() => await this.props.appHeartbeat())
+                }, () => this.props.appHeartbeat());
             }
         }, 60000);
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        if(!this.state.heartbeat && this.props.user.id && this.props.auth.isLoggedIn && this.props.auth.accessToken){
+        if(!this.state.heartbeat && this.props.user.id && this.props.auth.isLoggedIn){
             this.setState({
                 heartbeat: Date.now(),
             }, async(store) => this.props.appHeartbeat())
+        }
+        if(!this.Heartbeat){
+            this.Heartbeat = setInterval(async() => {
+                if(this.props.user.id && this.props.auth.isLoggedIn){
+                    this.setState({
+                        heartbeat: Date.now(),
+                    }, () => this.props.appHeartbeat());
+                }
+            }, 60000);
         }
     }
 
@@ -127,6 +136,8 @@ class Main extends Component<Props> {
         await this.props.setRoute(route);
 
     }
+
+    _heartbeat = async() => { return this.props.appHeartbeat()};
 };
 
 const mapStateToProps = (state) => {

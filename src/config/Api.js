@@ -1,4 +1,4 @@
-import config from "./Config";
+import config from "./Config.js";
 import React, {Component} from "react";
 
 
@@ -6,8 +6,7 @@ import React, {Component} from "react";
 export default function Api () {
     let apiVersion = 0;
     let prefix = `api/v${apiVersion}`;
-    // let uri = (config.env === 'dev') ? `${config.dev.http}/${prefix}` : `${config.prod.http}/${prefix}/`;
-    let uri = `${config.dev.http}/${prefix}`;
+    let uri = config.env === 'dev' ? `${config.dev.uri}/${prefix}` : `${config.prod.uri}/${prefix}`;
     let endpoints = {
         client: {
             get: {
@@ -51,10 +50,11 @@ export default function Api () {
         messenger: {
             get: {
                 search: (query) => `messenger/search/${query}`,
+
                 create: (slug, alias) => `messenger/create/${slug}/${alias}`,
                 fetchCall: (threadId, callId, type) => `messenger/${threadId}/call/${callId}/${type}`, //heartbeat
-                type: (type) => `messenger/get/${type}`, //?
-                getMessages: (threadId, type, messageId = null) => `messenger/get/${threadId}/${type}/${messageId}`,
+                type: (type) => `messenger/get/${type}`, //All threads, thread settings, recent threads
+                getMessages: (threadId, type, messageId = '') => `messenger/get/${threadId}/${type}`,
 
             },
             post: {

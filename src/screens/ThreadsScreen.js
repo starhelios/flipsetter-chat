@@ -20,7 +20,7 @@ import ThreadList from "../components/threads/ThreadList";
 import { withSocketContext } from "../components/Socket";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {ScrollView, withNavigationFocus} from "react-navigation";
-import {App, Auth, User, Threads, Messages} from "../reducers/actions";
+import {App, Auth, User, Threads, Messages, Call} from "../reducers/actions";
 import {connect} from "react-redux";
 import threadsService from "../services/ThreadsService";
 import Utils from "../components/Utils";
@@ -28,6 +28,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import NavigationService from "../services/NavigationService";
 import SearchBar from "../components/SearchBar";
 import SearchResults from "../components/SearchResults";
+import config from '../config';
+
 if (
     Platform.OS === 'android' &&
     UIManager.setLayoutAnimationEnabledExperimental
@@ -52,6 +54,11 @@ class ThreadsScreen extends Component<Props>{
     constructor(props){
         super(props);
         this.searchHeight =  new Animated.Value(this.props.search.query ? 50 : 0);
+        // this.activeCalls = setInterval(() => {
+        //     if(this.props.app.heartbeat && this.props.app.heartbeat.data.states.active_calls.length > 1){
+        //         this.props.appHeartbeat();
+        //     }
+        // }, 30000);
         // console.log(this.props);
         //
         // this.setState({
@@ -64,7 +71,7 @@ class ThreadsScreen extends Component<Props>{
         let update = await this.props.getThreads();
         // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
         // this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
-        // console.log(update);
+        console.log("Update Threads", update);
         //lets grab the current rendered threads as well
         // let threads = this.state.threads;
 
@@ -74,8 +81,11 @@ class ThreadsScreen extends Component<Props>{
         // this.props.storeThreads(threads);
 
         //Set the state to trigger the update
-        if(update){
-            SplashScreen.hide();
+        if(update.type === "GET_THREADS_SUCCESS"){
+            this.setState({
+                threads: {...this.props.threads.threads},
+            }, SplashScreen.hide())
+
         }
     }
 
@@ -84,15 +94,17 @@ class ThreadsScreen extends Component<Props>{
         // if(this.props.threads.activeThread){this.props.setActiveThread(null)}
         // this.keyboardDidHideListener.remove();
         // this.keyboardDidShowListener.remove();
+        // clearInterval(this.activeCalls);
     }
 
 
     async componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+
         if(prevProps.isFocused !== this.props.isFocused && this.props.isFocused){
                 //Update Threads
                 // await this.props.getThreads();
                 // console.log("focused Threads");
-            this.componentDidMount();
+            // this.componentDidMount();
         }
         if(this.state.refreshing){
             this.setState({
@@ -107,7 +119,20 @@ class ThreadsScreen extends Component<Props>{
                 thread: this.props.navigation.getParam("newMessage")
             })
         }
-
+        
+        if(this.props.app.heartbeat){
+            if(typeof this.props.app.heartbeat.data !== "undefined" || prevProps.app.heartbeat.data.states.active_calls.length !== this.props.app.heartbeat.data.states.active_calls.length){
+                this.activeCalls = setInterval(() => {
+                    if(this.props.app.heartbeat && this.props.app.heartbeat.data.states.active_calls.length > 1){
+                        this.props.appHeartbeat();
+                    }
+                }, 30000);
+            }
+            //Clear Interval
+            if(this.props.app.heartbeat.data.states.active_calls.length === 0){
+                clearInterval(this.activeCalls);
+            }
+        }
     }
 
     // keyboardDidShow = (event) => {
@@ -152,14 +177,20 @@ class ThreadsScreen extends Component<Props>{
         // console.log(this.state.searchHeight);
     }
 
-    async refreshThreads(){
+    refreshThreads = async() => {
         this.setState({
             refreshing: true,
         });
-        this.props.getThreads();
 
+       let refresh = await this.props.getThreads();
+       if(refresh.type === "GET_THREADS_SUCCESS"){
+           this.setState({
+               refreshing: false,
+           })
+       }
 
     }
+
     _renderItem = (data) => {
         // console.log("render",data);
         let item = data.item;
@@ -305,9 +336,10 @@ class ThreadsScreen extends Component<Props>{
                             }}
                             stickySectionHeadersEnabled={true}
                             style={{flex: 1}}
-                            onRefresh={this.refreshThreads.bind(this)}
+                            onRefresh={this.refreshThreads}
                             refreshing={this.state.refreshing}
                             onScroll={this.showSearch}
+                            initialNumToRender={15} //Render first 15 quickly, stops flicker on threads refresh
                             // scrollEventThrottle={500}
                         />
                     </View>
@@ -315,6 +347,7 @@ class ThreadsScreen extends Component<Props>{
 
         )
     }
+
 }
 
 const styles = StyleSheet.create({
@@ -338,6 +371,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
+    appHeartbeat: App.appHeartbeat,
     setErrorMsg: App.setErrorMsg,
     setIsLoading: App.setIsLoading,
     setAccessToken: Auth.setAccessToken,
@@ -347,6 +381,7 @@ const mapDispatchToProps = {
     setActiveThread: Threads.setActiveThread,
     getUser: User.getUser,
     getMessages: Messages.getMessages,
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(ThreadsScreen)));

@@ -40,21 +40,19 @@ class MessagesScreen extends Component<Props>{
     state = {
         isLoading: true,
         threadAvatar: null,
-        messages: null,
+        messages: (this.props.messages.messages.hasOwnProperty(this.props.navigation.getParam('thread'))) ? [...this.props.messages.messages[this.props.navigation.getParam('thread')]] : null,
         renderMessages: false,
         participants: {},
         bobbles: {},
         typers:{},
         startedTyping: null,
+        activeCall: null,
     };
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.echo = this.props.socket;
         this.typeInterval = 0;
-        if(this.props.messages.messages.hasOwnProperty(this.props.navigation.getParam('thread'))){
-            this.state.messages = this.props.messages.messages[this.props.navigation.getParam('thread')];
-        }
     }
 
     async componentDidMount(){
@@ -62,22 +60,41 @@ class MessagesScreen extends Component<Props>{
         // this.user = await fetchUser.payload.data;
 
         this.props.setActiveThread(this.activeThread);
-        let update = await this.props.getMessages(this.activeThread);
+        //Let's update the thread
+        this.update = await this.props.getMessages(this.activeThread);
+
         //Move this into redux!!
         
-        if(update){
-            this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
-            this.bobbleHeads(update.payload.data.bobble_heads);
+        if(this.update.type === "GET_MESSAGES_SUCCESS"){
+            // this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
+            if(typeof this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`] !== "undefined"){
+                this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`].subscribe();
+                this.thread = this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`];
+            }
+            else{
+                this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
+            }
+            this.bobbleHeads(this.update.payload.data.bobble_heads);
             this.thread.whisper('online', {
                 owner_id: this.props.user.id,
                 online: 1,
                 name: `${this.props.user.first} ${this.props.user.last}`,
             });
         }
+
         this.typeInterval = setInterval(this._updateTypers, 2000);
 
+        //Is there an active call for this thread?
+        let activeCall = null;
+        if(this.props.app.heartbeat !== null)  activeCall = this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.activeThread)[0];
+        if(activeCall){
+            this.setState({
+                activeCall: activeCall,
+            })
+        }
         //Are Messages loaded && are bobbles updated?
-        if(this.state.messages && update){
+        if(this.state.messages && this.update){
+
             this.setState({
                 isLoading:false,
             })
@@ -87,14 +104,19 @@ class MessagesScreen extends Component<Props>{
     }
 
     async componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        // console.log("echo", this.state.participants);
+        //check if messages updated and if most recent message matches the sender's recent message
+        // console.log("MESSAGES", this.state.messages)
+        //Check if we need to refresh for a new thread (e.g. navigating to messages while already on it)
+        // if(this.props.navigation.getParam('callEnded') === true){
+        //     this.props.appHeartbeat();
+        // }
         if(prevProps.navigation.getParam('thread') !== this.props.navigation.getParam('thread')){
             this.props.navigation.navigate("Threads", {
                 newMessage: this.props.navigation.getParam("thread")
             })
         }
         else{
-            
+            //Was the app in the background?  Let's do some housekeeping and update the thread messages
             if(prevProps.app.appState.match(/inactive|background/) && this.props.app.appState === 'active'){
                 let update = await this.props.getMessages(this.activeThread);
                 if(update && this.activeThread === this.props.navigation.getParam('thread')){
@@ -107,20 +129,69 @@ class MessagesScreen extends Component<Props>{
                 }
             }
         }
-        
+
+        //Check if Messages have been retreived from redux and placed in store and if so finish rendering
+        if(this.state.messages && this.state.isLoading && this.update){
+            this.setState({
+                isLoading: false,
+            })
+        }
+        //Check if messages aren't set and make sure they are retrieved from redux
+        if(this.props.messages.messages.hasOwnProperty(this.props.navigation.getParam('thread')) && !this.state.messages){
+            this.setState({
+                messages: [...this.props.messages.messages[this.props.navigation.getParam('thread')]],
+            })
+        }
+
+        //Make Sure socket is connected and if disconnects re-subscribe to restore connecction
+        if(this.props.socket.status !== prevProps.socket.status && this.props.socket.status === "connected"){
+
+
+            if(typeof this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`] !== "undefined"){
+                this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`].subscribe();
+                this.thread = this.echo.socket.connector.channels[`presence-thread_${this.props.navigation.getParam('thread')}`];
+            }
+            else{
+                this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
+            }
+        }
+
+        //Check for active calls from heartbeat
+        if(typeof this.props.app.heartbeat !== undefined && this.props.app.heartbeat !== null){
+            if(this.props.app.heartbeat.data.states.active_calls.length !== prevProps.app.heartbeat.data.states.active_calls.length){
+
+                let activeCall = this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.activeThread)[0];
+                // console.log("Current_call", activeCall);
+                if(activeCall){
+                    this.setState({activeCall: activeCall, renderMessage: true,})
+                }
+                else{
+                    this.setState({
+                        activeCall: false,
+                        renderMessage:true,
+                    })
+                }
+            }
+        }
+
+        if(typeof prevProps.messages.messages[this.activeThread] !== "undefined"){
+            if(this.props.messages.messages[this.activeThread].length !== prevProps.messages.messages[this.activeThread].length){
+                this.setState({
+                    messages: (this.props.messages.messages.hasOwnProperty(this.props.navigation.getParam('thread'))) ? [...this.props.messages.messages[this.props.navigation.getParam('thread')]] : null,
+                    renderMessages: true,
+                })
+            }
+        }
+        if(this.props.call.status !== prevProps.call.stats && this.props.call.status === "ended"){
+            this.props.appHeartbeat();
+            this.props.setCallStatus(null);
+        }
+
     }
 
     componentWillUnmount() {
         clearInterval(this.typeInterval);
-        if(this.echo.privateChannel){
-            this.echo.privateChannel.stopListening('.new_message')
-                .stopListening('.thread_joined')
-                .stopListening('.message_purged')
-                .stopListening('.call_started')
-                .stopListening('.thread_kicked')
-                .stopListening('.knock_knock');
-            // this.thread.stopListening();
-        }
+
         if(this.thread){
             this.thread.unsubscribe();
         }
@@ -130,136 +201,6 @@ class MessagesScreen extends Component<Props>{
 
     _listeners = () => {
         // this.private = this.echo.private(`user_notify_${this.user.user_id}`);
-
-        this.echo.privateChannel
-            .listen('.new_message', (e) => {
-
-            let check = Object.values(this.state.messages).filter(message => {
-
-                if(message._id === e.temp_id || message.id === e.message_id || e.owner_id === this.props.user.id){
-                    return message;
-                }
-            });
-
-            if(check.length === 0){
-                if(e.thread_id ===this.activeThread){
-                    let newMessage = {};
-                    switch(e.message_type){
-                        case 0:
-                            newMessage =
-                                {
-                                    _id: e.message_id,
-                                    text: emojify(entities.decode(e.body), {output: 'unicode'}),
-                                    createdAt: e.created_at,
-                                    user: {
-                                        _id: e.owner_id,
-                                        name: e.owner_name,
-                                        avatar: `https://tippinweb.com/api/v0${e.avatar}`,
-                                    }
-                                };
-                            break;
-                        case 1:
-                            newMessage =
-                                {
-                                    _id: e.message_id,
-                                    image: "https://tippinweb.com/api/v0/images/messenger/"+e.message_id+"/thumb",
-                                    createdAt: e.created_at,
-                                    user: {
-                                        _id: e.owner_id,
-                                        name: e.owner_name,
-                                        avatar: `https://tippinweb.com/api/v0${e.avatar}`,
-                                    }
-                                };
-                            break;
-                        case 89:
-                            newMessage =
-                                {
-                                    _id:e.message_id,
-                                    text: `${e.name} ${e.body}`,
-                                    createdAt: e.created_at,
-                                    system: true,
-                                }
-                            break;
-                        case 90:
-                            newMessage =
-                                {
-                                    _id:e.message_id,
-                                    text: `${e.name} ${e.body}`,
-                                    createdAt: e.created_at,
-                                    system: true,
-                                }
-                            break;
-
-                    }
-                    
-                    let filter = this.props.messages.messages[this.props.navigation.getParam('thread')].filter( (message, i) => {
-                        if(message._id === e.message_id){
-                            return message;
-                        }
-                    });
-
-                    if(filter.length === 0) {
-                        this.props.addMessage(this.activeThread, newMessage);
-                        this.props.markRead(this.activeThread);
-                        //update threads screen store in the background
-                        let threads = {...this.props.threads.threads};
-                        let current = threads[this.activeThread];
-                        
-                        current.recent_message = {
-                            body: newMessage.text,
-                            message_type: e.message_type,
-                            name: newMessage.user.name,
-                        };
-                        if(e.message_type === 1){
-                            current.recent_message.body = `${newMessage.user.name} sent a photo`;
-                        }
-                        else if(e.message_type === 2){
-                            current.recent_message.body = `${newMessage.user.name} sent a video`;
-                        }
-                        delete threads[this.activeThread];
-                        this.props.storeThreads({
-                            [this.activeThread]: current,
-                            ...threads
-                        });
-                        let bobbles = {};
-                        let participants = {};
-                        if(newMessage.user){
-                            bobbles = {
-                                ...(this.state.bobbles.hasOwnProperty(this.state.participants[newMessage.user._id].message_id) && this.state.bobbles[this.state.participants[newMessage.user._id].message_id][newMessage.user._id]) ?? delete this.state.bobbles[this.state.participants[newMessage.user._id].message_id][newMessage.user._id],
-                                [newMessage._id]: {
-                                    ...this.state.bobbles[newMessage._id], [newMessage.user._id]: (this.state.participants[newMessage.user._id].avatar) ?? null,
-                                }
-                            }
-                            participants = {
-                                ...this.state.participants,
-                                [newMessage.user._id]: {
-                                    ...this.state.participants[newMessage.user._id],
-                                    message_id: newMessage._id,
-                                }
-                            }
-                        }
-
-                        this.setState(prevState => ({
-                            messages: GiftedChat.append(prevState.messages, newMessage),
-                            bobbles: bobbles,
-                            participants: participants,
-                            renderMessages: true,
-                        }));
-
-                        this.thread.whisper('read', {
-                            owner_id: this.props.user.id,
-                            message_id: newMessage._id,
-                        });
-                    }
-                }
-            }
-
-        })
-            .listen('.thread_joined', event => { console.log('.thread_joined', event)})
-            .listen('.message_purged',  event => { console.log('.message_purged', event)})
-            .listen('.call_started', event => { console.log('.call_started', event)})
-            .listen('.thread_kicked', event => { console.log('.thread_kicked', event)})
-            .listen('.knock_knock',  event => { console.log('.knock_knock', event)});
 
         this.thread.here( users => {
                 console.log("here", users);
@@ -271,8 +212,9 @@ class MessagesScreen extends Component<Props>{
                 console.log("leaving", user);
             })
             .listenForWhisper('typing', data => {
+                console.log("typing");
                 if(data.typing && data.owner_id !== this.props.user.id){
-                    
+
                     this.setState(state => ({
                         participants: {
                             ...state.participants,
@@ -339,36 +281,40 @@ class MessagesScreen extends Component<Props>{
 
     async onSend(message = []) {
 
-        //grab the current stuff quickly
+        //grab the current messages
         let messages = [...this.props.messages.messages[this.props.navigation.getParam('thread')]];
-        let incoming = {
-            _id: await message._id,
-            createdAt: message.createdAt,
-            text: emojify(entities.decode(message.text), {output: 'unicode'}),
-            user: message.user,
-        };
-        this.setState(prevState => ({
-            messages: GiftedChat.append(prevState.messages, incoming),
-            renderMessages: true,
-            startedTyping: null,
-        }), async() => {
+
+        // this.setState(prevState => ({
+        //     messages: GiftedChat.append(prevState.messages, incoming),
+        //     renderMessages: true,
+        //     startedTyping: null,
+        // }));
             // console.log(this.state.messages);
             //Set the message fast, we can update later
-
-            let response = await this.props.sendMessage(this.props.navigation.getParam('thread'), message);
-            let updated =
+            let incoming =
                 {
-                    _id: await response.payload.data.message.message_id,
+                    _id: await message._id,
                     createdAt: message.createdAt,
                     text: emojify(entities.decode(message.text), {output: 'unicode'}),
                     user: {
                         ...message.user,
-                        name: response.payload.data.message.name,
+                        // name: response.payload.data.message.name,
                     },
+                    temp_id: await message._id
                 };
             //add messages to store
-            await this.props.addMessage(this.props.navigation.getParam('thread'), updated);
+            await this.props.addMessage(this.activeThread, incoming);
+            let response = await this.props.sendMessage(this.props.navigation.getParam('thread'), message);
+            let updated = {
+                ...incoming,
+                _id: await response.payload.data.message.message_id,
+                user: {
+                    ...incoming.user,
+                    name: await response.payload.data.message.name,
+                },
+            }
 
+            this.props.updateMessage(this.activeThread, updated);
             //update threads screen store in the background
             let threads = {...this.props.threads.threads};
             let current = {...threads[this.activeThread]};
@@ -386,7 +332,7 @@ class MessagesScreen extends Component<Props>{
             this.setState({
                 messages: [...this.props.messages.messages[this.activeThread]],
             });
-        });
+        // });
 
     }
 
@@ -451,16 +397,46 @@ class MessagesScreen extends Component<Props>{
         }
     }
 
+    joinCall = (call) => {
+        // console.log("Call", call);
+        this.props.setCallId(call.call_id);
+        this.props.setCallType(call.call_type);
+        this.props.setCallRoom(call.room_id);
+        this.props.setCallRoomPin(call.room_pin);
+        this.props.setCallerName(call.name);
+        this.props.setCallThreadId(call.thread_id);
+        this.props.setCallStatus("joining");
+
+    }
+
+    startCall = async (type) => {
+        let response;
+        (type === 1) ? response = await this.props.startVideoCall(this.activeThread) : response = await this.props.startWhiteboard(this.activeThread);
+
+        // console.log("StartCall", response);
+
+        if(response.type === "START_VIDEO_CALL_SUCCESS" || response.type === "START_WHITEBOARD_SUCCESS"){
+            // this.props.setCallId(response.data.call_id);
+            // this.props.setCallType(response.data.call_type);
+            // this.props.setCallRoom(response.data.room_id);
+            // this.props.setCallRoomPin(response.data.room_pin);
+            this.props.setCallerName(this.props.user.name);
+            // this.props.setCallThreadId(response.data.thread_id);
+            this.props.setCallStatus("initiated");
+            this.props.appHeartbeat();
+        }
+    }
+
     render(){
-        if(!this.state.isLoading) {
+        // if(!this.state.isLoading) {
             return (
                 <Container>
                 <Header>
-                    <Left style={{marginRight: 20,}}>
+                    <Left style={{marginRight: 40,}}>
                         <Button
                             title=''
                             transparent
-                            onPress={() => this.props.navigation.navigate("Threads")}
+                            onPress={() => this.props.navigation.goBack()}
                          >
                             <FontAwesome5 name={"chevron-left"} size={24} color={"#FFF"}/>
                         </Button>
@@ -473,11 +449,11 @@ class MessagesScreen extends Component<Props>{
                     }}>
                         <FastImage
                             source={{
-                                uri: `${config.api.uri}${this.props.threads.threads[this.activeThread].avatar}`,
+                                uri: `https://${config.api.uri}${this.props.threads.threads[this.activeThread].avatar}`,
                                 headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                 priority: FastImage.priority.high
                             }}
-                            style={{width: 40, height: 40, borderRadius: 20}}
+                            style={{width: 30, height: 30, borderRadius: 15}}
                         />
                         <Text style={{fontWeight: 'bold', width: 200, paddingLeft: 15, color: "#FFF"}}>
                             {this.props.threads.threads[this.props.navigation.getParam('thread')].name}
@@ -487,14 +463,21 @@ class MessagesScreen extends Component<Props>{
                         {
                             (this.props.threads.threads[this.activeThread].options.admin || (!this.props.threads.threads[this.activeThread].options.admin && this.props.threads.threads[this.activeThread].options.admin_call) || this.props.threads.threads[this.activeThread].thread_type === 1) &&
                                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',}}>
-                                    <FontAwesome5 name={"phone"} size={24} color={"#FFF"}/>
-                                    <FontAwesome5 style={{marginLeft: 15,}} name={"video"} size={24} color={"#FFF"}/>
-                                    <FontAwesome5 style={{marginLeft: 15,}} name={"chalkboard-teacher"} size={24} color={"#FFF"}/>
+                                    <View style={{marginLeft: 15,}}><FontAwesome5 name={"video"} size={24} color={"#FFF"} onPress={() => this.startCall(1)}/></View>
+                                    <View style={{marginLeft: 30, marginRight: 15}}><FontAwesome5 name={"chalkboard-teacher"} size={24} color={"#FFF"} onPress={() => this.startCall(2)}/></View>
                                 </View>
                         }
                     </Right>
                 </Header>
                 <View style={{flex:1}}>
+                    { (this.state.activeCall) &&
+                        <View style={{flexDirection: "row", height: 30, width: config.layout.window.width, backgroundColor: "#269c26", alignItems: "center", justifyContent:"space-between"}}>
+                            <Text size={15} style={{marginLeft: 5, color: "#FFFFFF",}}>There is an active {(this.state.activeCall.call_type === 1) ? "video call" : "whiteboard session"}</Text>
+                            <TouchableOpacity style={{marginRight: 25}} onPress={() => this.joinCall(this.state.activeCall)}>
+                                <Text style={{ color: "#FFFFFF",}}>JOIN</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                     <GiftedChat
 
                         messages={this.state.messages}
@@ -504,9 +487,10 @@ class MessagesScreen extends Component<Props>{
                         onSend={messages => this.onSend(messages[0])}
                         user={{
                             _id: this.props.user.id,
-                            avatar: `https://tippinweb.com/api/v0` + this.props.user.avatar,
+                            avatar: `https://${config.api.uri}` + this.props.user.avatar,
                         }}
                         // showUserAvatar
+                        renderLoading={() => <ActivityIndicator color="#0000ff" />}
                         maxInputLength={350}
                         onInputTextChanged={(text) => this.inputTextChanged(text)}
                         renderTime={() => {return null}}
@@ -518,6 +502,7 @@ class MessagesScreen extends Component<Props>{
                                 return true;
                             }
                         }}
+                        // showAvatarForEveryMessage={true}
                         renderMessage={this.renderMessage}
                         // renderMessageText={this.renderMessageText}
                         renderAvatar={this.renderAvatar}
@@ -530,37 +515,38 @@ class MessagesScreen extends Component<Props>{
                 </View>
                 </Container>
             )
-        }
-        else{
-            return(
-                <Container>
-                    <Header>
-                        <Left><Button
-                            title=''
-                            transparent
-                            onPress={() => this.props.navigation.goBack()}
-                        >
-                            <FontAwesome5 name={"chevron-left"} size={24}/>
-                        </Button></Left>
-                        <Body><Title>Messages</Title></Body>
-                        <Right></Right>
-                    </Header>
-                    <Content>
-                        <ActivityIndicator color="#0000ff" />
-                    </Content>
-                </Container>
-            )
-        }
+        // }
+        // else{
+        //     return(
+        //         <Container>
+        //             <Header>
+        //                 <Left><Button
+        //                     title=''
+        //                     transparent
+        //                     onPress={() => {this.props.navigation.goBack()}}
+        //                 >
+        //                     <FontAwesome5 name={"chevron-left"} size={24}/>
+        //                 </Button></Left>
+        //                 <Body><Title>Messages</Title></Body>
+        //                 <Right></Right>
+        //             </Header>
+        //             <Content>
+        //                 <ActivityIndicator color="#0000ff" />
+        //             </Content>
+        //         </Container>
+        //     )
+        // }
     }
 
     renderAvatar = (props) => {
-        return (
-            <FastImage
+
+        return (<FastImage
+                key={`avatar_${props.currentMessage._id}`}
                 source={{
-                    uri: props.currentMessage.user.avatar,
+                    uri: `${props.currentMessage.user.avatar}`,
                     // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                     headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
-                    // priority: FastImage.priority.high
+                    priority: FastImage.priority.high
                 }}
                 style={{
                     height: 34,
@@ -610,10 +596,11 @@ class MessagesScreen extends Component<Props>{
                     {(props.currentMessage._id !== this.state.messages[0]._id) &&
                         Object.entries(this.state.participants).map((participant, index, arr) => {
                             if(index <= 5 && (props.currentMessage._id === participant.message_id)){
+
                                 return <FastImage
                                     key={`${participant[0]}_bobble_${props.currentMessage._id}`}
                                     source={{
-                                        uri: `${config.api.uri}${participant[1].avatar}`,
+                                        uri: `https://${config.api.uri}${participant[1].avatar}`,
                                         // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                                         headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                         // priority: FastImage.priority.high
@@ -628,7 +615,7 @@ class MessagesScreen extends Component<Props>{
                                     }}
                                 />
                             }
-                            else if(index === 6){
+                            else if(index === 6 && participant[0] !== props.currentMessage.user._id && (props.currentMessage._id === participant.message_id)){
                                 let overflow = arr.length - 6;
                                 return <Text key={`overflow_${props.currentMessage._id}`} style={{backgroundColor: "#d3d3d3" , color: "#FFF", marginLeft:(props.position === "left") ? 4:0, marginRight: (props.position === "left") ? 0:4}}>+{overflow}</Text>
                             }
@@ -664,10 +651,11 @@ class MessagesScreen extends Component<Props>{
                 {(props.currentMessage._id !== this.state.messages[0]._id) &&
                 Object.entries(this.state.participants).map((participant, index, arr) => {
                     if(index <= 5 && participant[0] !== props.currentMessage.user._id && (props.currentMessage._id === participant.message_id)){
+
                         return <FastImage
                             key={`${participant[0]}_bobble`}
                             source={{
-                                uri: `${config.api.uri}${participant[1].avatar}`,
+                                uri: `https://${config.api.uri}${participant[1].avatar}`,
                                 headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                 // priority: FastImage.priority.high
                             }}
@@ -682,7 +670,7 @@ class MessagesScreen extends Component<Props>{
                             }}
                         />
                     }
-                    else if(index === 6){
+                    else if(index === 6 && participant[0] !== props.currentMessage.user._id && (props.currentMessage._id === participant.message_id)){
                         let overflow = arr.length - 6;
                         return <Text key={`overflow_${props.currentMessage._id}`} style={{backgroundColor: "#b5a8a8" , color: "#FFF", marginLeft:4,}}>+{overflow}</Text>
                     }
@@ -695,6 +683,7 @@ class MessagesScreen extends Component<Props>{
     }
 
     renderImage = (props) => {
+
         return (
             <View style={[styles.container]}>
                 <Lightbox
@@ -705,7 +694,7 @@ class MessagesScreen extends Component<Props>{
                     <FastImage
                         style={[styles.image]}
                         source={{
-                            uri: props.currentMessage.image,
+                            uri: `https://${props.currentMessage.image}`,
                             headers: {
                                 Authorization: `Bearer ${this.props.auth.accessToken}`,
                             },
@@ -730,17 +719,18 @@ class MessagesScreen extends Component<Props>{
                 <View style={{flexDirection: 'row', alignItems: 'center', height: 25, width: config.layout.window.width}}>
                     <View style={{flex: 1, flexDirection: 'row-reverse'}}>
                         {
-                            (this.state.messages.length > 0) &&
+                            (this.state.messages && this.state.messages.length > 0) &&
                             (Object.entries(this.state.participants).map((participant, index, arr) => {
                                 let self = false;
                                 Object.entries(this.state.messages).map(message => {
                                     if(message[1]._id === participant[1].message_id) self = true;
                                 })
                                 if((index <= 5 && !participant[1].typing && this.state.messages[0]._id === participant[1].message_id) || self){
+
                                     return <FastImage
                                         key={`${participant[0]}_bobble`}
                                         source={{
-                                            uri: `${config.api.uri}${participant[1].avatar}`,
+                                            uri: `https://${config.api.uri}${participant[1].avatar}`,
                                             // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                                             headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                                             // priority: FastImage.priority.high
@@ -767,11 +757,12 @@ class MessagesScreen extends Component<Props>{
                         {   (Object.values(this.state.typers).length > 0) &&
                         typers.map((typer, index, arr) => {
                             if(index <= 5){
+
                                 return <FastImage
                                     style={{height: 14, width: 14, borderRadius: 7}}
                                     key={`${typer.id}_typer_${index}`}
                                     source={{
-                                        uri: `${config.api.uri}${typer.avatar}`,
+                                        uri: `https://${config.api.uri}${typer.avatar}`,
                                         headers: {
                                             Authorization: `Bearer ${this.props.auth.accessToken}`,
                                         },
@@ -830,6 +821,7 @@ const mapStateToProps = (state) => {
         threads: state.threads,
         user: state.user,
         messages: state.messages,
+        call: state.call,
     }
 }
 
@@ -843,11 +835,20 @@ const mapDispatchToProps = {
     sendMessage: Messages.sendMessage,
     markRead: Messages.markRead,
     addMessage: Messages.addMessage,
+    updateMessage: Messages.updateMessage,
     addMessages: Messages.addMessages,
     setActiveThread: Threads.setActiveThread,
     storeThreads: Threads.storeThreads,
     startVideoCall: Call.startVideoCall,
     startWhiteboard: Call.startWhiteboard,
+    setCallId: Call.setCallId,
+    setCallType: Call.setCallType,
+    setCallRoom: Call.setCallRoom,
+    setCallRoomPin: Call.setCallRoomPin,
+    setCallerName: Call.setCallerName,
+    setCallThreadId: Call.setCallThreadId,
+    setCallStatus: Call.setCallStatus,
+    appHeartbeat: App.appHeartbeat,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(MessagesScreen)));
