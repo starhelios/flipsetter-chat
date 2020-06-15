@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "94364707091",
+    "firebase_url": "https://flipsetter-mobile.firebaseio.com",
+    "project_id": "flipsetter-mobile",
+    "storage_bucket": "flipsetter-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94364707091:android:7c370e43896061ef4812e6",
+        "android_client_info": {
+          "package_name": "com.flipsetter.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94364707091-tobe7r1tg6bunp4skh8tf5rsnsos6eq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1433JQmh2qUfqKGuvMGQ141Zp5gEEyK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94364707091-tobe7r1tg6bunp4skh8tf5rsnsos6eq4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "94364707091-n4gccot6iv6thbipltfeaaf4b430ibf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flipsetter.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

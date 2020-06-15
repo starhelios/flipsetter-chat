@@ -1,0 +1,59 @@
+
+let config = {
+    env: (__DEV__) ? "dev" : "prod",
+    prefix: `/api/v1`,
+    prod: {
+        http: "https://flipsetter.com",
+        wss: "wss://flipsetter.com/janus"
+    },
+    dev: {
+        http: "https://tippinweb.com",
+        wss: "wss://tippinweb.com/janus-ws",
+        client_id: '5',
+        client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
+    },
+}
+
+export default config;
+
+
+//
+// let config = {
+//
+//     env: (__DEV__) ? "dev" : "prod",
+//     apiVersion:1,
+//     prefix: () => `api/v${config.apiVersion}`,
+//     prod: {
+//         http: "https://flipsetter.com/",
+//         wss: "wss://flipsetter.com/janus"
+//     },
+//     dev: {
+//         http: "https://tippinweb.com/",
+//         wss: "wss://tippinweb.com/janus",
+//         client_id: '5',
+//         client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
+//     },
+//     uri: (config.env === "dev") ? config.dev.http+this.prefix : config.prod.http+this.prefix,
+//
+// }
+//
+// export default config;
+
+
+// export default config =  {
+//     env: (__DEV__) ? "dev" : "prod",
+//     apiVersion: 1,
+//     uri: {
+//         prefix: `/api/v${config.apiVersion}`,
+//         prod: {
+//             http: "https://flipsetter.com",
+//             wss: "wss://flipsetter.com/janus",
+//         },
+//         dev: {
+//             http: "https://tippinweb.com",
+//             wss: "wss://tippinweb.com/janus",
+//             client_id: '5',
+//             client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
+//         }
+//     }
+//}

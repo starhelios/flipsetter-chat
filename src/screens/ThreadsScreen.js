@@ -1,0 +1,352 @@
+import React, {Component} from 'react';
+import {
+    SectionList,
+    StatusBar,
+    StyleSheet,
+    Platform,
+    Image,
+    FlatList,
+    TouchableOpacity,
+    ActivityIndicator,
+    Animated,
+    Easing,
+    UIManager,
+    LayoutAnimation, Keyboard
+} from 'react-native';
+import SplashScreen from "react-native-splash-screen";
+import {Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title, Button, View} from 'native-base';
+import * as Animateable from "react-native-animatable";
+import ThreadList from "../components/threads/ThreadList";
+import { withSocketContext } from "../components/Socket";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {ScrollView, withNavigationFocus} from "react-navigation";
+import {App, Auth, User, Threads, Messages} from "../reducers/actions";
+import {connect} from "react-redux";
+import threadsService from "../services/ThreadsService";
+import Utils from "../components/Utils";
+import { SafeAreaView } from "react-native-safe-area-context";
+import NavigationService from "../services/NavigationService";
+import SearchBar from "../components/SearchBar";
+import SearchResults from "../components/SearchResults";
+if (
+    Platform.OS === 'android' &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+class ThreadsScreen extends Component<Props>{
+    headerHeight = 0;
+    state = {
+        threads: {...this.props.threads.threads},
+        isloading: true,
+        refreshing: false,
+        searchResults: null,
+        focused: false,
+        listData: {},
+        searchHidden: true,
+        // searchTimeout: null,
+        keyboard:false,
+    }
+
+    constructor(props){
+        super(props);
+        this.searchHeight =  new Animated.Value(this.props.search.query ? 50 : 0);
+        // console.log(this.props);
+        //
+        // this.setState({
+        //
+        // })
+    }
+
+    async componentDidMount(): void {
+        //Let's grab the latest threads
+        let update = await this.props.getThreads();
+        // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
+        // this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
+        // console.log(update);
+        //lets grab the current rendered threads as well
+        // let threads = this.state.threads;
+
+        // update.map(thread => threads[thread.thread_id] = thread);
+
+        //update threads in redux
+        // this.props.storeThreads(threads);
+
+        //Set the state to trigger the update
+        if(update){
+            SplashScreen.hide();
+        }
+    }
+
+
+    componentWillUnmount(): void {
+        // if(this.props.threads.activeThread){this.props.setActiveThread(null)}
+        // this.keyboardDidHideListener.remove();
+        // this.keyboardDidShowListener.remove();
+    }
+
+
+    async componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+        if(prevProps.isFocused !== this.props.isFocused && this.props.isFocused){
+                //Update Threads
+                // await this.props.getThreads();
+                // console.log("focused Threads");
+            this.componentDidMount();
+        }
+        if(this.state.refreshing){
+            this.setState({
+                // threads: threads,
+                refreshing: false,
+            });
+        }
+        if(this.props.navigation.getParam("newMessage")){
+            let thread = this.props.navigation.getParam("newMessage");
+            this.props.navigation.setParams({newMessage: null});
+            this.props.navigation.navigate("Messages", {
+                thread: this.props.navigation.getParam("newMessage")
+            })
+        }
+
+    }
+
+    // keyboardDidShow = (event) => {
+    //     if(this.state.isFocused){
+    //         this.setState(state =>({
+    //             keyboard: !state.keyboard,
+    //         }))
+    //     }
+    // }
+    //
+    // keyboardDidHide = (event) => {
+    //     if(this.props.isFocused){
+    //         this.setState(state => ({
+    //             keyboard:!state.keyboard,
+    //         }));
+    //     }
+    // }
+
+    showSearch = (event) => {
+        if(event === "toggle"){
+            //Button
+            this.setState(state => ({
+                    searchHidden: !state.searchHidden,
+                }),
+                Animated.timing(this.searchHeight, {
+                    toValue: (!this.state.searchHidden) ? 0 : 50,
+                    duration: 100,
+                    easing: Easing.linear,
+                }).start()
+            );
+        }
+        else if(event.nativeEvent.contentOffset.y && event.nativeEvent.contentOffset.y > 0){
+            this.setState({
+                searchHidden: true,
+            });
+            Animated.timing(this.searchHeight, {
+                toValue: 0,
+                duration: 0,
+                easing: Easing.linear(),
+            }).start()
+        }
+        // console.log(this.state.searchHeight);
+    }
+
+    async refreshThreads(){
+        this.setState({
+            refreshing: true,
+        });
+        this.props.getThreads();
+
+
+    }
+    _renderItem = (data) => {
+        // console.log("render",data);
+        let item = data.item;
+        switch(data.section.title){
+            case "contacts":
+                return(<SearchResults
+                    item={item}
+                />);
+            case "threads":
+                return(<ThreadList
+                    thread_id={item.thread_id}
+                    avatar={item.avatar}
+                    name={item.name}
+                    latest_message={item.recent_message.body}
+                    updated_at={item.updated_at}
+                    onPressItem={this._onPressItem}
+                    title={item.name}
+                    thread={item}
+                />);
+
+        }
+    }
+
+    listData = () => {
+        //init threads
+        let threads = [];
+        //Grab search query and turn it into a regex for searching through threads
+        let query = (this.props.search.query) ? new RegExp(this.props.search.query.split(' ').join("|"), "i") : null;
+
+        //if query is set loop through threads and see what matches
+        if(query){
+           threads = Object.values(this.props.threads.threads).filter( (thread) => {
+                if(query.test(thread.name)){return true;}
+
+            });
+           //eventually loop through threads and check body for match, comes later
+        }
+        else{
+            //else return all threads because we haven't sorted
+            threads = Object.values(this.props.threads.threads);
+        }
+
+
+        let list = [{
+            title: "threads",
+            data: threads
+        }];
+
+        if(Object.values(this.props.search.results).length > 0 || this.props.search.query){
+            list.unshift(
+                {
+                    title: "contacts",
+                    data:  Object.values(this.props.search.results),
+                }
+            );
+        }
+
+        return [
+            {
+                title: "contacts",
+                data: Object.values(this.props.search.results),
+            },
+            {
+                title: "threads",
+                data: threads
+            }
+        ];
+
+    }
+
+   _onPressItem = (item) => {
+        //Store active thread for app state, also marks thread as read
+
+        // this.props.setActiveThread(item);
+
+        this.props.navigation.navigate('Messages', {
+            thread: item,
+        });
+
+   }
+
+   _searchFocused = (focused) => {
+       console.log("focused",focused);
+        this.setState({
+           focused: focused,
+           searchHidden: (!focused),
+        })
+   }
+
+    render(){
+        return (
+            <Container>
+                <Header onLayout={(event) => this.headerHeight}>
+                    <Left></Left>
+                    <Body><Title>Threads</Title></Body>
+                    <Right style={{marginRight: 25}}>
+                        <TouchableOpacity onPress={() => this.showSearch("toggle")} style={{width:30}}>
+                            <FontAwesome5
+                                name={"search"}
+                                style={{
+                                    fontSize: 24,
+                                    color:"#FFF"
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </Right>
+                </Header>
+                    <Animated.View
+                        style={{
+                            height:this.searchHeight,
+
+                        }}
+                    >
+                        <SearchBar
+                            focused={this._searchFocused}
+                            hidden={this.state.searchHidden}
+                        />
+                    </Animated.View>
+
+                    <View
+                        style={{
+                            backgroundColor: (this.state.focused) ? "rgba(0,0,0,0.3)" : "#FFF",
+                            opacity:(this.state.focused && !this.props.search.query) ? .5 : 1,
+                            flex:1
+                        }}
+                    >
+                        <SectionList
+                            sections={this.listData()}
+                            keyExtractor={
+                                item => (item.thread_id) ? `thread_${item.thread_id }` : `search_${item.id}`
+                            }
+                            renderItem={this._renderItem}
+                            renderSectionHeader={({section}) => {
+                                if(this.props.search.query){
+                                    return(<Text style={{fontSize: 25, flex:1, flexDirection:'row'}}>{section.title.charAt(0).toUpperCase() + section.title.slice(1)}</Text>);
+                                }
+                            }
+                            }
+                            renderSectionFooter={({section}) => {
+                                if(section.title === "contacts" && section.data.length > 0){
+                                    return( <View style={{marginBottom:25,}} />);
+                                }
+                            }}
+                            stickySectionHeadersEnabled={true}
+                            style={{flex: 1}}
+                            onRefresh={this.refreshThreads.bind(this)}
+                            refreshing={this.state.refreshing}
+                            onScroll={this.showSearch}
+                            // scrollEventThrottle={500}
+                        />
+                    </View>
+            </Container>
+
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    resultsContainer: {
+        flex:1,
+        flexDirection: 'column',
+        backgroundColor:"#a2d",
+    },
+});
+
+
+
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth,
+        app: state.app,
+        user: state.user,
+        threads: state.threads,
+        search: state.search,
+    }
+}
+
+const mapDispatchToProps = {
+    setErrorMsg: App.setErrorMsg,
+    setIsLoading: App.setIsLoading,
+    setAccessToken: Auth.setAccessToken,
+    setIsLoggedIn: Auth.setIsLoggedIn,
+    getThreads: Threads.getThreads,
+    storeThreads: Threads.storeThreads,
+    setActiveThread: Threads.setActiveThread,
+    getUser: User.getUser,
+    getMessages: Messages.getMessages,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(ThreadsScreen)));
