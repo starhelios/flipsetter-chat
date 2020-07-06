@@ -189,6 +189,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-vector-icons')
+
+    implementation project(':react-native-document-picker')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -204,6 +207,8 @@ dependencies {
 //    WebRTC
 //    compile project(':WebRTCModule')
 
+//image
+implementation 'com.github.yalantis:ucrop:2.2.5'
     //Firebase
     implementation "com.google.firebase:firebase-messaging:18.0.0"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'

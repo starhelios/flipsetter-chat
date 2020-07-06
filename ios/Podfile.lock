@@ -1,12 +1,12 @@
 PODS:
-  - appcenter-analytics (3.0.0):
+  - appcenter-analytics (3.0.3):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
     - React
-  - appcenter-core (3.0.0):
+  - appcenter-core (3.0.3):
     - AppCenterReactNativeShared
     - React
-  - appcenter-crashes (3.0.0):
+  - appcenter-crashes (3.0.3):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React
@@ -276,7 +276,11 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
+  - react-native-document-picker (3.5.3):
+    - React
   - react-native-image-base64 (0.1.4):
+    - React
+  - react-native-image-picker (2.3.1):
     - React
   - react-native-safe-area-context (0.6.4):
     - React
@@ -321,17 +325,17 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
-  - ReactNativeART (1.1.2):
+  - ReactNativeART (1.2.0):
     - React
   - ReactNativeIncallManager (3.2.7):
     - React
-  - RNCallKeep (3.0.10):
+  - RNCallKeep (3.0.12):
     - React
-  - RNCAsyncStorage (1.8.0):
+  - RNCAsyncStorage (1.11.0):
     - React
-  - RNCMaskedView (0.1.6):
+  - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (5.5.3):
+  - RNDeviceInfo (5.6.1):
     - React
   - RNFastImage (7.0.2):
     - React
@@ -346,17 +350,17 @@ PODS:
     - Fabric
     - Firebase/Core
     - React
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.9.0):
     - React
-  - RNScreens (2.2.0):
+  - RNScreens (2.9.0):
     - React
   - RNSVG (11.0.1):
     - React
   - RNVectorIcons (6.6.0):
     - React
-  - RNVoipPushNotification (2.0.0):
+  - RNVoipPushNotification (2.1.0):
     - React-Core
   - SDWebImage (5.4.2):
     - SDWebImage/Core (= 5.4.2)
@@ -388,7 +392,9 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -476,8 +482,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-image-base64:
     :path: "../node_modules/react-native-image-base64"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-sensitive-info:
@@ -539,9 +549,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: 7a0bbe928d07467ac8b2d7f6f2a675872a6471d8
-  appcenter-analytics: 2eba9da53aa3efbfa625fc1ab9dd9ccebba18b24
-  appcenter-core: 98c617ae028c90020e404f020c37d7cb189adf4c
-  appcenter-crashes: add23a3c3cf0403e1f54c39d85e9b3c5db7279e7
+  appcenter-analytics: 4fdc885acb8a3bfac835515a8b9610d054ba8b9f
+  appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
+  appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
   AppCenterReactNativeShared: 48a905fe90071696748e3def60199546167cdb86
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
@@ -571,8 +581,10 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-image-base64: 2ff9ac788639c87a91361ab6652cc95e871b1e54
-  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
+  react-native-document-picker: b1b4a52c0051e10642c54cfc10933759e8ccdda4
+  react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
+  react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
+  react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
   react-native-sensitive-info: 4629b223484a08225c3eb088ff3f91b03097b5e5
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webrtc: 86d841823e66d68cc1f86712db1c2956056bf0c2
@@ -586,24 +598,24 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  ReactNativeART: c580fba2f7d188d8fa4418ce78db8130654ed10f
-  ReactNativeIncallManager: 352f4a3cbe9385edf7eff57be3fe6bd1ab64fe7f
-  RNCallKeep: 26b7f999575c42d6e325a89368a7157c0f3f2be6
-  RNCAsyncStorage: 5d83b49070d41fd72906a116c5e7bdac4ea3a814
-  RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
-  RNDeviceInfo: 310c1f43d418d950a193c7650de2f9559c906048
+  ReactNativeART: f003b07dfa7098aa419ed95b69560923440b1eee
+  ReactNativeIncallManager: 35e387f58d3fc6e8cc042f47a2256b5f50134a67
+  RNCallKeep: 3de65c1f97b6fb5d2cf065fcf53b80579e334fa8
+  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  RNVoipPushNotification: 065208b32273ba5901ae0f102b2d28a11e0a0373
+  RNVoipPushNotification: be6f70cac9d1fd73e020063093f635f64d97c9c6
   SDWebImage: 4ca2dc4eefae4224bea8f504251cda485a363745
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: ab3ceb57029daa76cb2d5c4170d0dec3ebea0505
+PODFILE CHECKSUM: 2e50dc9fbf0a022060d9c571f1cdde418a812a4d
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.2
