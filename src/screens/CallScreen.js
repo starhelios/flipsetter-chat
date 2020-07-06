@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
-import {StyleSheet, Platform, StatusBar, View} from 'react-native';
-import { Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title } from 'native-base';
+import {StyleSheet, Platform, StatusBar, View, SafeAreaView} from 'react-native';
+import {
+    Container,
+    Header,
+    Icon,
+    Content,
+    List,
+    ListItem,
+    Left,
+    Body,
+    Right,
+    Thumbnail,
+    Text,
+    Title,
+    Button,
+} from 'native-base';
 import { App, Call, User, Threads } from "../reducers/actions/";
 import {connect} from "react-redux";
 import {withSocketContext} from "../components/Socket";
 import WebRTC from "../components/WebRTC";
 import config from "../config";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import InCallManager from 'react-native-incall-manager';
+import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
 
 class CallScreen extends Component<Props> {
 
@@ -13,28 +30,34 @@ class CallScreen extends Component<Props> {
 
     constructor(props) {
         super(props);
+
     }
 
     componentDidMount(): void {
+        InCallManager.start({media: 'video'}); //Add in checks for media type later
         this.setState({
             init: true,
         })
-        console.log("JOIN",this.props.joinCall(this.props.call.threadId));
+        if(this.props.call.status !== "initiated"){
+            this.props.joinCall(this.props.call.threadId);
+        }
+        this.props.callHeartbeat(this.props.call.threadId, this.props.call.id, "heartbeat");
+        this.callHeartbeat = setInterval(() => this.props.callHeartbeat(this.props.call.threadId, this.props.call.id, "heartbeat"), 15000);
     }
 
     componentWillUnmount(): void {
-        console.log("LEAVE", this.props.leaveCall(this.props.call.threadId));
+        InCallManager.stop();
+        if(this.props.call.id){
+            RNCallKeep.endCall(this.props.call.id);
+            this.props.leaveCall(this.props.call.threadId);
+        }
+        clearInterval(this.callHeartbeat);
     }
 
     render(){
         return(
-            <Container style={{flex: 1}}>
-                <Header>
-                    <Left></Left>
-                    <Body></Body>
-                    <Right></Right>
-                </Header>
-
+            <View style={{flex: 1}}>
+                <StatusBar hidden/>
                 <View style={styles.remoteVideo}>
                     {
                         (this.state.init) &&
@@ -42,7 +65,7 @@ class CallScreen extends Component<Props> {
                     }
                 </View>
 
-            </Container>
+            </View>
         )
     }
 
@@ -74,6 +97,8 @@ const mapDispatchToProps = {
     setErrorMsg: App.setErrorMsg,
     joinCall: Call.joinCall,
     leaveCall: Call.leaveCall,
+    callHeartbeat: Call.callHeartbeat,
+    appHeartbeat: App.appHeartbeat,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(CallScreen))

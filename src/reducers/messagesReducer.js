@@ -1,6 +1,7 @@
 import {Messages} from './actions';
 import {emojify} from "react-emojione";
 import {AllHtmlEntities as entities} from 'html-entities';
+import config from "../config";
 
 const initialState = {
     messages: {},
@@ -12,8 +13,44 @@ export default function(state =initialState, action){
         case Messages.actionTypes.ADD_MESSAGE:
             // console.log("addMessage", state.messages[action.payload.thread], action.payload.thread);
             // let current = (state.messages[action.payload.thread]) ?? null;
-            let previous = (state.messages.hasOwnProperty(action.payload.thread)) ? state.messages[action.payload.thread] : [];
-            return {...state, messages: {...state.messages, [action.payload.thread]: [action.payload.message, ...(previous) ?? null]}};
+            if(state.messages.hasOwnProperty(action.payload.thread)){
+                let check = Object.values(state.messages[action.payload.thread]).filter(message => {
+                    if(message._id === action.payload.message.temp_id || message._id === action.payload.message._id){
+                        return message;
+                    }
+
+                });
+                if(check.length === 0){
+                    let previous = state.messages[action.payload.thread];
+                    return {...state,
+                        messages: {
+                            ...state.messages,
+                            [action.payload.thread]: [action.payload.message, ...(previous) ?? null]
+                        }
+                    };
+                }
+            }
+            return {...state};
+        case Messages.actionTypes.UPDATE_MESSAGE:
+            if(state.messages.hasOwnProperty(action.payload.thread)){
+                let check = Object.entries(state.messages[action.payload.thread]).filter((message, key) => {
+                    if(message[1]._id === action.payload.message.temp_id || message[1]._id === action.payload.message._id){
+                        return {message};
+                    }
+
+                });
+                let update = state.messages[action.payload.thread]
+                update[check[0]] = action.payload.message;
+                if(check.length === 1){
+                    return {...state,
+                        messages: {
+                            ...state.messages,
+                            [action.payload.thread]: [...update]
+                        }
+                    }
+                }
+            }
+            return {...state};
         case Messages.actionTypes.ADD_MESSAGES:
             return {...state, messages: {...state.messages, [action.payload.thread]: action.payload.messages}};
         case Messages.actionTypes.GET_MESSAGES_SUCCESS:
@@ -33,7 +70,7 @@ export default function(state =initialState, action){
                                 user: {
                                     _id: message.owner_id,
                                     name: message.name,
-                                    avatar:  `https://tippinweb.com/api/v0` + message.avatar ,
+                                    avatar:  `https://${config.api.uri}${message.avatar}` ,
                                 }
                             };
                         break;
@@ -41,12 +78,12 @@ export default function(state =initialState, action){
                         newMessage =
                             {
                                 _id: message.message_id,
-                                image: "https://tippinweb.com/api/v0/images/messenger/"+message.message_id,
+                                image: `https://${config.api.uri}/${config.api.images.messengerPhoto(message.message_id)}`,
                                 createdAt: message.created_at,
                                 user: {
                                     _id: message.owner_id,
                                     name: message.owner_name,
-                                    avatar: `https://tippinweb.com/api/v0${message.avatar}`,
+                                    avatar: `https://${config.api.uri}${message.avatar}`,
                                 }
                             };
                         break;
@@ -85,7 +122,7 @@ export default function(state =initialState, action){
                 }
 
             });
-
+            // console.log("MESSAGES", messages);
             return {...state, messages: {...state.messages, [data.thread.thread_id]: messages}};
         case Messages.actionTypes.SEND_MESSAGE_SUCCESS:
             return {...state};

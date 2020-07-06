@@ -6,7 +6,7 @@ import {withNavigationFocus} from "react-navigation";
 import {Friends, App, Call, Auth, User} from "../reducers/actions";
 import {AppRegistry, StyleSheet, Text, TouchableHighlight, View, SafeAreaView, TextInput, ListView, ScrollView, Dimensions, Image, Alert} from 'react-native';
 import {Container, Header} from "native-base";
-import WebRTC from "../components/WebRTC";
+import WebRTC from "../components/WebRTC.demo";
 import Whiteboard from "../components/Whiteboard";
 
 class EventsScreen extends Component<Props> {
@@ -32,8 +32,8 @@ class EventsScreen extends Component<Props> {
     render() {
         return(
         <View style={styles.container}>
-            <Whiteboard style={styles.whiteboard} />
             <WebRTC style={styles.remoteVideo}/>
+            <Whiteboard style={styles.whiteboard}/>
         </View>);
     }
 
@@ -42,7 +42,7 @@ class EventsScreen extends Component<Props> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: config.layout.window.width,
+        zIndex: 0,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     },
 
     remoteVideo: {
+        flex:1,
         position:'absolute',
         bottom:0,
         right:0,

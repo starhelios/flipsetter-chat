@@ -37,7 +37,7 @@ export function getUser(){
         payload: {
             request: {
                 method: 'GET',
-                url: `${config.api.prefix}/${config.api.user.get.info}`,
+                url: `${config.api.user.get.info}`,
                 headers:{
                     Authorization: null,
                     Accept: 'application/json',

@@ -43,10 +43,10 @@
   NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[[userInfo objectForKey:@"extraPayload"] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
   NSNumber *type = [data valueForKey:@"notification_type"];
   NSNumber *check = @7;
-  NSLog(@"Is Equal: %d", [type isEqualToNumber:@7]);
-  NSLog(@"%@", [data valueForKey:@"call_id"]);
+  
+  
   if([type isEqualToNumber:check]){
-    if(![RNCallKeep checkIfBusy]){
+    if([RNCallKeep isCallActive:[data valueForKey:@"call_id"]]){
       [RNCallKeep endCallWithUUID:[data valueForKey:@"call_id"] reason:4];
     }
     [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];

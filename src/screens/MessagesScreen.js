@@ -398,17 +398,18 @@ this.setState({openPicker:false,showEmoji:false})
 
     }
 
+    addEmoji=(text)=>{
+  this.setState({typedMsg:this.state.typedMsg+text},()=>{
+    this.inputTextChanged(this.state.typedMsg)
+})
+    }
+
     inputTextChanged = (text) => {
-        // alert(MessageText.text)
-        // alert(text)
-//  let emj = emojify(entities.decode(text), { output: 'unicode' })
-//         alert(JSON.stringify(emj))
-        this.setState({showEmoji:false})
+        this.setState({typedMsg:text})
         let now = Date.now();
         if (this.state.startedTyping === null || this.state.startedTyping + 1500 <= now) {
             this.setState({
                 startedTyping: now,
-                typedMsg: text
             });
             (this.thread) && this.thread.whisper('typing', {
                 owner_id: this.props.user.id,
@@ -416,6 +417,7 @@ this.setState({openPicker:false,showEmoji:false})
                 typing: true,
             });
         }
+  
     }
 
     joinCall = (call) => {
@@ -520,13 +522,10 @@ alert(JSON.stringify(image))    })
     customSystemMessage = (props) => {
         return (
             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-
-                
                 <TouchableOpacity style={{
                     alignSelf: 'center', justifyContent: 'center', margin: 3,
                 }} onPress={() => this.openEmoji()}>
-                    <Image resizeMode='contain' source={Images.emojiIcon
-                    } style={{ alignSelf: 'center' }} />
+                    <Image resizeMode='contain' source={Images.emojiIcon} style={{ alignSelf: 'center' }} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     margin: 3,
@@ -599,8 +598,11 @@ alert(JSON.stringify(image))    })
                     }
                     <GiftedChat
                     isInitialized={true}
+                    text={this.state.typedMsg}
+                    // text={this.props.currentMessage}
                         renderSend={(props) => this.customSystemMessage(props)}
-messages={this.state.messages}
+                        messages={this.state.messages}
+// messageIdGenerator={()=>}
                         extraData={this.state.participants}
                         alwaysShowSend={true}
                         onSend={messages => this.onSend(messages[0])}
@@ -625,7 +627,6 @@ messages={this.state.messages}
                         // showAvatarForEveryMessage={true}
                         renderMessage={this.renderMessage}
                         // onPressActionButton={()=>alert('hh')}
-                        // renderMessageText={(txt)=>alert(txt)}
                         renderAvatar={this.renderAvatar}
                         // onPressAvatar={()=>alert('hh')}
                         renderBubble={this.renderBubble}
@@ -645,7 +646,7 @@ messages={this.state.messages}
                     <EmojiSelector
                     // autoSize={true}
                     // sizes={5}
-                        onEmojiSelected={emoji => this.inputTextChanged(emoji)}
+                        onEmojiSelected={emoji => this.addEmoji(emoji)}
                         showSearchBar={true}
                         showTabs={true}
                         aria-setsize={5}
@@ -714,6 +715,8 @@ messages={this.state.messages}
             />
         )
     }
+   
+
 
     renderBubble = (props) => {
         if (isSameUser(props.currentMessage, props.previousMessage) && isSameDay(props.currentMessage, props.previousMessage)) {

@@ -93,8 +93,6 @@ export default class ForgotScreen extends React.Component {
     //     }
     // }
 
-
-
     render() {
         return (
             <Container style={styles.container}>
@@ -110,7 +108,7 @@ export default class ForgotScreen extends React.Component {
                     <TextInput
                         value={this.state.email}
                         onChangeText={(email) => this.setState({ email })}
-                        placeholder={'Username'}
+                        placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         style={styles.input}
                         ref={(input) => this.resetInput = input}
@@ -121,13 +119,11 @@ export default class ForgotScreen extends React.Component {
                         style={styles.loginButton}
                         underlayColor='#04b600'
                     ><Text style={styles.resetText}>Reset Password</Text></TouchableOpacity>
-
                     <Text style={[styles.resetText,{padding:10}]} onPress={this._login}>Login</Text>
                 </Animated.View>
             </Container>
         );
     }
-
 }
 
 const styles = StyleSheet.create({

@@ -42,8 +42,6 @@ target 'mobile' do
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
 
-  pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
-
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 

@@ -1519,7 +1519,7 @@ function Janus(gatewayCallbacks) {
                     function getScreenMedia(constraints, gsmCallback) {
                         Janus.log("Adding media constraint (screen capture)");
                         Janus.debug(constraints);
-                        navigator.mediaDevices.getUserMedia(constraints)
+                        mediaDevices.getUserMedia(constraints)
                             .then(function(stream) { gsmCallback(null, stream); })
                             .catch(function(error) { pluginHandle.consentDialog(false); gsmCallback(error); });
                     };

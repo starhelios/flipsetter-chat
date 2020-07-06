@@ -12,7 +12,7 @@ import simplify from 'simplify-js';
 import uuid from "react-native-uuid";
 // import Api from "../service/Api";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
-import {Friends} from "../reducers/actions";
+import {Friends, Call} from "../reducers/actions";
 import {connect} from "react-redux";
 import {withNavigationFocus} from "react-navigation";
 
@@ -40,11 +40,12 @@ class Whiteboard extends React.Component{
 
     constructor(props){
         super(props);
-        console.log("socket", this.props.socket);
-        this.echo = this.props.socket.socket;
-        // this.call = this.echo.join('call_'+this.props.thread_id+'_'+this.props.call_id);
-        this.call = this.echo.join('whiteboard_demo');
-        console.log("Call", this.call);
+        this.echo = this.props.socket;
+
+        let timeline = this.props.callHeartbeat(this.props.thread_id, this.props.call_id, "whiteboard_timeline");
+        if(timeline.type = "CALL_HEARTBEAT_SUCCESS"){
+            console.log("TIMELINE", timeline);
+        }
         this._panResponder = PanResponder.create({
             // Ask to be the responder:
             onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -110,8 +111,20 @@ class Whiteboard extends React.Component{
                 return true;
             },
         });
+    }
 
-        this.listeners();
+    componentDidMount(): void {
+        if(typeof this.echo.socket.connector.channels[`presence-call_${this.props.thread_id}_${this.props.call_id}`] !== "undefined"){
+            this.echo.socket.connector.channels[`presence-call_${this.props.thread_id}_${this.props.call_id}`].subscribe();
+            this.call = this.echo.socket.connector.channels[`presence-thread_${this.props.thread_id}`];
+        }
+        else{
+            this.call = this.echo.socket.join(`call_${this.props.thread_id}_${this.props.call_id}`)
+        }
+        if(this.call){
+            this.listeners();
+        }
+
     }
 
     componentDidUpdate(){
@@ -141,7 +154,11 @@ class Whiteboard extends React.Component{
                     <SafeAreaView style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center", borderWidth:1, width: screenWidth}}>
                         <TouchableOpacity
                             style={{width: 40}}
-                            onPress={() => this.props.navigation.goBack()}
+                            onPress={() => this.props.navigation.navigate('Messages', {
+                                thread: this.props.thread_id,
+                                callEnded: true,
+                            })}
+
                         >
                             <Icon type={"FontAwesome5"} name={"chevron-left"} size={30} style={{color: '#000', }}/>
                         </TouchableOpacity>
@@ -365,6 +382,7 @@ class Whiteboard extends React.Component{
             path: null,
             paths: [...this.state.paths, this.path],
         });
+        this.props.savePath(this.props.call.threadId, this.props.call.id, this.path);
         this.path = null;
     }
 
@@ -485,12 +503,15 @@ const mapStateToProps = (state) => {
         auth: state.auth,
         app: state.app,
         user: state.user,
-        friends: state.friends
+        friends: state.friends,
+        call: state.call,
     }
 }
 
 const mapDispatchToProps = {
     getList: Friends.getList,
+    savePath: Call.savePath,
+    callHeartbeat: Call.callHeartbeat,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(Whiteboard)))

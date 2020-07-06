@@ -7,7 +7,7 @@ import {App, Auth, User} from "../reducers/actions";
 import {connect} from "react-redux";
 import {withSocketContext} from "./Socket";
 import platform from "../native-base-theme/variables/platform";
-
+import config from "../config";
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
@@ -102,7 +102,7 @@ class Login extends Component<Props> {
                     <TextInput
                         value={this.props.auth.username}
                         onChangeText={(username) => this.props.setUsername(username)}
-                        placeholder={'Username'}
+                        placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         keyboardType='email-address'
                         style={styles.input}

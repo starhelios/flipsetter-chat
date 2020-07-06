@@ -21,7 +21,7 @@ export function getSearch(query){
         payload: {
             request: {
                 method: 'GET',
-                url: `${config.api.prefix}/${config.api.messenger.get.search(query)}`,
+                url: `${config.api.messenger.get.search(query)}`,
                 headers:{
                     Accept: 'application/json',
                     'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import VoipPushNotification from 'react-native-voip-push-notification'
 import {App, Auth, Threads, Messages, Call} from "../reducers/actions";
 import DeviceInfo from "react-native-device-info";
 import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
+import InCallManager from 'react-native-incall-manager';
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import NavigationService from "./NavigationService";
@@ -23,13 +24,13 @@ class FirebaseService extends Component<Props> {
     constructor(props) {
         super(props);
         // this.props.storeThreads({});
-        this._checkPermission();
+
 
 
     }
 
     async componentDidMount(): void {
-
+        this._checkPermission();
         const device_token = await firebase.messaging().getToken();
         this.props.setDeviceToken(device_token);
         this.props.setDeviceID(await DeviceInfo.getUniqueId());
@@ -118,21 +119,31 @@ class FirebaseService extends Component<Props> {
     }
 
     async _listeners(){
+        console.log("Listeners");
         this.fcmTokenListener = firebase.messaging().onTokenRefresh( fcmToken => {
 
             this.props.setDeviceToken(fcmToken);
         });
         this.messageListener = firebase.messaging().onMessage((message) => {
-            // console.log("Message", message);
-
+            console.log("Message", message);
+            let data = JSON.parse(message._data.extraPayload)
+            switch(data.notification_type){
+                case 0: this.messageReceived(message); break;
+                case 2: this.newCall(message, data); break;
+                case 7: this.joinedCall(message, data); break;
+                default: console.log("caught", message);
+            }
         });
         //notification received
         this.removeNotificationListener = notifications().onNotification(async (notification: Notification) => {
             console.log("Notification", notification);
             let data = JSON.parse(notification._data.extraPayload)
+            console.log("Notification Case", data.notification_type);
             switch(data.notification_type){
+
                 case 0: this.messageReceived(notification); break;
                 case 2: this.newCall(notification, data); break;
+                case 3: this.endCall(notification, data); break;
                 case 7: this.joinedCall(notification, data); break;
                 default: console.log("caught", notification);
             }
@@ -180,7 +191,9 @@ class FirebaseService extends Component<Props> {
 
         if(Platform.OS === 'ios'){
             VoipPushNotification.addEventListener('register', (token) => {
-                this.props.setVOIPToken(token);
+                if(this.props.app.voip_token !== token){
+                    this.props.setVOIPToken(token);
+                }
             });
             VoipPushNotification.addEventListener('notification', (notification) => {
                 console.log("VOIP", notification);
@@ -193,16 +206,55 @@ class FirebaseService extends Component<Props> {
 
     newCall = (notification, data) => {
         console.log("newCall",data);
+        this.props.setAppState("callDisplayed");
         this.props.setCallType(data.call_type);
         this.props.setCallRoom(data.room_id);
         this.props.setCallRoomPin(data.room_pin);
         this.props.setCallerName(data.sender_name);
         this.props.setCallThreadId(data.thread_id);
+        this.props.appHeartbeat();
         if(Platform.OS === "android"){
             console.log("android call", notification, this.props.call);
+            RNCallKeep.displayIncomingCall(data.call_id, data.thread_name, data.sender_name, "generic", true);
         }
     }
 
+    endCall = async(notification, data) => {
+        //Call Ended, at this time we only need to clear the data and trigger heartbeat.
+        if(this.props.threads.activeThread && this.props.app.route === "Call"){
+            let status;
+
+            console.log("Is Call Active", status);
+            if(status){
+                console.log("Ending Active Call");
+            }
+            if(this.props.call.id){RNCallKeep.endCall(this.props.call.id);}
+            NavigationService.navigate("Messages",{
+                thread: this.props.threads.activeThread,
+            })
+            this.props.setCallId(null);
+            this.props.setCallStatus("ended");
+            this.props.setCallType(null);
+            this.props.setCallRoom(null);
+            this.props.setCallRoomPin(null);
+            this.props.setCallerName(null);
+            this.props.setCallThreadId(null);
+            this.props.appHeartbeat();
+        }
+
+        else if(this.props.app.route !== "Call"){
+            this.props.setCallId(null);
+            this.props.setCallStatus("ended");
+            this.props.setCallType(null);
+            this.props.setCallRoom(null);
+            this.props.setCallRoomPin(null);
+            this.props.setCallerName(null);
+            this.props.setCallThreadId(null);
+            this.props.appHeartbeat();
+        }
+
+
+    }
     joinedCall = (notification, data) => {
         // console.log("joinedCall", data);
         // if(this.props.call.status !== 'active'){
@@ -214,76 +266,83 @@ class FirebaseService extends Component<Props> {
     }
 
     messageReceived = async(notification) => {
-
         let body;
 
         // console.log(channel.channelId);
         let data = JSON.parse(notification._data.extraPayload);
-        console.log("notif data", data);
-        switch(data.message_type){
-            case 0:
-                body = (data.thread_type === 2) ? `${data.name}: ${emojify(entities.decode(data.body), {output: 'unicode'})}` : `${emojify(entities.decode(data.body), {output: 'unicode'})}`;
-                break;
-            case 1:
-                body = `${data.name} sent a photo`;
-                break;
-            case 89:
-                body = `${data.name} ${data.body}`;
-                break;
-            case 90:
-                body = `${data.name} ${data.body}`;
 
-                break;
-        }
+        let check = Object.values(this.props.messages.messages[data.thread_id]).filter(message => {
 
+            if(message._id === data.temp_id || message._id === data.message_id || data.owner_id === this.props.user.id){
+                return message;
+            }
+        });
 
-        if(data.thread_id !== this.props.threads.activeThread && this.props.user.id !== data.owner_id) {
-            const channel = new firebase.notifications.Android.Channel('default', 'Default Channel', firebase.notifications.Android.Importance.Max)
-                .setDescription('Default channel');
-            await firebase.notifications().android.createChannel(channel);
+        if(check.length === 0){
+            switch(data.message_type){
+                case 0:
+                    body = `${emojify(entities.decode(data.body), {output: 'unicode'})}`;
+                    break;
+                case 1:
+                    body = `${data.name} sent a photo`;
+                    break;
+                case 89:
+                    body = `${data.name} ${data.body}`;
+                    break;
+                case 90:
+                    body = `${data.name} ${data.body}`;
 
-
-            if(Platform.OS === 'android'){
-                const groupDisplay = new firebase.notifications.Notification()
-                .android.setChannelId(notification.data.channelId)
-                .setNotificationId(data.thread_id)
-                .setSubtitle((data.thread_type === 2) ? data.thread_subject : data.name)
-                .setData({
-                    ...data
-                })
-                // .setTitle(data.thread_subject)
-                // .setBody(body)
-                // .android.setLargeIcon(`${config.api.uri}${data.avatar}`)
-                .android.setGroup(data.thread_id)
-                .android.setGroupSummary(true)
-                .android.setColor('#24422e')
-                .android.setGroupAlertBehaviour(firebase.notifications.Android.GroupAlert.Children)
+                    break;
             }
 
-            let display = new firebase.notifications.Notification();
-            display.setNotificationId(data.message_id)
-                .setTitle((data.thread_type === 2) ? data.thread_subject : data.name)
-                .setBody(body)
-                .setData({
-                    ...data
-                });
-            if(Platform.OS === 'android'){
-                display.android.setChannelId(notification.data.channelId)
-                    .android.setAutoCancel(true)
-                    // .android.setLargeIcon(avatar)// create this icon in Android Studio
-                    // .android.setBigPicture(`${config.api.uri}${data.avatar}` )
-                    .android.setTag(data.name)
-                    .android.setGroup(data.thread_id)
-                    .android.setGroupAlertBehaviour(
-                    firebase.notifications.Android.GroupAlert.Children
-                );
-            }
-            if(Platform.OS === 'ios'){
-                display
-                    .ios.setThreadIdentifier(data.thread_id)
-                    .ios.setAlertAction("input")
-                    .ios.setHasAction(true)
-            }
+
+            if(data.thread_id !== this.props.threads.activeThread && this.props.user.id !== data.owner_id) {
+                const channel = new firebase.notifications.Android.Channel('default', 'Default Channel', firebase.notifications.Android.Importance.Max)
+                    .setDescription('Default channel');
+                await firebase.notifications().android.createChannel(channel);
+
+
+                if (Platform.OS === 'android') {
+                    const groupDisplay = new firebase.notifications.Notification()
+                        .android.setChannelId(notification.data.channelId)
+                        .setNotificationId(data.thread_id)
+                        .setSubtitle((data.thread_type === 2) ? data.thread_subject : data.name)
+                        .setData({
+                            ...data
+                        })
+                        // .setTitle(data.thread_subject)
+                        // .setBody(body)
+                        // .android.setLargeIcon(`${config.api.uri}${data.avatar}`)
+                        .android.setGroup(data.thread_id)
+                        .android.setGroupSummary(true)
+                        .android.setColor('#24422e')
+                        .android.setGroupAlertBehaviour(firebase.notifications.Android.GroupAlert.Children)
+                }
+
+                let display = new firebase.notifications.Notification();
+                display.setNotificationId(data.message_id)
+                    .setTitle((data.thread_type === 2) ? data.thread_subject : data.name)
+                    .setBody(body)
+                    .setData({
+                        ...data
+                    });
+                if (Platform.OS === 'android') {
+                    display.android.setChannelId(notification.data.channelId)
+                        .android.setAutoCancel(true)
+                        // .android.setLargeIcon(avatar)// create this icon in Android Studio
+                        // .android.setBigPicture(`${config.api.uri}${data.avatar}` )
+                        .android.setTag(data.name)
+                        .android.setGroup(data.thread_id)
+                        .android.setGroupAlertBehaviour(
+                        firebase.notifications.Android.GroupAlert.Children
+                    );
+                }
+                if (Platform.OS === 'ios') {
+                    display
+                        .ios.setThreadIdentifier(data.thread_id)
+                        .ios.setAlertAction("input")
+                        .ios.setHasAction(true)
+                }
 
                 // .ios.setThreadIdentifier(data.thread_id)
                 // .android.setBigText((data.message_type === 0 && data.thread_type === 2) ? `${data.name}: ${body}` : body)
@@ -292,11 +351,21 @@ class FirebaseService extends Component<Props> {
                 // .android.setColor('#24422e') // you can set a color here
                 // .android.setPriority(firebase.notifications.Android.Priority.High)
 
-            // console.log("groupDisplay", groupDisplay);
-            // console.log("display", display);
-            if(Platform.OS === 'android'){
-                try{
-                    firebase.notifications().displayNotification(groupDisplay)
+                // console.log("groupDisplay", groupDisplay);
+                // console.log("display", display);
+                if (Platform.OS === 'android') {
+                    try {
+                        firebase.notifications().displayNotification(groupDisplay)
+                            .catch((err) => {
+                                console.log("send notif err", err);
+                                return Promise.resolve()
+                            });
+                    } catch (e) {
+                        console.log("group_error", e);
+                    }
+                }
+                try {
+                    firebase.notifications().displayNotification(display)
                         .catch((err) => {
                             console.log("send notif err", err);
                             return Promise.resolve()
@@ -305,105 +374,96 @@ class FirebaseService extends Component<Props> {
                     console.log("group_error", e);
                 }
             }
-            try{
-                firebase.notifications().displayNotification(display)
-                    .catch((err) => {
-                        console.log("send notif err", err);
-                        return Promise.resolve()
-                    });
-            } catch (e) {
-                console.log("group_error", e);
-            }
-
-            let newMessage = {};
-            switch(data.message_type){
-                case 0:
-                    newMessage =
-                        {
-                            _id:  data.message_id,
-                            text: emojify(entities.decode(data.body), {output: 'unicode'}),
-                            createdAt: data.created_at,
-                            user: {
-                                _id: data.owner_id,
-                                name: data.name,
-                                avatar:  `https://tippinweb.com/api/v0` + data.avatar ,
+                let newMessage = {};
+                switch(data.message_type){
+                    case 0:
+                        newMessage =
+                            {
+                                _id:  data.message_id,
+                                text: emojify(entities.decode(data.body), {output: 'unicode'}),
+                                createdAt: data.created_at,
+                                user: {
+                                    _id: data.owner_id,
+                                    name: data.name,
+                                    avatar:  `https://${config.api.uri}` + data.avatar ,
+                                }
+                            };
+                        break;
+                    case 1:
+                        newMessage =
+                            {
+                                _id: data.message_id,
+                                image: `https://${config.api.uri}/images/messenger/`+data.message_id,
+                                createdAt: data.created_at,
+                                user: {
+                                    _id: data.owner_id,
+                                    name: data.owner_name,
+                                    avatar: `https://${config.api.uri}${data.avatar}`,
+                                }
+                            };
+                        break;
+                    case 89:
+                        newMessage =
+                            {
+                                _id:data.message_id,
+                                text: `${data.name} ${data.body}`,
+                                createdAt: data.created_at,
+                                system: true,
                             }
-                        };
-                    break;
-                case 1:
-                    newMessage =
-                        {
-                            _id: data.message_id,
-                            image: "https://tippinweb.com/api/v0/images/messenger/"+data.message_id,
-                            createdAt: data.created_at,
-                            user: {
-                                _id: data.owner_id,
-                                name: data.owner_name,
-                                avatar: `https://tippinweb.com/api/v0${data.avatar}`,
+                        break;
+                    case 90:
+                        newMessage =
+                            {
+                                _id:data.message_id,
+                                text: `${data.name} ${data.body}`,
+                                createdAt: data.created_at,
+                                system: true,
                             }
-                        };
-                    break;
-                case 89:
-                    newMessage =
-                        {
-                            _id:data.message_id,
-                            text: `${data.name} ${data.body}`,
-                            createdAt: data.created_at,
-                            system: true,
-                        }
-                    break;
-                case 90:
-                    newMessage =
-                        {
-                            _id:data.message_id,
-                            text: `${data.name} ${data.body}`,
-                            createdAt: data.created_at,
-                            system: true,
-                        }
-                    break;
+                        break;
+                }
+
+                this.props.addMessage(data.thread_id, newMessage);
+
+            //Lets still update the threads
+            let threads = {...this.props.threads.threads};
+            let thread = threads[data.thread_id];
+
+            delete threads[data.thread_id];
+            // console.log(this.props.messages.messages[data.thread_id]);
+            thread.created_at = data.created_at;
+            thread.updated_at = Date.now();
+            thread.thread_subject = data.thread_subject;
+            thread.thread_type = data.thread_type;
+            thread.utc_created_at = data.utc_created_at;
+            thread.recent_message = {
+                body: body,
+                message_type: data.message_type,
+                name: data.name,
             }
+            // console.log("thread1",thread);
+            // if(thread.recent_message.message_type === 0){
+            //     thread.recent_message.body = body;
+            // }
+            // if(thread.recent_message.message_type === 1){
+            //     thread.recent_message.body = body;
+            // }
+            // if(thread.recent_message.message_type === 2){
+            //     thread.recent_message.body = body;
+            // }
+            // if(thread.recent_message.message_type === 89){}
+            // if(thread.recent_message.message_type === 90){}
 
-            this.props.addMessage(data.thread_id, newMessage);
+            if(this.props.threads.activeThread !== data.thread_id){
+                thread.unread = true
+            }
+            else{ thread.unread = false; }
+
+            // console.log("Thread", thread);
+
+            this.props.storeThreads({[data.thread_id]: {
+                    ...thread
+                }, ...threads});
         }
-        //Lets still update the threads
-        let threads = {...this.props.threads.threads};
-        let thread = threads[data.thread_id];
-
-        delete threads[data.thread_id];
-        // console.log(this.props.messages.messages[data.thread_id]);
-        thread.created_at = data.created_at;
-        thread.updated_at = Date.now();
-        thread.thread_subject = data.thread_subject;
-        thread.thread_type = data.thread_type;
-        thread.utc_created_at = data.utc_created_at;
-        thread.recent_message = {
-            body: body,
-            message_type: data.message_type,
-            name: data.name,
-        }
-        // console.log("thread1",thread);
-        // if(thread.recent_message.message_type === 0){
-        //     thread.recent_message.body = body;
-        // }
-        // if(thread.recent_message.message_type === 1){
-        //     thread.recent_message.body = body;
-        // }
-        // if(thread.recent_message.message_type === 2){
-        //     thread.recent_message.body = body;
-        // }
-        // if(thread.recent_message.message_type === 89){}
-        // if(thread.recent_message.message_type === 90){}
-
-        if(this.props.threads.activeThread !== data.thread_id){
-            thread.unread = true
-        }
-        else{ thread.unread = false; }
-
-        // console.log("Thread", thread);
-
-        this.props.storeThreads({[data.thread_id]: {
-                ...thread
-            }, ...threads});
     }
 
     render(){
@@ -423,6 +483,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+    appHeartbeat: App.appHeartbeat,
+    setAppState: App.setAppState,
     setDeviceToken: App.setDeviceToken,
     setVOIPToken: App.setVOIPToken,
     setDeviceID: App.setDeviceID,

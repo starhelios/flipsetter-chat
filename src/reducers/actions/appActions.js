@@ -12,9 +12,11 @@ const actionTypes = {
     SET_DEVICE_TOKEN: "SET_DEVICE_TOKEN",
     SET_VOIP_TOKEN: "SET_VOIP_TOKEN",
     APP_HEARTBEAT: "APP_HEARTBEAT",
+    APP_HEARTBEAT_SUCCESS:"APP_HEARTBEAT_SUCCESS",
     JOIN_DEVICE_TO_SITE:"JOIN_DEVICE_TO_SITE",
     REGISTER_DEVICE_TO_ACCOUNT: "REGISTER_DEVICE_TO_ACCOUNT",
     SET_LAST_NOTIFICATION: "SET_LAST_NOTIFICATION",
+    SET_DEVICE_TYPE: "SET_DEVICE_TYPE",
 };
 
 /*
@@ -38,6 +40,9 @@ function setDeviceID(id){
 function setDeviceToken(token){
     return {type: actionTypes.SET_DEVICE_TOKEN, payload:token}
 }
+function setDeviceType(device_type){
+    return {type: actionTypes.SET_DEVICE_TYPE, payload: device_type}
+}
 function setLastNotification(id){
     return {type: actionTypes.SET_LAST_NOTIFICATION, payload: id}
 }
@@ -50,7 +55,7 @@ function appHeartbeat(){
         type: actionTypes.APP_HEARTBEAT,
         payload: {
             request: {
-                url: `${config.api.prefix}/${config.api.client.get.heartbeat}`,
+                url: `${config.api.client.get.heartbeat}`,
                 method: 'GET',
             }
         }
@@ -61,7 +66,7 @@ function joinDevice(device_id, device_token, voip_token){
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
             request: {
-                url: `${config.api.prefix}/${config.api.client.post.deviceJoin}`,
+                url: `${config.api.client.post.deviceJoin}`,
                 data: {
                     "device_id": device_id,
                     "device_type": (Platform.OS === 'android') ? 0 : 1,
@@ -78,7 +83,7 @@ function registerDevice(device_id, fcm_token, voip_token){
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
         payload: {
             request: {
-                url: `${config.prefix}/device/register`,
+                url: `${config.api.client.post.deviceRegister}`,
                 data: {
                     "device_id": device_id,
                     "device_token": fcm_token,
@@ -91,5 +96,5 @@ function registerDevice(device_id, fcm_token, voip_token){
 }
 
 export default {
-    actionTypes, setAppState, setErrorMsg, setIsLoading, setRoute, setDeviceID, setDeviceToken, setVOIPToken, setLastNotification, joinDevice, registerDevice, appHeartbeat
+    actionTypes, setAppState, setErrorMsg, setIsLoading, setRoute, setDeviceID, setDeviceToken, setDeviceType, setVOIPToken, setLastNotification, joinDevice, registerDevice, appHeartbeat
 };

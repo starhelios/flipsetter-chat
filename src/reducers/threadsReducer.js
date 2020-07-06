@@ -29,7 +29,6 @@ export default function(state=initialState, action){
             threads = state.threads.filter( thread => thread.thread_id !== action.payload.thread.thread_id);
             return {...state, threads: {threads, [action.payload.thread.thread_id]: action.payload.thread}};
         case Threads.actionTypes.GET_THREADS_SUCCESS:
-            // console.log(action.payload.data.threads);
             (action.payload.data.threads).map(thread => {
                 if(thread.recent_message.message_type === 90 || thread.recent_message.message_type === 89){
                     thread.recent_message.body = `${thread.recent_message.name} ${thread.recent_message.body}`;

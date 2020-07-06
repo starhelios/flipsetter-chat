@@ -62,21 +62,21 @@ ContactsStack.navigationOptions = {
     ),
 };
 
-const EventsStack = createStackNavigator({
-    Events: EventsScreen,
-},{
-    headerMode: 'screen',
-});
-
-EventsStack.navigationOptions = {
-    tabBarLabel: 'Events',
-    tabBarIcon: ({ focused }) => (
-        <TabBarIcon
-            focused={focused}
-            name={Platform.OS === 'ios' ? 'calendar' : 'calendar'}
-        />
-    ),
-};
+// const EventsStack = createStackNavigator({
+//     Events: EventsScreen,
+// },{
+//     headerMode: 'screen',
+// });
+//
+// EventsStack.navigationOptions = {
+//     tabBarLabel: 'Events',
+//     tabBarIcon: ({ focused }) => (
+//         <TabBarIcon
+//             focused={focused}
+//             name={Platform.OS === 'ios' ? 'calendar' : 'calendar'}
+//         />
+//     ),
+// };
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -97,7 +97,7 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator({
     ThreadsStack,
     ContactsStack,
-    EventsStack,
+    // EventsStack,
     SettingsStack,
 
 },{
