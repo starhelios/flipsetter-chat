@@ -16,7 +16,7 @@ let config = {
         janusws: "/janus-ws",
         echo: "/socket",
         client_id: '5',
-        client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
+        client_secret: 'fJECvkXXFPOuMtSXkR26eOSUD3rzhv4GafF5xB1U',
     },
 }
 
