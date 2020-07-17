@@ -102,7 +102,7 @@ class Login extends Component<Props> {
                     <TextInput
                         value={this.props.auth.username}
                         onChangeText={(username) => this.props.setUsername(username)}
-                        placeholder={'Username'}
+                        placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         keyboardType='email-address'
                         style={styles.input}

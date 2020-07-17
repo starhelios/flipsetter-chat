@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth:1,
         borderColor:"#d9d9d9",
+       
     },
     icon:{
         alignItems:'center',
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
 
     },
     placeholder:{
-
+        // backgroundColor:'red'
     },
     cancel:{
         fontSize: 15,
@@ -152,12 +153,13 @@ const styles = StyleSheet.create({
     },
     input: {
         flex:1,
-        fontSize:24,
-        marginHorizontal: 10,
-        marginVertical: 5,
+        fontSize:22,
+        alignSelf:'center',
+        padding:5,
+      
         paddingRight: 48,
         color: '#000',
-        paddingHorizontal: 10,
+        // backgroundColor:'red'
     },
 });
 

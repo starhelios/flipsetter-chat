@@ -93,13 +93,11 @@ export default class ForgotScreen extends React.Component {
     //     }
     // }
 
-
-
     render() {
         return (
             <Container style={styles.container}>
                 <Header style={styles.header} transparent>
-                    <Left><Text>Back</Text></Left>
+                    <Left><Text style={styles.resetText}>Back</Text></Left>
                     <Body></Body>
                     <Right></Right>
                 </Header>
@@ -110,7 +108,7 @@ export default class ForgotScreen extends React.Component {
                     <TextInput
                         value={this.state.email}
                         onChangeText={(email) => this.setState({ email })}
-                        placeholder={'Username'}
+                        placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         style={styles.input}
                         ref={(input) => this.resetInput = input}
@@ -120,14 +118,12 @@ export default class ForgotScreen extends React.Component {
                         onPress={this.reset}
                         style={styles.loginButton}
                         underlayColor='#04b600'
-                    ><Text>Reset Password</Text></TouchableOpacity>
-
-                    <Text style={styles.signup} onPress={this._login}>Login</Text>
+                    ><Text style={styles.resetText}>Reset Password</Text></TouchableOpacity>
+                    <Text style={[styles.resetText,{padding:10}]} onPress={this._login}>Login</Text>
                 </Animated.View>
             </Container>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -155,10 +151,7 @@ const styles = StyleSheet.create({
         padding:10,
         marginTop:MARGIN_TOP
     },
-    signup:{
-        fontSize:15,
-        marginTop:15,
-    },
+   
     input: {
         backgroundColor:'#FFFFFF',
         width: window.width - 30,
@@ -170,13 +163,21 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     loginButton: {
-        height:30,
-        width:100,
+        height:35,
+        width:'50%',
         borderRadius:15,
         alignItems:'center',
         justifyContent: 'center',
         color:'#000',
         backgroundColor: "#04b600",
+        // backgroundColor:'red'
     },
+    resetText:{
+        textAlign:'center',
+        fontSize:15,
+        fontWeight:'bold',
+        color:'white'
+
+    }
 
 });

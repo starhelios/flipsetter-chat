@@ -1,35 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SplashScreen from "react-native-splash-screen";
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import {
     ActivityIndicator,
     AsyncStorage,
     StatusBar,
-    StyleSheet,
+    StyleSheet,Image
 } from 'react-native';
 import { Button, Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title, View} from 'native-base';
-
 import { withSocketContext } from "../../components/Socket";
 import {Auth, User} from "../../reducers/actions";
-
+import logo from '../../components/assets/Logo.png';
 
 class AuthLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
         this._bootstrapAsync();
-
     }
 
     componentDidMount(){
-
     }
-
-
 
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
-
         if(this.props.auth.isLoggedIn && this.props.auth.accessToken){
             this.props.navigation.navigate('Main');
         }
@@ -60,10 +54,20 @@ class AuthLoadingScreen extends React.Component {
     render() {
         return (
             <Container style={styles.container}>
-                <Body style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <ActivityIndicator color="#0000ff" />
-                    <Text>Loading</Text>
-                </Body>
+                <View style={{flex: 1,  alignItems: 'center'}}>
+                   <Image resizeMode='contain' style={{marginTop:'35%', alignSelf:'center',width:wp('50%'),height:wp('50%')}} source={logo}/>
+                   <Text style={{padding:15,textAlign:'center', fontSize:22,fontWeight:'bold'}}>Collaborate</Text>
+                  <View style={{bottom:0,position:'absolute',marginBottom:30,}}>
+                  <View style={{flexDirection:'row',alignSelf:'center'}}>
+                      <Text style={{ textAlign:'center', fontSize:17,fontWeight:'bold'}}>By</Text>
+                  <Text style={{color:'green', textAlign:'center', fontSize:17,fontWeight:'bold'}}> Flip</Text>
+                  <Text style={{ textAlign:'center', fontSize:17,fontWeight:'bold'}}>Setter</Text>
+                  </View>
+                  <Text style={{ textAlign:'center',padding:2, fontSize:15,fontWeight:'bold'}}>The door is always open!</Text>
+                  </View>
+                    {/* <ActivityIndicator color="#0000ff" />
+                    <Text>Loading</Text> */}
+                </View>
             </Container>
         );
     }
