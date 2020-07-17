@@ -1,27 +1,25 @@
-
 let config = {
-    env: (__DEV__) ? "dev" : "prod",
-    prefix: `/api/v1`,
-    prod: {
-        uri: "flipsetter.com",
-        janus: "/janus",
-        janusws: "/janus-ws",
-        echo: "/socket",
-        client_id: '10',
-        client_secret: '4HGLGxFAeX8aAYUreGH862QwO5oU4JPtGFjIhoLo',
-    },
-    dev: {
-        uri: "tippinweb.com",
-        janus: "/janus",
-        janusws: "/janus-ws",
-        echo: "/socket",
-        client_id: '5',
-        client_secret: 'fJECvkXXFPOuMtSXkR26eOSUD3rzhv4GafF5xB1U',
-    },
-}
+  env: __DEV__ ? 'dev' : 'prod',
+  prefix: `/api/v1`,
+  prod: {
+    uri: 'flipsetter.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '10',
+    client_secret: '4HGLGxFAeX8aAYUreGH862QwO5oU4JPtGFjIhoLo',
+  },
+  dev: {
+    uri: 'tippinweb.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '5',
+    client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
+  },
+};
 
 export default config;
-
 
 //
 // let config = {
@@ -44,7 +42,6 @@ export default config;
 // }
 //
 // export default config;
-
 
 // export default config =  {
 //     env: (__DEV__) ? "dev" : "prod",
