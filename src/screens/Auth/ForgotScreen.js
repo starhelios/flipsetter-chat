@@ -6,7 +6,7 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
-    TextInput,
+    TextInput,Vibration,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -76,22 +76,24 @@ export default class ForgotScreen extends React.Component {
     };
 
     _login = () => {
+        Vibration.vibrate(1000);
         this.props.navigation.goBack()
     }
 
-    // reset = async() => {
-    //     if(this.state.email) {
-    //         let response = await AuthService.reset(this.state.email);
-    //         if(response.status){
-    //             this.setState({msg: 'Please Check Your Email to Continue'});
-    //         }else{
-    //             this.setState({msg: response.errors.forms});
-    //         }
-    //     }
-    //     else{
-    //         this.setState({msg: "Enter Your Email"});
-    //     }
-    // }
+    reset = async() => {
+        Vibration.vibrate(1000);
+        if(this.state.email) {
+            let response = await AuthService.reset(this.state.email);
+            if(response.status){
+                this.setState({msg: 'Please Check Your Email to Continue'});
+            }else{
+                this.setState({msg: response.errors.forms});
+            }
+        }
+        else{
+            this.setState({msg: "Enter Your Email"});
+        }
+    }
 
     render() {
         return (

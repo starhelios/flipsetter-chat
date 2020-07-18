@@ -1,12 +1,12 @@
 PODS:
-  - appcenter-analytics (3.0.1):
+  - appcenter-analytics (3.0.3):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
     - React
-  - appcenter-core (3.0.1):
+  - appcenter-core (3.0.3):
     - AppCenterReactNativeShared
     - React
-  - appcenter-crashes (3.0.1):
+  - appcenter-crashes (3.0.3):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React
@@ -276,7 +276,11 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
+  - react-native-document-picker (3.5.3):
+    - React
   - react-native-image-base64 (0.1.4):
+    - React
+  - react-native-image-picker (2.3.1):
     - React
   - react-native-safe-area-context (0.6.4):
     - React
@@ -327,11 +331,11 @@ PODS:
     - React
   - RNCallKeep (3.0.12):
     - React
-  - RNCAsyncStorage (1.9.0):
+  - RNCAsyncStorage (1.11.0):
     - React
-  - RNCMaskedView (0.1.7):
+  - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (5.5.4):
+  - RNDeviceInfo (5.6.1):
     - React
   - RNFastImage (7.0.2):
     - React
@@ -348,16 +352,31 @@ PODS:
     - React
   - RNGestureHandler (1.6.1):
     - React
-  - RNReanimated (1.8.0):
+  - RNImageCropPicker (0.30.0):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.30.0)
+    - RSKImageCropper
+  - RNImageCropPicker/QBImagePickerController (0.30.0):
+    - React-Core
+    - React-RCTImage
+    - RSKImageCropper
+  - RNReanimated (1.9.0):
     - React
-  - RNScreens (2.4.0):
+  - RNScreens (2.9.0):
+    - React
+  - RNSound (0.11.0):
+    - React
+    - RNSound/Core (= 0.11.0)
+  - RNSound/Core (0.11.0):
     - React
   - RNSVG (11.0.1):
     - React
   - RNVectorIcons (6.6.0):
     - React
-  - RNVoipPushNotification (2.0.0):
+  - RNVoipPushNotification (2.1.0):
     - React-Core
+  - RSKImageCropper (2.2.3)
   - SDWebImage (5.4.2):
     - SDWebImage/Core (= 5.4.2)
   - SDWebImage/Core (5.4.2)
@@ -388,7 +407,9 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -413,8 +434,10 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSound (from `../node_modules/react-native-sound`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - RNVoipPushNotification (from `../node_modules/react-native-voip-push-notification`)
@@ -438,6 +461,7 @@ SPEC REPOS:
     - libwebp
     - nanopb
     - Protobuf
+    - RSKImageCropper
     - SDWebImage
     - SDWebImageWebPCoder
 
@@ -476,8 +500,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-image-base64:
     :path: "../node_modules/react-native-image-base64"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-sensitive-info:
@@ -524,10 +552,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-firebase/ios"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSound:
+    :path: "../node_modules/react-native-sound"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -539,9 +571,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: 7a0bbe928d07467ac8b2d7f6f2a675872a6471d8
-  appcenter-analytics: 46b4bb2832834a198ba6c4058b4eb335386c1063
-  appcenter-core: 765878f5c300907bb70dbb8e956c5a74df7ca23d
-  appcenter-crashes: 66b533f4e2a2278ddbd9369614fe18f0d7f58e47
+  appcenter-analytics: 4fdc885acb8a3bfac835515a8b9610d054ba8b9f
+  appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
+  appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
   AppCenterReactNativeShared: 48a905fe90071696748e3def60199546167cdb86
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
@@ -571,8 +603,10 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-image-base64: 2ff9ac788639c87a91361ab6652cc95e871b1e54
-  react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
+  react-native-document-picker: b1b4a52c0051e10642c54cfc10933759e8ccdda4
+  react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
+  react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
+  react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
   react-native-sensitive-info: 4629b223484a08225c3eb088ff3f91b03097b5e5
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webrtc: 86d841823e66d68cc1f86712db1c2956056bf0c2
@@ -586,24 +620,27 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
-  ReactNativeIncallManager: 352f4a3cbe9385edf7eff57be3fe6bd1ab64fe7f
-  RNCallKeep: 99a56dc650bba1af3eaad0ab9bbc83ce0bc58e32
-  RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
-  RNCMaskedView: 76c40a1d41c3e2535df09246a2b5487f04de0814
-  RNDeviceInfo: 6a3d16fce033f6979c4a6a41e62244d183e8c765
+  ReactNativeART: f003b07dfa7098aa419ed95b69560923440b1eee
+  ReactNativeIncallManager: 35e387f58d3fc6e8cc042f47a2256b5f50134a67
+  RNCallKeep: 3de65c1f97b6fb5d2cf065fcf53b80579e334fa8
+  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
+  RNImageCropPicker: a606d65f71c6c05caa3c850c16fb1ba2a4718608
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
+  RNSound: c980916b596cc15c8dcd2f6ecd3b13c4881dbe20
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  RNVoipPushNotification: 065208b32273ba5901ae0f102b2d28a11e0a0373
+  RNVoipPushNotification: be6f70cac9d1fd73e020063093f635f64d97c9c6
+  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: 4ca2dc4eefae4224bea8f504251cda485a363745
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: ab3ceb57029daa76cb2d5c4170d0dec3ebea0505
+PODFILE CHECKSUM: b32e4a583f56aa63ac7ee4b05bae792d50b27a2a
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.2

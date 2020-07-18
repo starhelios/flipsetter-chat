@@ -8,7 +8,7 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
-    TextInput,
+    TextInput,Vibration,
     StatusBar,
     TouchableOpacity,
     View,
@@ -70,6 +70,7 @@ export default class RegisterScreen extends React.Component {
 
 
     register = () => {
+        Vibration.vibrate(1000);
         const user = this.state;
         // RegisterService.submit(user).then((response) => {
         //     let msg = '';
