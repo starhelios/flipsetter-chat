@@ -129,7 +129,12 @@ class ThreadsScreen extends Component<Props>{
                 }, 30000);
             }
             //Clear Interval
+<<<<<<< HEAD
             if(this.props.app.heartbeat.data.states.active_calls.length === 0){
+=======
+            if(this.props.app.heartbeat.data.states.active_calls.length === 0)
+            {
+>>>>>>> alex-dev
                 clearInterval(this.activeCalls);
             }
         }
@@ -284,7 +289,7 @@ class ThreadsScreen extends Component<Props>{
         return (
             <Container>
                 <Header onLayout={(event) => this.headerHeight}>
-                    <Left style={{flex: 1}}><Title>Threads</Title></Left>
+                    <Left style={{flex: 1}}><Title>Messages</Title></Left>
                     <Body style={{flex: 1}}></Body>
                     <Right style={{flex: 1, marginRight: 0}}>
                         <TouchableOpacity onPress={() => this.showSearch("toggle")} style={{width:30}}>

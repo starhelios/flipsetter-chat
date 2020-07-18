@@ -3,6 +3,7 @@ import config from "../../config";
 /*
  * action types
  */
+
 const actionTypes = {
     GET_THREADS:"GET_THREADS",
     GET_THREADS_SUCCESS:"GET_THREADS_SUCCESS",

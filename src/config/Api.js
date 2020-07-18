@@ -1,8 +1,6 @@
 import config from "./Config.js";
 import React, {Component} from "react";
 
-
-
 export default function Api () {
     let apiVersion = 0;
     let prefix = `api/v${apiVersion}`;
@@ -15,8 +13,10 @@ export default function Api () {
                 heartbeat: `auth/heartbeat`,
             },
             post: {
-                deviceRegister: `device/register`,
-                deviceJoin: `device/join`,
+                // deviceRegister: `device/register`,
+                // deviceJoin: `device/join`,
+                 deviceRegister: `user/devices`,
+                deviceJoin: `user/devices`,
                 register: `register`,
                 resetPassword: `password/reset`,
                 reportError: `report/error`,
@@ -55,7 +55,13 @@ export default function Api () {
                 fetchCall: (threadId, callId, type) => `messenger/${threadId}/call/${callId}/${type}`, //heartbeat
                 type: (type) => `messenger/get/${type}`, //All threads, thread settings, recent threads
                 getMessages: (threadId, type, messageId = '') => `messenger/get/${threadId}/${type}`,
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> alex-dev
 
+=======
+>>>>>>> dawson-dev
             },
             post: {
                 join: (slug) => `messenger/join/${slug}`,
@@ -68,9 +74,7 @@ export default function Api () {
             messengerPhoto: (messageId, thumb = false) => `images/messenger/${messageId}/${(thumb) && thumb}`,
             profileImage: (alias, slug, full = false, image = false, full_two = false) => `images/${alias}/${slug}/` + (full) && `full/` + (image) && `image/` + (full_two) && `full_two/`
         }
-
     }
-
 
     return {
         apiVersion: apiVersion,
@@ -78,5 +82,4 @@ export default function Api () {
         uri: uri,
         ...endpoints,
     }
-
 };

@@ -4,6 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.github.yamill.orientation.OrientationPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
+import com.reactnativecommunity.slider.ReactSliderPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
@@ -34,6 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
 //            packages.add(new WebRTCModulePackage());
+
+            // packages.add(new RNSoundPackage());
             packages.add(new RNFirebaseMessagingPackage());
             packages.add(new RNFirebaseNotificationsPackage());
             return packages;

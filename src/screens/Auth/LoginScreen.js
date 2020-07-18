@@ -11,50 +11,52 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    View,
+    View, Vibration
 } from 'react-native';
-import {withNavigationFocus} from 'react-navigation';
-import {SafeAreaView} from "react-native-safe-area-context";
+import { withNavigationFocus } from 'react-navigation';
+import { SafeAreaView } from "react-native-safe-area-context";
 import Login from "../../components/Login";
 import logo from '../../components/assets/Logo.png';
-
-import {withSocketContext} from "../../components/Socket";
-import {connect} from "react-redux";
-
-import {App, Auth, User} from "../../reducers/actions";
+import { withSocketContext } from "../../components/Socket";
+import { connect } from "react-redux";
+import ActivityLoader from '../../components/ActivityLoader';
+import { App, Auth, User } from "../../reducers/actions";
 import NavigationService from "../../services/NavigationService";
 import SplashScreen from "react-native-splash-screen";
-
 
 // import FCM from "../../components/FCM";
 // import Api from "../../service/Api";
 // import DeviceService from "../../service/DeviceService";
 
-
 class LoginScreen extends React.Component {
-
     // socket = this.props.socket;
-
     constructor(props) {
         super(props);
+        this.state = {
+            loading: false,
+        }
         SplashScreen.hide();
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-
-        if(this.props.auth.isLoggedIn === true && this.props.auth.accessToken){
+        if (this.props.auth.isLoggedIn === true && this.props.auth.accessToken) {
             this.props.navigation.navigate('Main');
         }
     }
+    componentDidMount(){
 
-    loginButton = async() => {
+    }
 
+    loginButton = async () => {
+        this.setState({ loading: true })
+        Vibration.vibrate(1000);
         let email = this.props.auth.username;
         let pass = this.props.auth.password;
-        let login = await this.props.login(email, pass);
-        console.log(login);
-        switch(login.type){
+        let login = await this.props.login(email, pass,this.props.app.device_token,this.props.app.voip_token);
+        console.log("login response " + JSON.stringify(login))
+        switch (login.type) {
             case "LOGIN_SUCCESS":
+                this.setState({ loading: false })
                 // let data = login.payload.data;
                 // await this.props.setAccessToken(data.access_token);
                 // await this.props.setRefreshToken(data.refresh_token);
@@ -67,26 +69,29 @@ class LoginScreen extends React.Component {
                 // this.props.navigation.navigate('Main');
                 break;
             case "LOGIN_FAIL":
+                this.setState({ loading: false })
                 // this.props.setIsLoggedIn(2);
                 // this.props.setErrorMsg("Please check your username and password")
                 break;
         }
-
     }
 
     signUp = () => {
+        Vibration.vibrate(1000);
         this.props.navigation.navigate('Register');
     }
 
     forgot = () => {
+        Vibration.vibrate(1000);
         this.props.navigation.navigate('Forgot');
     }
 
     render() {
-        if(Platform.OS === 'android'){
-            return(
-                <SafeAreaView style={{flex: 1}}>
+        if (Platform.OS === 'android') {
+            return (
+                <SafeAreaView style={{ flex: 1 }}>
                     <Login
+                        loading={this.state.loading}
                         loginButton={() => this.loginButton()}
                         signUp={() => this.signUp()}
                         forgot={() => this.forgot()}
@@ -94,15 +99,17 @@ class LoginScreen extends React.Component {
                 </SafeAreaView>
             );
         }
-        else{
-            return(<Login
-                loginButton={() => this.loginButton()}
-                signUp={() => this.signUp()}
-                forgot={() => this.forgot()}
-            />);
+        else {
+            return (
+                <Login
+                    loading={this.state.loading}
+                    loginButton={() => this.loginButton()}
+                    signUp={() => this.signUp()}
+                    forgot={() => this.forgot()}
+                />
+            );
         }
     }
-
 }
 
 const mapStateToProps = (state) => {
@@ -125,7 +132,6 @@ const mapDispatchToProps = {
     setExpiry: Auth.setExpiry,
     setIsLoggedIn: Auth.setIsLoggedIn,
     login: Auth.login,
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(LoginScreen)))

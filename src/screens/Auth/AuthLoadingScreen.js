@@ -16,10 +16,22 @@ import logo from '../../components/assets/Logo.png';
 class AuthLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
+<<<<<<< HEAD
         this._bootstrapAsync();
     }
 
     componentDidMount(){
+=======
+
+    }
+
+    componentDidMount(){
+        setTimeout(() => {
+            this._bootstrapAsync();
+       }, 3000);
+
+       SplashScreen.hide();
+>>>>>>> alex-dev
     }
 
     // Fetch the token from storage then navigate to our appropriate place

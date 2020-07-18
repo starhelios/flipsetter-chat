@@ -1,5 +1,6 @@
 import config from "../../config";
-
+import DeviceInfo from 'react-native-device-info';
+import { Platform } from "react-native";
 /*
  * action types
  */
@@ -62,6 +63,11 @@ function appHeartbeat(){
     }
 }
 function joinDevice(device_id, device_token, voip_token){
+    let deviceName = '';
+
+    DeviceInfo.getDeviceName().then(deviceName => {
+        deviceName = deviceName
+      });
     return {
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
@@ -69,9 +75,11 @@ function joinDevice(device_id, device_token, voip_token){
                 url: `${config.api.client.post.deviceJoin}`,
                 data: {
                     "device_id": device_id,
-                    "device_type": (Platform.OS === 'android') ? 0 : 1,
+                    // "device_type": (Platform.OS === 'android') ? 0 : 1,
                     "device_token": device_token,
                     "voip_token": voip_token,
+                    "device_os":Platform.OS === 'ios'?'ios':'android',
+                    "device_name":deviceName
                 },
                 method: 'POST',
             }
@@ -79,6 +87,11 @@ function joinDevice(device_id, device_token, voip_token){
     }
 }
 function registerDevice(device_id, fcm_token, voip_token){
+    let deviceName = '';
+
+    DeviceInfo.getDeviceName().then(deviceName => {
+        deviceName = deviceName
+      });
     return {
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
         payload: {
@@ -88,6 +101,8 @@ function registerDevice(device_id, fcm_token, voip_token){
                     "device_id": device_id,
                     "device_token": fcm_token,
                     "voip_token": voip_token,
+                    "device_os":Platform.OS === 'ios'?'ios':'android',
+                    "device_name":deviceName
                 },
                 method: 'POST',
             }

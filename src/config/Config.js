@@ -1,6 +1,7 @@
 
 let config = {
-    env: (__DEV__) ? "dev" : "prod",
+    // env: (__DEV__) ? "dev" : "prod",
+    env:"dev",
     prefix: `/api/v1`,
     prod: {
         uri: "flipsetter.com",
@@ -16,12 +17,11 @@ let config = {
         janusws: "/janus-ws",
         echo: "/socket",
         client_id: '5',
-        client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
+        client_secret: 'fJECvkXXFPOuMtSXkR26eOSUD3rzhv4GafF5xB1U',
     },
 }
 
 export default config;
-
 
 //
 // let config = {

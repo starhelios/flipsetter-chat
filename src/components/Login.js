@@ -8,6 +8,10 @@ import {connect} from "react-redux";
 import {withSocketContext} from "./Socket";
 import platform from "../native-base-theme/variables/platform";
 import config from "../config";
+<<<<<<< HEAD
+=======
+import ActivityLoader from './ActivityLoader';
+>>>>>>> alex-dev
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
@@ -78,8 +82,8 @@ class Login extends Component<Props> {
     };
 
 
-
     render(){
+
         if(!this.props.isFocused) return(
             <Container style={{flex: 1,}}>
                 <View style={{...styles.container}}>
@@ -99,6 +103,7 @@ class Login extends Component<Props> {
                         (this.props.auth.errorMsg) &&
                         <Text style={styles.error}>{this.props.auth.errorMsg}</Text>
                     }
+                    {this.props.loading ? <ActivityLoader/>:null}
                     <TextInput
                         value={this.props.auth.username}
                         onChangeText={(username) => this.props.setUsername(username)}
@@ -125,18 +130,22 @@ class Login extends Component<Props> {
                         onSubmitEditing={this.props.loginButton}
                         blurOnSubmit={false}
                     />
+
                     <TouchableOpacity
                         style={styles.loginButton}
                         underlayColor='#04b600'
                         onPress={this.props.loginButton}
                     >
-                        <Text>Login</Text>
+                    <Text style={styles.loginText}>Login</Text>
                     </TouchableOpacity>
 
                     <Text style={styles.signup} onPress={this.props.signUp}>Sign Up</Text>
                     <Text style={styles.signup} onPress={this.props.forgot}>Forgot Password</Text>
                 {/*</Animated.View>*/}
+
+
                 </Animated.View>
+                
             </Container>
         )
     }
@@ -151,10 +160,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     error: {
-        color: '#000',
+        color: 'white',
         alignItems: 'center',
         justifyContent: 'center',
         textDecorationLine:'underline',
+        marginBottom:10
     },
     logo: {
         height: IMAGE_HEIGHT,
@@ -164,14 +174,20 @@ const styles = StyleSheet.create({
         marginTop:20,
         // borderRadius: IMAGE_HEIGHT/2,
     },
-    logoText: {
-
+    
+    loginText:{
+        fontSize:15,
+        color:"#FFF",
+        fontWeight:'bold',
+        alignSelf:'center'
     },
+
     signup:{
         fontSize:15,
         marginTop:15,
         color:"#FFF"
     },
+
     input: {
         width: window.width - 30,
         height: 50,

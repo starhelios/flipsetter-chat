@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 //
 import TabBarIcon from '../components/tabbar/TabBarIcon';
+
 //Main Tab Screens
 import ThreadsScreen from '../screens/ThreadsScreen';
 import ContactsScreen from '../screens/ContactsScreen';
@@ -13,6 +14,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 //Threads Stack
 import MessagesScreen from '../screens/MessagesScreen';
 import CallScreen from '../screens/CallScreen';
+
 // import CanvasScreen from '../screens/CanvasScreen';
 // import SvgScreen from '../screens/SvgScreen';
 

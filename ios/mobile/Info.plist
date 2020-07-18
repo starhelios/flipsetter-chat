@@ -51,6 +51,10 @@
 	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>FlipSetter is requesting access to your microphone</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>FlipSetter would like to save photos to your photo gallery</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FlipSetter would like access to your photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
