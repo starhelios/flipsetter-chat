@@ -129,12 +129,7 @@ class ThreadsScreen extends Component<Props>{
                 }, 30000);
             }
             //Clear Interval
-<<<<<<< HEAD
             if(this.props.app.heartbeat.data.states.active_calls.length === 0){
-=======
-            if(this.props.app.heartbeat.data.states.active_calls.length === 0)
-            {
->>>>>>> alex-dev
                 clearInterval(this.activeCalls);
             }
         }

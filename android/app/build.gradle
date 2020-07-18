@@ -195,7 +195,6 @@ dependencies {
     implementation project(':@react-native-community_slider')
     implementation project(':react-native-webview')
     implementation project(':react-native-sound')
-    implementation project(':react-native-vector-icons')
 
     implementation project(':react-native-document-picker')
     implementation fileTree(dir: "libs", include: ["*.jar"])

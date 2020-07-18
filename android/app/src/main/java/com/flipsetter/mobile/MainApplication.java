@@ -10,7 +10,6 @@ import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.zmxv.RNSound.RNSoundPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
 import com.facebook.react.ReactNativeHost;

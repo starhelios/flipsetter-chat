@@ -47,8 +47,9 @@ function setErrorMsg(msg) {
     return { type: actionTypes.SET_ERROR_MSG, payload: msg }
 }
 
-function login(email, pass,fcm_token,voip_token) {
-let deviceName = '';
+function login(email, pass, fcm_token, voip_token) {
+    let deviceName = '';
+    
     DeviceInfo.getDeviceName().then(deviceName => {
         deviceName = deviceName
       });
@@ -57,16 +58,8 @@ let deviceName = '';
         type: actionTypes.LOGIN,
         payload: {
             request: {
-<<<<<<< HEAD
-                url: `${(config.env === "dev") ? `https://${config.dev.uri}/`:`https://${config.prod.uri}/`}oauth/token`,
-                data: {
-                    grant_type: 'password',
-                    client_id: (config.env === "dev") ? config.dev.client_id : config.prod.client_id,
-                    client_secret: (config.env === "dev") ? config.dev.client_secret : config.prod.client_secret,
-                    username: email,
-=======
                 url: 'https://tippinweb.com/api/v1/auth/login',
-                //    url: `${(config.env === "dev") ? `https://${config.dev.uri}/`:`https://${config.prod.uri}/`}oauth/token`,
+                //    url: `${(config.env === "dev") ? `https://${config.dev.uri}`:`https://${config.prod.uri}`}${config.prefix}/auth/login`,
                 data: {
                     // grant_type: 'password',
                     // client_id: (config.env === "dev") ? config.dev.client_id : config.prod.client_id,
@@ -76,7 +69,6 @@ let deviceName = '';
                     // email:email,
                     // scope: '',
                     email: email,
->>>>>>> alex-dev
                     password: pass,
                     client_secret : '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
                     device_id : DeviceInfo.getDeviceId(),

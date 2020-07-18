@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '11.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'mobile' do
@@ -37,33 +37,17 @@ target 'mobile' do
   pod 'Firebase/Core', '~> 6.3.0'
   pod 'Firebase/Messaging', '~> 6.3.0'
 
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-
-  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
-
-
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-
-
-
-
   pod 'RNSound', :path => '../node_modules/react-native-sound'
-
-
-
-
-
-
-  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-
-  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
-
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
-
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  
+  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+  pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
   pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
   target 'mobileTests' do
     inherit! :search_paths

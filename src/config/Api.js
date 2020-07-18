@@ -55,13 +55,6 @@ export default function Api () {
                 fetchCall: (threadId, callId, type) => `messenger/${threadId}/call/${callId}/${type}`, //heartbeat
                 type: (type) => `messenger/get/${type}`, //All threads, thread settings, recent threads
                 getMessages: (threadId, type, messageId = '') => `messenger/get/${threadId}/${type}`,
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> alex-dev
-
-=======
->>>>>>> dawson-dev
             },
             post: {
                 join: (slug) => `messenger/join/${slug}`,

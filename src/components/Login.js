@@ -8,10 +8,7 @@ import {connect} from "react-redux";
 import {withSocketContext} from "./Socket";
 import platform from "../native-base-theme/variables/platform";
 import config from "../config";
-<<<<<<< HEAD
-=======
 import ActivityLoader from './ActivityLoader';
->>>>>>> alex-dev
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;

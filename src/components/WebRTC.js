@@ -476,17 +476,10 @@ const styles = StyleSheet.create({
 
     },
     localVideo: {
-<<<<<<< HEAD
-        height: 200,
-        width:100,
-        bottom:125,
-        left: config.layout.window.width/2-50,
-=======
         height: 250,
         width: 125,
         bottom: 125,
         right: 25,
->>>>>>> alex-dev
         position:"absolute",
         zIndex:1,
 
