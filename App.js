@@ -3,7 +3,6 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow
  */
 
 import React, {Component} from 'react';
@@ -41,19 +40,15 @@ function getActiveRouteName(navigationState) {
     return route.routeName;
 }
 
-class Main extends Component<Props> {
+class Main extends Component {
 
-    Heartbeat;
-    appState;
+    Heartbeat ;
+    appState ;
     state = {
         heartbeat: null,
     }
-    constructor(props) {
-        super(props);
 
-    }
-
-    async componentDidMount(): void{
+    async componentDidMount() {
         await Analytics.setEnabled(true);
 
         await Analytics.trackEvent("Analytics Started")
@@ -75,7 +70,7 @@ class Main extends Component<Props> {
         }, 60000);
     }
 
-    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         if(!this.state.heartbeat && this.props.user.id && this.props.auth.isLoggedIn){
             this.setState({
                 heartbeat: Date.now(),
@@ -92,7 +87,7 @@ class Main extends Component<Props> {
         }
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         clearInterval(this.Heartbeat);
         AppState.removeEventListener("change", this._handleAppStateChange);
     }

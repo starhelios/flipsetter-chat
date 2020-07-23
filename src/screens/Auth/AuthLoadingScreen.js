@@ -14,15 +14,10 @@ import {Auth, User} from "../../reducers/actions";
 import logo from '../../components/assets/Logo.png';
 
 class AuthLoadingScreen extends React.Component {
-    constructor(props) {
-        super(props);
-
-    }
-
     componentDidMount(){
         setTimeout(() => {
             this._bootstrapAsync();
-       }, 3000);
+       }, 100);
 
        SplashScreen.hide();
     }
@@ -30,7 +25,7 @@ class AuthLoadingScreen extends React.Component {
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
         if(this.props.auth.isLoggedIn && this.props.auth.accessToken){
-            this.props.navigation.navigate('Main');
+            this.props.navigation.navigate('WhiteboardStack');
         }
         else{
             this.props.navigation.navigate('Login');

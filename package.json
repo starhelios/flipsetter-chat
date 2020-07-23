@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
     "doctor": "npx @react-native-community/cli doctor"
@@ -21,12 +21,14 @@
     "appcenter-analytics": "^3.0.0",
     "appcenter-crashes": "^3.0.0",
     "axios": "^0.19.0",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "buffer": "^5.5.0",
     "html-entities": "^1.2.1",
     "laravel-echo": "^1.6.1",
     "moment": "^2.24.0",
     "native-base": "^2.13.8",
+    "prop-types": "^15.7.2",
     "react": "16.9.0",
     "react-emojione": "^5.0.1",
     "react-native": "0.61.5",
@@ -80,6 +82,7 @@
     "redux-thunk": "^2.3.0",
     "simplify-js": "^1.2.4",
     "socket.io-client": "2.1.1",
+    "styled-components": "^5.1.1",
     "url": "^0.11.0"
   },
   "devDependencies": {
@@ -88,9 +91,17 @@
     "@react-native-community/eslint-config": "^0.0.5",
     "@react-native-community/toolbar-android": "0.1.0-rc.2",
     "babel-jest": "^24.9.0",
-    "eslint": "^6.5.1",
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
+    "prettier": "^2.0.5",
     "react-devtools": "3"
   },
   "jest": {
