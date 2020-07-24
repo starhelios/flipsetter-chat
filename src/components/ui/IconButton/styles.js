@@ -1,5 +1,9 @@
 import styled from 'styled-components/native';
 
-export const Touch = styled.TouchanbleOpacity``;
+import { Image } from '../Image';
 
-export const Icon = styled.Image``;
+export const Touch = styled.TouchableOpacity``;
+
+export const Icon = styled(Image).attrs({
+  resizeMode: 'contain',
+})``;

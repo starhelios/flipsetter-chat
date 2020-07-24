@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import IconIoniconsUI from 'react-native-vector-icons/Ionicons';
 import IconFeatherUI from 'react-native-vector-icons/Feather';
+import IconAntDesignUI from 'react-native-vector-icons/AntDesign';
 
 import { Text } from '../../ui/Text';
 import { Image } from '../../ui/Image';
@@ -65,9 +66,29 @@ export const RefreshIcon = styled(IconFeatherUI).attrs({
 })`
   padding-right: 15px;`;
 
-export const MoreIcon = styled(IconFeatherUI).attrs({
+export const MoreIcon = styled(IconFeatherUI).attrs((props) => ({
   name: 'more-horizontal',
+  size: 30,
+  borderRadius: 14,
+  color: props.isPressed ? Color.headerBackgroundColor : Color.white,
+}))`
+  background-color: ${(props) => (props.isPressed ? Color.white : Color.headerBackgroundColor)};
+  borderRadius: 14px;
+  padding: 3px;
+`;
+
+export const BackArrowIcon = styled(IconAntDesignUI).attrs({
+  name: 'doubleleft',
   size: 30,
   color: Color.white,
 })`
-  padding-right: 15px;`;
+  padding-right: 15px;
+`;
+
+export const ForwardArrowIcon = styled(IconAntDesignUI).attrs({
+  name: 'doubleright',
+  size: 30,
+  color: Color.white,
+})`
+  padding-right: 15px;
+`;

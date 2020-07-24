@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import { Touch, Icon } from './styles'
+import { Touch, Icon } from './styles';
 
-export const IconButton = ({ iconSource }) => {
-  return <Touch><Icon source={{ uri: iconSource }} /></Touch>
-}
-
+export const IconButton = ({ iconSource, iconSize, tintColor }) => {
+  return (
+    <Touch>
+      <Icon source={iconSource} size={iconSize} tintColor={tintColor} />
+    </Touch>
+  );
+};
