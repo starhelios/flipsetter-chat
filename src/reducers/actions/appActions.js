@@ -1,6 +1,7 @@
 import config from "../../config";
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from "react-native";
+import Constants from "../../components/Constants";
 /*
  * action types
  */
@@ -63,10 +64,9 @@ function appHeartbeat(){
     }
 }
 function joinDevice(device_id, device_token, voip_token){
-    let deviceName = '';
 
     DeviceInfo.getDeviceName().then(deviceName => {
-        deviceName = deviceName
+        Constants.DEVICE_NAME = deviceName;
       });
     return {
         type: actionTypes.JOIN_DEVICE_TO_SITE,
@@ -79,7 +79,7 @@ function joinDevice(device_id, device_token, voip_token){
                     "device_token": device_token,
                     "voip_token": voip_token,
                     "device_os":Platform.OS === 'ios'?'ios':'android',
-                    "device_name":deviceName
+                    "device_name":Constants.DEVICE_NAME
                 },
                 method: 'POST',
             }
@@ -87,10 +87,10 @@ function joinDevice(device_id, device_token, voip_token){
     }
 }
 function registerDevice(device_id, fcm_token, voip_token){
-    let deviceName = '';
+    // let deviceName = '';
 
     DeviceInfo.getDeviceName().then(deviceName => {
-        deviceName = deviceName
+        Constants.DEVICE_NAME = deviceName;
       });
     return {
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
@@ -102,7 +102,7 @@ function registerDevice(device_id, fcm_token, voip_token){
                     "device_token": fcm_token,
                     "voip_token": voip_token,
                     "device_os":Platform.OS === 'ios'?'ios':'android',
-                    "device_name":deviceName
+                    "device_name":Constants.DEVICE_NAME
                 },
                 method: 'POST',
             }

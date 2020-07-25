@@ -1,6 +1,6 @@
 
 let config = {
-    // env: (__DEV__) ? "dev" : "prod",
+    env: (__DEV__) ? "dev" : "prod",
     env:"dev",
     prefix: `/api/v1`,
     prod: {
@@ -9,7 +9,8 @@ let config = {
         janusws: "/janus-ws",
         echo: "/socket",
         client_id: '10',
-        client_secret: '4HGLGxFAeX8aAYUreGH862QwO5oU4JPtGFjIhoLo',
+        client_secret:'pFpBM7VznnzJTthOMPXQEnhCPkfgcM12XqCeol2n',
+        // client_secret: '4HGLGxFAeX8aAYUreGH862QwO5oU4JPtGFjIhoLo',
     },
     dev: {
         uri: "tippinweb.com",
@@ -17,7 +18,9 @@ let config = {
         janusws: "/janus-ws",
         echo: "/socket",
         client_id: '5',
-        client_secret: 'fJECvkXXFPOuMtSXkR26eOSUD3rzhv4GafF5xB1U',
+        client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
+
+        // client_secret: 'fJECvkXXFPOuMtSXkR26eOSUD3rzhv4GafF5xB1U',
     },
 }
 

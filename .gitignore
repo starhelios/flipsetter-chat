@@ -24,6 +24,7 @@ web.php
 # Android/IntelliJ
 #
 build/
+android/app/release/
 .idea
 .gradle
 local.properties
@@ -59,10 +60,9 @@ buck-out/
 /ios/Pods/
 
 # lock files
+*.lock
+*.lock.old
 package-lock.json
-yarn.lock
-yarn.lock.old
-/ios/Podfile.lock
 
 #Don't commit this
 

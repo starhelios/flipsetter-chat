@@ -1,10 +1,7 @@
 import config from "../../config";
-<<<<<<< HEAD
-
-=======
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from "react-native";
->>>>>>> alex-dev
+import Constants from "../../components/Constants";
 /*
  * action types
  */
@@ -62,14 +59,10 @@ function appHeartbeat(){
     }
 }
 function joinDevice(device_id, device_token, voip_token){
-<<<<<<< HEAD
-=======
 
-    let deviceName = '';
     DeviceInfo.getDeviceName().then(deviceName => {
-        deviceName = deviceName
+        Constants.DEVICE_NAME = deviceName;
       });
->>>>>>> alex-dev
     return {
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
@@ -77,50 +70,35 @@ function joinDevice(device_id, device_token, voip_token){
                 url: `${config.api.client.post.deviceJoin}`,
                 data: {
                     "device_id": device_id,
-<<<<<<< HEAD
-                    "device_type": (Platform.OS === 'android') ? 0 : 1,
-                    "device_token": device_token,
-                    "voip_token": voip_token,
-=======
                     // "device_type": (Platform.OS === 'android') ? 0 : 1,
                     "device_token": device_token,
                     "voip_token": voip_token,
                     "device_os":Platform.OS === 'ios'?'ios':'android',
-                    "device_name":deviceName
->>>>>>> alex-dev
+                    "device_name":Constants.DEVICE_NAME
                 },
                 method: 'POST',
             }
         }
     }
 }
-function registerDevice(device_id, fcm_token, voip_token){
-<<<<<<< HEAD
-=======
 
-    let deviceName = '';
+function registerDevice(device_id, fcm_token, voip_token){
+
+    // let deviceName = '';
     DeviceInfo.getDeviceName().then(deviceName => {
-        deviceName = deviceName
+        Constants.DEVICE_NAME = deviceName;
       });
->>>>>>> alex-dev
     return {
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
         payload: {
             request: {
-<<<<<<< HEAD
-                url: `${config.prefix}/device/register`,
-=======
                 url: `${config.prefix}/user/devices`,
->>>>>>> alex-dev
                 data: {
                     "device_id": device_id,
                     "device_token": fcm_token,
                     "voip_token": voip_token,
-<<<<<<< HEAD
-=======
                     "device_os":Platform.OS === 'ios'?'ios':'android',
-                    "device_name":deviceName
->>>>>>> alex-dev
+                    "device_name":Constants.DEVICE_NAME
                 },
                 method: 'POST',
             }

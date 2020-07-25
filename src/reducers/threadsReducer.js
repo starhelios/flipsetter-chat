@@ -9,6 +9,7 @@ const initialState = {
 
 
 export default function(state=initialState, action){
+    // alert(JSON.stringify(action))
     let threads = {};
     switch(action.type){
         case Threads.actionTypes.SET_ACTIVE_THREAD:

@@ -91,7 +91,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'cog' : 'cog'}
+      name={Platform.OS === 'ios' ? 'cog' : 'calendar'}
     />
   ),
 };

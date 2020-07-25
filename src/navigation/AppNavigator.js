@@ -1,5 +1,4 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-
 import AuthLoadingScreen from '../screens/Auth/AuthLoadingScreen';
 
 import MainTabNavigator from './MainTabNavigator';

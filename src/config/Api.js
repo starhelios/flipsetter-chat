@@ -3,7 +3,9 @@ import React, {Component} from "react";
 
 export default function Api () {
     let apiVersion = 0;
-    let prefix = `api/v${apiVersion}`;
+    // let prefix = `api/v${apiVersion}`;
+let prefix = `api/v1`;
+
     let uri = config.env === 'dev' ? `${config.dev.uri}/${prefix}` : `${config.prod.uri}/${prefix}`;
     let endpoints = {
         client: {
@@ -17,8 +19,8 @@ export default function Api () {
                 // deviceJoin: `device/join`,
                  deviceRegister: `user/devices`,
                 deviceJoin: `user/devices`,
-                register: `register`,
-                resetPassword: `password/reset`,
+                register: `auth/register`,
+                resetPassword: `auth/password/email`,
                 reportError: `report/error`,
                 heartbeat: `auth/heartbeat`,
             }

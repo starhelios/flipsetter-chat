@@ -23,6 +23,7 @@ import ActivityLoader from '../../components/ActivityLoader';
 import { App, Auth, User } from "../../reducers/actions";
 import NavigationService from "../../services/NavigationService";
 import SplashScreen from "react-native-splash-screen";
+import Toast from 'react-native-simple-toast';
 
 // import FCM from "../../components/FCM";
 // import Api from "../../service/Api";
@@ -43,36 +44,63 @@ class LoginScreen extends React.Component {
             this.props.navigation.navigate('Main');
         }
     }
-    componentDidMount(){
+
+ checkEmailValid(value) {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(value) === true) {
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
+    componentDidMount() {
 
     }
 
     loginButton = async () => {
+        // alert(this.checkEmailValid(this.props.auth.username))
         this.setState({ loading: true })
         Vibration.vibrate(1000);
-        let email = this.props.auth.username;
-        let pass = this.props.auth.password;
-        let login = await this.props.login(email, pass,this.props.app.device_token,this.props.app.voip_token);
-        console.log("login response " + JSON.stringify(login))
-        switch (login.type) {
-            case "LOGIN_SUCCESS":
-                this.setState({ loading: false })
-                // let data = login.payload.data;
-                // await this.props.setAccessToken(data.access_token);
-                // await this.props.setRefreshToken(data.refresh_token);
-                // await this.props.setExpiry(Date.now() + data.expires_in);
-                // await this.props.setEmail(this.props.auth.username);
-                // await this.props.setUsername(null);
-                // await this.props.setPassword(null);
-                // (this.props.auth.isLoggedIn === 2) && this.props.setErrorMsg(null);
-                // this.props.setIsLoggedIn(true);
-                // this.props.navigation.navigate('Main');
-                break;
-            case "LOGIN_FAIL":
-                this.setState({ loading: false })
-                // this.props.setIsLoggedIn(2);
-                // this.props.setErrorMsg("Please check your username and password")
-                break;
+        if (this.props.auth.username === '') {
+            this.setState({ loading: false })
+            Toast.show('Please enter the Email Address to Login', Toast.LONG);
+        }
+        else if (this.checkEmailValid(this.props.auth.username)){
+            this.setState({ loading: false })
+            Toast.show('Please enter Valid Email', Toast.LONG);
+        }
+        else if (this.props.auth.password === '') {
+            this.setState({ loading: false })
+            Toast.show('Please enter Password', Toast.LONG);
+        }
+        
+        else {
+            let email = this.props.auth.username;
+            let pass = this.props.auth.password;
+            let login = await this.props.login(email, pass, this.props.app.device_token, this.props.app.voip_token);
+            console.log("login response " + JSON.stringify(login))
+            switch (login.type) {
+                case "LOGIN_SUCCESS":
+                    this.setState({ loading: false })
+                    // let data = login.payload.data;
+                    // await this.props.setAccessToken(data.access_token);
+                    // await this.props.setRefreshToken(data.refresh_token);
+                    // await this.props.setExpiry(Date.now() + data.expires_in);
+                    // await this.props.setEmail(this.props.auth.username);
+                    // await this.props.setUsername(null);
+                    // await this.props.setPassword(null);
+                    // (this.props.auth.isLoggedIn === 2) && this.props.setErrorMsg(null);
+                    // this.props.setIsLoggedIn(true);
+                    // this.props.navigation.navigate('Main');
+                    break;
+                case "LOGIN_FAIL":
+                    this.setState({ loading: false })
+                    // this.props.setIsLoggedIn(2);
+                    // this.props.setErrorMsg("Please check your username and password")
+                    break;
+            }
         }
     }
 
