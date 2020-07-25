@@ -25,7 +25,7 @@ class AuthLoadingScreen extends React.Component {
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
         if(this.props.auth.isLoggedIn && this.props.auth.accessToken){
-            this.props.navigation.navigate('WhiteboardStack');
+            this.props.navigation.navigate('Main');
         }
         else{
             this.props.navigation.navigate('Login');

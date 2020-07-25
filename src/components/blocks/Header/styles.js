@@ -1,14 +1,16 @@
 import styled from 'styled-components/native';
 import IconIoniconsUI from 'react-native-vector-icons/Ionicons';
 import IconFeatherUI from 'react-native-vector-icons/Feather';
-import IconAntDesignUI from 'react-native-vector-icons/AntDesign';
 
 import { Text } from '../../ui/Text';
 import { Image } from '../../ui/Image';
+import { IconButton } from '../../ui/IconButton';
 
-import { logoImg } from '../../../images';
+import { logoImg, leftCurvedArrowIcon, rightCurvedArrowIcon } from '../../../images';
 
 import Color from '../../../config/Colors';
+
+export { HeaderMenu } from '../HeaderMenu';
 
 export const Container = styled.View`
   background-color: ${Color.headerBackgroundColor};
@@ -66,29 +68,49 @@ export const RefreshIcon = styled(IconFeatherUI).attrs({
 })`
   padding-right: 15px;`;
 
+export const MoreIconWrapper = styled.View`
+  backgroundColor: ${(props) => (props.isPressed ? Color.white : Color.headerBackgroundColor)};
+  borderRadius: 8px;
+`;
+
 export const MoreIcon = styled(IconFeatherUI).attrs((props) => ({
   name: 'more-horizontal',
   size: 30,
-  borderRadius: 14,
   color: props.isPressed ? Color.headerBackgroundColor : Color.white,
 }))`
-  background-color: ${(props) => (props.isPressed ? Color.white : Color.headerBackgroundColor)};
-  borderRadius: 14px;
-  padding: 3px;
+  padding-horizontal: 2px;
 `;
 
-export const BackArrowIcon = styled(IconAntDesignUI).attrs({
-  name: 'doubleleft',
-  size: 30,
-  color: Color.white,
+export const BackArrowIcon = styled(IconButton).attrs({
+  iconSource: leftCurvedArrowIcon,
+  iconSize: 30,
+  tintColor: Color.white,
 })`
   padding-right: 15px;
 `;
 
-export const ForwardArrowIcon = styled(IconAntDesignUI).attrs({
-  name: 'doubleright',
-  size: 30,
-  color: Color.white,
+export const ForwardArrowIcon = styled(IconButton).attrs({
+  iconSource: rightCurvedArrowIcon,
+  iconSize: 30,
+  tintColor: Color.white,
 })`
   padding-right: 15px;
+`;
+
+export const VerticalMenuWrapper = styled.View`
+  width: 100%;
+  borderBottomLeftRadius: 20px;
+  borderBottomRightRadius: 20px;
+  backgroundColor: ${Color.headerMenuBackgroundColor};
+`;
+
+export const HorizontalMenuWrapper = styled.View`
+  height: 100%;
+  width: 0px;
+  borderBottomLeftRadius: 20px;
+  borderBottomRightRadius: 20px;
+  backgroundColor: ${Color.headerMenuBackgroundColor};
+  right: 44px;
+  top: 50px;
+  position: absolute;
 `;

@@ -2,7 +2,13 @@ import React from 'react';
 
 import { Scroller, Container, MenuListItem } from './styles';
 
-import { addParticipantsIcon, leaveIcon, inviteIcon, crossIcon, downloadIcon} from '../../../images';
+import {
+  addParticipantsIcon,
+  leaveIcon,
+  inviteIcon,
+  crossIcon,
+  downloadIcon,
+} from '../../../images';
 
 const MENU_ITEMS = [
   {
@@ -12,12 +18,12 @@ const MENU_ITEMS = [
   },
   {
     id: 'generateInviteLink',
-    icon: leaveIcon,
+    icon: inviteIcon,
     name: 'Generate invite link',
   },
   {
     id: 'downloadWhiteboard',
-    icon: inviteIcon,
+    icon: downloadIcon,
     name: 'Download whiteboard as image',
   },
   {
@@ -27,15 +33,21 @@ const MENU_ITEMS = [
   },
   {
     id: 'leaveWhite',
-    icon: downloadIcon,
+    icon: leaveIcon,
     name: 'Leave whiteboard',
   },
 ];
 
 export const HeaderMenu = () => {
-  const renderItem = ({ item }) => {
-    return <MenuListItem label={item.name} iconSource={item.icon} />
-  }
+  const renderItem = ({ item, index }) => {
+    return (
+      <MenuListItem
+        label={item.name}
+        iconSource={item.icon}
+        isLast={(MENU_ITEMS.length - 1) === index}
+      />
+    );
+  };
 
   return (
     <Container>

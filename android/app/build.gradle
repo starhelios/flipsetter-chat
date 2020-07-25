@@ -127,6 +127,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+     dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "com.flipsetter.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -189,8 +193,8 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-device-info')
     implementation project(':react-native-orientation')
+    implementation project(':react-native-device-info')
     implementation project(':react-native-reanimated')
     implementation project(':@react-native-community_slider')
     implementation project(':react-native-webview')

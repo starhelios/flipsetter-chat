@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import SideMenu from 'react-native-side-menu';
 
-import { HeaderMenu, SettingWhitebordMenu } from '../../components/blocks';
+import { HeaderMenu, FooterMenu as FooterMenuUI } from '../../components/blocks';
 import Colors from '../../config/Colors';
 
 export { Header } from '../../components/blocks';
@@ -19,4 +19,4 @@ export const MenuLeft = styled(SideMenu).attrs({
   disableGestures: true,
 })``;
 
-export const RightMenu = styled(SettingWhitebordMenu)``;
+export const FooterMenu = styled(FooterMenuUI)``;

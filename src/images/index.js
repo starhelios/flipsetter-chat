@@ -10,6 +10,12 @@ import magicPointerIcon from './icon/magicPointer.png';
 import palitraIcon from './icon/palitra.png';
 import pencilIcon from './icon/pencil.png';
 import uploadImageIcon from './icon/uploadImage.png';
+import leftCurvedArrowIcon from './icon/leftCurvedArrow.png';
+import rightCurvedArrowIcon from './icon/rightCurvedArrow.png';
+import graphIcon from './icon/graph.png';
+import whitePaperIcon from './icon/whitePaper.png';
+import shapeIcon from './icon/shape.png';
+import imageIcon from './icon/image.png';
 
 // Import images
 import logoImg from './pictures/logo.png';
@@ -27,4 +33,10 @@ export {
   pencilIcon,
   uploadImageIcon,
   logoImg,
+  leftCurvedArrowIcon,
+  rightCurvedArrowIcon,
+  graphIcon,
+  whitePaperIcon,
+  shapeIcon,
+  imageIcon,
 };

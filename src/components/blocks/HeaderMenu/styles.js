@@ -4,10 +4,13 @@ import Colors from '../../../config/Colors';
 
 export { MenuListItem } from './MenuListItem';
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
     flex: 1;
-    background-color: ${Colors.headerBackgroundColor};
-    height: 100px;
+    background-color: ${Colors.headerMenuBackgroundColor};
+    height: 0;
+    top: 0;
 `;
 
-export const Scroller = styled.FlatList``;
+export const Scroller = styled.FlatList.attrs({
+  bounces: false,
+})``;

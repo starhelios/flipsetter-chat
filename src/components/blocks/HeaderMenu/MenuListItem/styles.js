@@ -1,14 +1,15 @@
 import styled from 'styled-components/native';
 
 import { Image } from '../../../ui/Image';
+import Colors from '../../../../config/Colors';
 
 export { Text } from '../../../ui/Text';
 
 export const Container = styled.View`  
-  border-bottom-width: ${(props) => (props.islast ? '0' : '2')}px;
+  border-bottom-width: ${(props) => (props.isLast ? '0' : '2')}px;
   padding-vertical: 15px;
   padding-horizontal: 15px;
-  border-color: grey;
+  border-color: ${Colors.headerMenuBorder};
   flex-direction: row;
 `;
 

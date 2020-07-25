@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import {
-  Header, Container, MenuLeft, RightMenu,
+  Header, Container, FooterMenu,
 } from './styles';
 
 import { useOrientation } from '../../helper/useOrientation';
@@ -16,15 +16,11 @@ const Whiteboard = () => {
   const orientation = useOrientation();
 
   return (
-    <MenuLeft isOpen={openLeftMenu} onChange={handleToggleLeftMenu}>
-      <Container>
-        <Header
-          onToggleMenu={handleToggleLeftMenu}
-          isOpenedMenu={openLeftMenu}
-        />
-        {orientation === 'PORTRAIT' && <RightMenu />}
-      </Container>
-    </MenuLeft>
+    <Container>
+      <Header />
+      {orientation === 'PORTRAIT' && <FooterMenu />}
+      {/*{orientation === 'LANDSCAPE' && <RightMenu />}*/}
+    </Container>
   );
 };
 
