@@ -8,6 +8,9 @@ const { width } = Dimensions.get('screen')
 
 export { BackgroundColorMenu } from '../BackgroundColorMenu';
 export { InsertFileMenu } from '../InsertFilesMenu';
+export { BrushStyleMenu } from '../BrushStyleMenu';
+export { EraserSizeMenu } from '../EraserSizeMenu';
+export { SelectColorMenu } from '../SelectColorMenu';
 
 export const Container = styled.View`
   display: flex;
@@ -31,7 +34,7 @@ export const Container = styled.View`
 `;
 
 export const Icon = styled(IconButton).attrs({
-  iconSize: 34,
+  iconSize: 28,
   tintColor: Colors.headerBackgroundColor,
 })``;
 

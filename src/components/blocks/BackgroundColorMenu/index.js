@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Scroller, Container, MenuListItem, Text,
+  Scroller, Container, MenuListItem, Text, ContainerHorizontal,
 } from './styles';
 
 import {
@@ -11,6 +11,8 @@ import {
   fillIcon,
   graphIcon,
 } from '../../../images';
+
+import { useOrientation } from '../../../helper/useOrientation';
 
 const MENU_ITEMS = [
   {
@@ -51,13 +53,16 @@ export const BackgroundColorMenu = () => {
     );
   };
 
+  const orientation = useOrientation();
+  const Wrapper = orientation === 'LANDSCAPE' ? ContainerHorizontal : Container;
+
   return (
-    <Container>
+    <Wrapper>
       <Text>Change background</Text>
       <Scroller
         data={MENU_ITEMS}
         renderItem={renderItem}
       />
-    </Container>
+    </Wrapper>
   );
 };

@@ -16,4 +16,6 @@ export default {
   menuSideSeparator: '#eff0f2',
   noticeText: '#fff',
   white: '#fff',
+  choosenGreen: '#179b6f',
+  choosenBackground: 'rgba(23,155,111,0.1)',
 };

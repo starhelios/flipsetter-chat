@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
-  Header, Container, FooterMenu,
+  Header, Container, FooterMenu, SideMenu,
 } from './styles';
 
 import { useOrientation } from '../../helper/useOrientation';
 
 const Whiteboard = () => {
-  const [openLeftMenu, updateLeftMenu] = useState(false);
-
-  const handleToggleLeftMenu = (toggle) => {
-    updateLeftMenu(toggle || !openLeftMenu);
-  };
-
   const orientation = useOrientation();
 
   return (
     <Container>
       <Header />
       {orientation === 'PORTRAIT' && <FooterMenu />}
-      {/*{orientation === 'LANDSCAPE' && <RightMenu />}*/}
+      {orientation === 'LANDSCAPE' && <SideMenu />}
     </Container>
   );
 };

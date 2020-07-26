@@ -16,9 +16,18 @@ import graphIcon from './icon/graph.png';
 import whitePaperIcon from './icon/whitePaper.png';
 import shapeIcon from './icon/shape.png';
 import imageIcon from './icon/image.png';
+import cameraIcon from './icon/camera.png';
+import photoPickerIcon from './icon/photoPicker.png';
+import uploadIcon from './icon/upload.png';
+import sliderPickerIcon from './icon/sliderPicker.png';
+import thinBrushIcon from './icon/thinBrush.png';
+import fatBrushIcon from './icon/fatBrush.png';
 
 // Import images
 import logoImg from './pictures/logo.png';
+import blackGradientImg from './pictures/blackGradient.png';
+import bluePalitraImg from './pictures/bluePalitra.png';
+import palitraImg from './pictures/palitra.png';
 
 export {
   addParticipantsIcon,
@@ -39,4 +48,13 @@ export {
   whitePaperIcon,
   shapeIcon,
   imageIcon,
+  cameraIcon,
+  photoPickerIcon,
+  uploadIcon,
+  sliderPickerIcon,
+  thinBrushIcon,
+  fatBrushIcon,
+  blackGradientImg,
+  bluePalitraImg,
+  palitraImg,
 };

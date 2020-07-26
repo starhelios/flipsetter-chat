@@ -1,31 +1,31 @@
 import React from 'react';
 
 import {
-  Scroller, Container, MenuListItem, Text,
+  Scroller, Container, MenuListItem, Text, ContainerHorizontal,
 } from './styles';
 
 import {
-  uploadImageIcon,
-  imageIcon,
-  whitePaperIcon,
-  fillIcon,
-  graphIcon,
+  cameraIcon,
+  photoPickerIcon,
+  uploadIcon,
 } from '../../../images';
+
+import { useOrientation } from '../../../helper/useOrientation';
 
 const MENU_ITEMS = [
   {
     id: 'takePhoto',
-    icon: fillIcon,
+    icon: cameraIcon,
     name: 'Take photo',
   },
   {
     id: 'choosePhoto',
-    icon: graphIcon,
+    icon: photoPickerIcon,
     name: 'Choose photo',
   },
   {
     id: 'uploadFile',
-    icon: uploadImageIcon,
+    icon: uploadIcon,
     name: 'Upload file',
   },
 ];
@@ -41,13 +41,16 @@ export const InsertFileMenu = () => {
     );
   };
 
+  const orientation = useOrientation();
+  const Wrapper = orientation === 'LANDSCAPE' ? ContainerHorizontal : Container;
+
   return (
-    <Container>
+    <Wrapper>
       <Text>Insert Files</Text>
       <Scroller
         data={MENU_ITEMS}
         renderItem={renderItem}
       />
-    </Container>
+    </Wrapper>
   );
 };

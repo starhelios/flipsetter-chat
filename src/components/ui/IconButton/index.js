@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { Touch, Icon } from './styles';
+import { Touch, Icon, IconWrapper } from './styles';
 
-export const IconButton = ({ iconSource, iconSize, tintColor, ...restProps }) => {
+export const IconButton = ({ isChoosen, iconSource, iconSize, tintColor, ...restProps }) => {
   return (
     <Touch {...restProps}>
-      <Icon source={iconSource} size={iconSize} tintColor={tintColor} />
+      <IconWrapper isChoosen={isChoosen}>
+        <Icon source={iconSource} size={iconSize} tintColor={tintColor} isChoosen={isChoosen} />
+      </IconWrapper>
     </Touch>
   );
 };
