@@ -12,6 +12,7 @@ import Janus from "./Janus";
 import InCallManager from 'react-native-incall-manager';
 import {Friends} from "../reducers/actions";
 import Whiteboard from "./Whiteboard";
+import WhiteboardNew from "../screens/Whiteboard";
 
 // let server = "wss://janus.flipsetter.com/janus-ws";
 let server = `wss://${(config.env === "dev") ? `${config.dev.uri}` : `${config.prod.uri}`}/janus-ws`;
@@ -428,7 +429,7 @@ class WebRTC extends Component<Props> {
         else if(this.props.call.type === 2){
             return(
                 <View style={{flex: 1}}>
-                    <Whiteboard
+                    <WhiteboardNew
                         thread_id={this.props.call.threadId}
                         call_id={this.props.call.id}
                     />
