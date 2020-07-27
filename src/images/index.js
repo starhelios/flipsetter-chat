@@ -22,12 +22,20 @@ import uploadIcon from './icon/upload.png';
 import sliderPickerIcon from './icon/sliderPicker.png';
 import thinBrushIcon from './icon/thinBrush.png';
 import fatBrushIcon from './icon/fatBrush.png';
+import backArrowIcon from './icon/backArrow.png';
+import forwardArrowIcon from './icon/forwardArrow.png';
+import chatIcon from './icon/chat.png';
+import microPhoneIcon from './icon/microPhone.png';
+import webCamIcon from './icon/webCam.png';
+import mutedMicroPhoneIcon from './icon/mutedMicroPhone.png';
 
 // Import images
 import logoImg from './pictures/logo.png';
 import blackGradientImg from './pictures/blackGradient.png';
 import bluePalitraImg from './pictures/bluePalitra.png';
 import palitraImg from './pictures/palitra.png';
+import landscapeBackgroundImg from './pictures/landscapeBackground.png';
+import portraitBackgroundImg from './pictures/portraitBackground.png';
 
 export {
   addParticipantsIcon,
@@ -57,4 +65,12 @@ export {
   blackGradientImg,
   bluePalitraImg,
   palitraImg,
+  landscapeBackgroundImg,
+  backArrowIcon,
+  forwardArrowIcon,
+  chatIcon,
+  microPhoneIcon,
+  webCamIcon,
+  mutedMicroPhoneIcon,
+  portraitBackgroundImg,
 };

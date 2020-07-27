@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Header, Container, FooterMenu, SideMenu,
+  Header, Container, PortraitBoard, LandscapeBoard,
 } from './styles';
 
 import { useOrientation } from '../../helper/useOrientation';
@@ -12,8 +12,8 @@ const Whiteboard = () => {
   return (
     <Container>
       <Header />
-      {orientation === 'PORTRAIT' && <FooterMenu />}
-      {orientation === 'LANDSCAPE' && <SideMenu />}
+      {orientation === 'PORTRAIT' && <PortraitBoard />}
+      {orientation === 'LANDSCAPE' && <LandscapeBoard />}
     </Container>
   );
 };

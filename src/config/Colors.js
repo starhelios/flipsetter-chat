@@ -18,4 +18,8 @@ export default {
   white: '#fff',
   choosenGreen: '#179b6f',
   choosenBackground: 'rgba(23,155,111,0.1)',
+  muted: '#fb6566',
+  black: '#000',
+  bubbleBack: '#fef4af',
+  bubbleText: '#958b5c',
 };

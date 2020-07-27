@@ -19,11 +19,9 @@ export const Container = styled.View`
   align-items: center;
   justify-content: space-evenly;
   flex-direction: column;
-  position: absolute;
-  top: 50px;
-  left: 45px;
   height: ${lessSize - 50}px;
   width: 50px;
+  z-index: 3;
   
   shadow-color: #000;
   shadow-offset: 1px 1px;

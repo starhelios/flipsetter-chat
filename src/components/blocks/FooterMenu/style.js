@@ -1,10 +1,10 @@
 import styled from 'styled-components/native';
-import { Dimensions } from 'react-native'
+import { Dimensions } from 'react-native';
 
 import { IconButton } from '../../ui';
 import Colors from '../../../config/Colors';
 
-const { width } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen');
 
 export { BackgroundColorMenu } from '../BackgroundColorMenu';
 export { InsertFileMenu } from '../InsertFilesMenu';
@@ -17,11 +17,10 @@ export const Container = styled.View`
   align-items: center;
   justify-content: space-evenly;
   flex-direction: row;
-  position: absolute;
-  bottom: 50px;
   height: 50px;
   width: 100%;
   padding-horizontal: 15px;
+  z-index: 3;
   
   shadow-color: #000;
   shadow-offset: 1px 1px;

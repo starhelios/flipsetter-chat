@@ -52,7 +52,7 @@ export const SideMenu = () => {
 
   return (
     <>
-      <Container isHorizontal>
+      <Container>
         <Icon iconSource={magicPointerIcon} onPress={closeMenus} />
         <Icon
           isChoosen={isBrushStyleMenuOpen}
