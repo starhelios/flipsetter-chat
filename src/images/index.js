@@ -36,6 +36,8 @@ import bluePalitraImg from './pictures/bluePalitra.png';
 import palitraImg from './pictures/palitra.png';
 import landscapeBackgroundImg from './pictures/landscapeBackground.png';
 import portraitBackgroundImg from './pictures/portraitBackground.png';
+import buildingsImg from './pictures/buildings.png';
+import workingImg from './pictures/working.png';
 
 export {
   addParticipantsIcon,
@@ -73,4 +75,6 @@ export {
   webCamIcon,
   mutedMicroPhoneIcon,
   portraitBackgroundImg,
+  buildingsImg,
+  workingImg,
 };
