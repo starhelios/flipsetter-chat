@@ -113,4 +113,5 @@ export const HorizontalMenuWrapper = styled.View`
   right: 44px;
   top: 50px;
   position: absolute;
+  zIndex: 999;
 `;
