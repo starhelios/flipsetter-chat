@@ -28,6 +28,9 @@ import chatIcon from './icon/chat.png';
 import microPhoneIcon from './icon/microPhone.png';
 import webCamIcon from './icon/webCam.png';
 import mutedMicroPhoneIcon from './icon/mutedMicroPhone.png';
+import extFullScreenIcon from './icon/extFullScreen.png';
+import fullScreenIcon from './icon/fullScreen.png';
+import closeIcon from './icon/close.png';
 
 // Import images
 import logoImg from './pictures/logo.png';
@@ -38,6 +41,8 @@ import landscapeBackgroundImg from './pictures/landscapeBackground.png';
 import portraitBackgroundImg from './pictures/portraitBackground.png';
 import buildingsImg from './pictures/buildings.png';
 import workingImg from './pictures/working.png';
+import womanImg from './pictures/woman.png';
+import manImg from './pictures/man.png';
 
 export {
   addParticipantsIcon,
@@ -77,4 +82,9 @@ export {
   portraitBackgroundImg,
   buildingsImg,
   workingImg,
+  womanImg,
+  manImg,
+  extFullScreenIcon,
+  fullScreenIcon,
+  closeIcon,
 };

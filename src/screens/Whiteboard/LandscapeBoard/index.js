@@ -4,7 +4,7 @@ import {
   Background, Container, SideMenu, WorkBoard, ShowSideMenuButton, BubbleInfo,
   TopWorkSide, BottomWorkSide, ShowDocManagerMenuButton, ShowChatButton,
   BottomLeftWorkSide, BottomRightWorkSide, ShowMicroPhoneButton, ShowCameraButton,
-  DocumentWrapper,
+  DocumentWrapper, CameraLandscapeView,
 } from './styles';
 
 const LandscapeBoard = () => {
@@ -53,6 +53,11 @@ const LandscapeBoard = () => {
           isOpen={showDocManagerMenu}
           onClose={() => toogleDocManagerMenu(!showDocManagerMenu)}
         />
+        { showCamera && (
+        <CameraLandscapeView
+          onClose={() => toogleCamera(!showCamera)}
+        />
+        )}
       </Container>
     </Background>
   );

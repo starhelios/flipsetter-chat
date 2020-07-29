@@ -1,6 +1,8 @@
 import React from 'react';
+import PT from 'prop-types';
 import { mix, useTransition } from 'react-native-redash';
 import Animated from 'react-native-reanimated';
+import noop from 'lodash/noop';
 
 import { MenuWrapper, DocumentManager } from './styles';
 
@@ -18,4 +20,14 @@ export const DocumentWrapper = ({ isOpen, onClose }) => {
       <DocumentManager onClose={onClose} />
     </MenuWrapper>
   );
+};
+
+DocumentWrapper.propTypes = {
+  isOpen: PT.bool,
+  onClose: PT.func,
+};
+
+DocumentWrapper.defaultProps = {
+  isOpen: false,
+  onClose: noop,
 };
