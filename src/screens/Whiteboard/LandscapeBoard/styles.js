@@ -9,6 +9,7 @@ import { IconButton, InfoBubble } from '../../../components/ui';
 import Colors from '../../../config/Colors';
 
 export { DocumentWrapper } from './DocumentWrapper';
+export { MessengerWrapper } from './MessengerWrapper';
 export { SideMenu, CameraLandscapeView } from '../../../components/blocks';
 
 export const Background = styled.ImageBackground.attrs({

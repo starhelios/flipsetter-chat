@@ -8,7 +8,7 @@ import {
 
 import Colors from '../../../config/Colors';
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export const Container = styled.View`
   height: ${height - 50}px;

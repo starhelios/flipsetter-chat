@@ -31,6 +31,8 @@ import mutedMicroPhoneIcon from './icon/mutedMicroPhone.png';
 import extFullScreenIcon from './icon/extFullScreen.png';
 import fullScreenIcon from './icon/fullScreen.png';
 import closeIcon from './icon/close.png';
+import smileIcon from './icon/smile.png';
+import clipIcon from './icon/clip.png';
 
 // Import images
 import logoImg from './pictures/logo.png';
@@ -43,6 +45,10 @@ import buildingsImg from './pictures/buildings.png';
 import workingImg from './pictures/working.png';
 import womanImg from './pictures/woman.png';
 import manImg from './pictures/man.png';
+import man1Img from './pictures/man1.png';
+import man2Img from './pictures/man2.png';
+import man3Img from './pictures/man3.png';
+import man4Img from './pictures/man4.png';
 
 export {
   addParticipantsIcon,
@@ -87,4 +93,10 @@ export {
   extFullScreenIcon,
   fullScreenIcon,
   closeIcon,
+  smileIcon,
+  clipIcon,
+  man1Img,
+  man2Img,
+  man3Img,
+  man4Img,
 };

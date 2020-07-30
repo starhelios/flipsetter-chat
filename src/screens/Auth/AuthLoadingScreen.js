@@ -17,7 +17,7 @@ class AuthLoadingScreen extends React.Component {
     componentDidMount(){
         setTimeout(() => {
             this._bootstrapAsync();
-       }, 3000);
+       }, 100);
 
        SplashScreen.hide();
     }
@@ -25,7 +25,7 @@ class AuthLoadingScreen extends React.Component {
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
         if(this.props.auth.isLoggedIn && this.props.auth.accessToken){
-            this.props.navigation.navigate('Main');
+            this.props.navigation.navigate('Whiteboard');
         }
         else{
             this.props.navigation.navigate('Login');

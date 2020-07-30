@@ -4,7 +4,7 @@ import {
   Background, Container, SideMenu, WorkBoard, ShowSideMenuButton, BubbleInfo,
   TopWorkSide, BottomWorkSide, ShowDocManagerMenuButton, ShowChatButton,
   BottomLeftWorkSide, BottomRightWorkSide, ShowMicroPhoneButton, ShowCameraButton,
-  DocumentWrapper, CameraLandscapeView,
+  DocumentWrapper, CameraLandscapeView, MessengerWrapper,
 } from './styles';
 
 const LandscapeBoard = () => {
@@ -52,6 +52,10 @@ const LandscapeBoard = () => {
         <DocumentWrapper
           isOpen={showDocManagerMenu}
           onClose={() => toogleDocManagerMenu(!showDocManagerMenu)}
+        />
+        <MessengerWrapper
+          isOpen={showChat}
+          onClose={() => toogleChat(!showChat)}
         />
         { showCamera && (
         <CameraLandscapeView
