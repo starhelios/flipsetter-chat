@@ -58,11 +58,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-# lock files
-package-lock.json
-yarn.lock
-yarn.lock.old
-/ios/Podfile.lock
-
 #Don't commit this
 
