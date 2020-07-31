@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { mix, useTransition } from 'react-native-redash';
+import Sound from 'react-native-sound';
 
 import {
-  Container, Icon, BackgroundColorMenu, MenuWrapper, InsertFileMenu, BrushStyleMenu, EraserSizeMenu, SelectColorMenu
+  Container, Icon, BackgroundColorMenu, MenuWrapper, InsertFileMenu,
+  BrushStyleMenu, EraserSizeMenu, SelectColorMenu,
 } from './style';
 
 import {
@@ -11,6 +13,8 @@ import {
 } from '../../../images';
 
 import { useOrientation } from '../../../helper/useOrientation';
+
+const whoosh = new Sound('dingsoundeffect.mp3', Sound.MAIN_BUNDLE);
 
 export const FooterMenu = () => {
   const [isBackgroundColorMenuOpen, onToggleBackgroundColorMenu] = useState(false);
@@ -26,6 +30,10 @@ export const FooterMenu = () => {
     onSelectColorMenu(false);
   };
   const orientation = useOrientation(closeMenus);
+
+  useEffect(() => {
+    if (whoosh.isLoaded()) whoosh.stop(() => whoosh.play());
+  }, [isBackgroundColorMenuOpen, isInsertFileMenuOpen, isBrushStyleMenuOpen, isEraserMenuOpen, isSelectColorMenuOpen]);
 
   const transitionBackgroundColor = useTransition((orientation === 'PORTRAIT') && isBackgroundColorMenuOpen, {
     duration: 200,

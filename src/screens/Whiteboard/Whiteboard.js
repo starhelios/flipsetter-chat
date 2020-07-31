@@ -1,4 +1,5 @@
 import React from 'react';
+import Sound from 'react-native-sound';
 
 import {
   Header, Container, PortraitBoard, LandscapeBoard,

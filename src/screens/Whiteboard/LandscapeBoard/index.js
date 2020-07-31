@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Sound from 'react-native-sound';
 
 import {
   Background, Container, SideMenu, WorkBoard, ShowSideMenuButton, BubbleInfo,
@@ -7,12 +8,18 @@ import {
   DocumentWrapper, CameraLandscapeView, MessengerWrapper,
 } from './styles';
 
+const whoosh = new Sound('dingsoundeffect.mp3', Sound.MAIN_BUNDLE);
+
 const LandscapeBoard = () => {
   const [showSideMenu, toogleSideMenu] = useState(false);
   const [showDocManagerMenu, toogleDocManagerMenu] = useState(false);
   const [showChat, toogleChat] = useState(false);
   const [showMicrophone, toogleMicrophone] = useState(false);
   const [showCamera, toogleCamera] = useState(false);
+
+  useEffect(() => {
+    if (whoosh.isLoaded()) whoosh.stop(() => whoosh.play());
+  }, [showDocManagerMenu, showCamera, showChat, showMicrophone]);
 
   return (
     <Background>

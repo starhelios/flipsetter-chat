@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { mix, useTransition } from 'react-native-redash';
+import Sound from 'react-native-sound';
 
 import {
   Container, Icon, BackgroundColorMenu, MenuWrapper,
@@ -12,6 +13,8 @@ import {
 } from '../../../images';
 
 import { useOrientation } from '../../../helper/useOrientation';
+
+const whoosh = new Sound('dingsoundeffect.mp3', Sound.MAIN_BUNDLE);
 
 export const SideMenu = () => {
   const [isBackgroundColorMenuOpen, onToggleBackgroundColorMenu] = useState(false);
@@ -27,6 +30,10 @@ export const SideMenu = () => {
     onSelectColorMenu(false);
   };
   const orientation = useOrientation(closeMenus);
+
+  useEffect(() => {
+    if (whoosh.isLoaded()) whoosh.stop(() => whoosh.play());
+  }, [isBackgroundColorMenuOpen, isInsertFileMenuOpen, isBrushStyleMenuOpen, isEraserMenuOpen, isSelectColorMenuOpen]);
 
   const transitionBackgroundColor = useTransition((orientation === 'LANDSCAPE') && isBackgroundColorMenuOpen, {
     duration: 200,
