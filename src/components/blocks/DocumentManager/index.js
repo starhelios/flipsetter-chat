@@ -30,7 +30,7 @@ const FILE_LIST = [{
 export const DocumentManager = ({ onClose }) => {
   return (
     <Container>
-      <CloseMenu onPress={onClose} />
+      { onClose && <CloseMenu onPress={onClose} />}
       <Header>Document Manager</Header>
       <Hr />
       <Folder

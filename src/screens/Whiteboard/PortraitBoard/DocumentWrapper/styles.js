@@ -1,22 +1,25 @@
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import Colors from '../../../../config/Colors';
 
 export { DocumentManager } from '../../../../components/blocks';
 
 export const MenuWrapper = styled.View`
-  padding-top: 20px;
+  width: 100%;
   position: absolute;
-  right: 0;
-  height: 100%;
+  bottom: 0;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 24px;
   
   backgroundColor: ${Colors.white};
   
   shadow-color: #000;
-  shadow-offset: 1px 1px;
-  shadow-opacity: 0.1;
-  shadow-radius: 5px;
+  shadow-offset: 2px 2px;
+  shadow-opacity: 0.2;
+  shadow-radius: 15px;
   
   border-color: ${Colors.menuSideSeparator};
 `;

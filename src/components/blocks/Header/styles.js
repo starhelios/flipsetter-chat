@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import IconIoniconsUI from 'react-native-vector-icons/Ionicons';
 import IconFeatherUI from 'react-native-vector-icons/Feather';
+import { Dimensions, Platform } from 'react-native';
 
 import { Text } from '../../ui/Text';
 import { Image } from '../../ui/Image';
@@ -9,6 +10,14 @@ import { IconButton } from '../../ui/IconButton';
 import { logoImg, leftCurvedArrowIcon, rightCurvedArrowIcon } from '../../../images';
 
 import Color from '../../../config/Colors';
+
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
+const isIphoneX = Platform.OS !== 'android'
+  && (deviceHeight === 812
+    || deviceWidth === 812
+    || deviceHeight === 896
+    || deviceWidth === 896);
 
 export { HeaderMenu } from '../HeaderMenu';
 
@@ -110,7 +119,7 @@ export const HorizontalMenuWrapper = styled.View`
   borderBottomLeftRadius: 20px;
   borderBottomRightRadius: 20px;
   backgroundColor: ${Color.headerMenuBackgroundColor};
-  right: 44px;
+  right: ${isIphoneX ? 44 : 0}px;
   top: 50px;
   position: absolute;
   zIndex: 999;

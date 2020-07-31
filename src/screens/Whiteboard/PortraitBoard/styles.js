@@ -8,6 +8,9 @@ import {
 import { IconButton, InfoBubble } from '../../../components/ui';
 import Colors from '../../../config/Colors';
 
+export { MessangerWrapper } from './MessangerWrapper';
+export { DocumentWrapper } from './DocumentWrapper';
+export { WebCamBlock } from './WebCamBlock';
 export { FooterMenu } from '../../../components/blocks';
 
 export const Background = styled.ImageBackground.attrs({

@@ -4,6 +4,7 @@ import {
   Background, Container, FooterMenu, WorkBoard, BubbleInfo, BottomLeftWorkSide,
   TopWorkSide, BottomWorkSide, ShowDocManagerMenuButton, ShowChatButton,
   TopLeftWorkSide, BottomRightWorkSide, ShowMicroPhoneButton, ShowCameraButton,
+  MessangerWrapper, DocumentWrapper, WebCamBlock
 } from './styles';
 
 const PortraitBoard = () => {
@@ -43,7 +44,13 @@ const PortraitBoard = () => {
             </BottomRightWorkSide>
           </BottomWorkSide>
         </WorkBoard>
+        {showCamera && <WebCamBlock />}
         <FooterMenu />
+        <MessangerWrapper
+          isOpen={showChat}
+          onClose={() => toogleChat(!showChat)}
+        />
+        <DocumentWrapper isOpen={showDocManagerMenu} />
       </Container>
     </Background>
   );
