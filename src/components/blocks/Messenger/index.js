@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import { man4Img, man3Img } from '../../../images';
 
 import {
-  Chat, Container, InfoBubble, SystemWrapper, InputToolbar,
+  Chat, Container, InfoBubble, SystemWrapper, InputToolbar, Bubble
 } from './styles';
 
 export const Messenger = () => {
@@ -61,7 +61,9 @@ export const Messenger = () => {
         messages={messages}
         onSend={onSend}
         placeholder="Start typing"
+        renderUsernameOnMessage
         onPressActionButton={() => null}
+        renderBubble={(props) => <Bubble {...props} />}
         renderInputToolbar={(props) => <InputToolbar {...props} />}
         renderSystemMessage={(props) => <SystemWrapper><InfoBubble rounded label={get(props, 'currentMessage.text', '')} /></SystemWrapper>}
         user={{

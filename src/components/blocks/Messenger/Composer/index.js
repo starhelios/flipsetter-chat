@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Platform, StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { Platform, StyleSheet, TextInput } from 'react-native'
 import { MIN_COMPOSER_HEIGHT, DEFAULT_PLACEHOLDER } from 'react-native-gifted-chat/lib/Constant'
 import Color from 'react-native-gifted-chat/lib/Color'
 import { StylePropType } from 'react-native-gifted-chat/lib/utils'

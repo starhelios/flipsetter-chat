@@ -18,10 +18,11 @@ export const MessengerWrapper = ({ isOpen, onClose }) => {
   });
   const width = mix(transition, 0, 350);
   const paddingHorizontal = mix(transition, 0, 20);
+  const borderRightWidth = mix(transition, 0, 1);
   return (
     <MenuWrapper
       as={Animated.View}
-      style={{ width, paddingHorizontal }}
+      style={{ width, paddingHorizontal, borderRightWidth }}
     >
       <HeaderContainer>
         <CloseMenu onPress={onClose} />

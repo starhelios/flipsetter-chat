@@ -6,6 +6,8 @@ export { InfoBubble } from '../../ui';
 
 export { InputToolbar } from './InputToolbar';
 
+export { Bubble } from './Bubble';
+
 export const Chat = styled(GiftedChat).attrs({
 
 })``;

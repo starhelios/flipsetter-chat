@@ -10,10 +10,10 @@ export { Messenger } from '../../../../components/blocks';
 const { height } = Dimensions.get('screen');
 
 export const MenuWrapper = styled.View`
-  padding-top: 20px;
+  padding-vertical: 20px;
   position: absolute;
   left: 0;
-  height: ${height - 70}px;
+  height: ${height - 50}px;
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -61,6 +61,7 @@ export const HeaderContainer = styled.View`
 export const AvatarsWrapper = styled.View`
   display: flex;
   flex-direction: row;
+  padding-bottom: 4px;
 `;
 
 export const Avatar = styled.Image`

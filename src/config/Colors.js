@@ -22,4 +22,5 @@ export default {
   black: '#000',
   bubbleBack: '#fef4af',
   bubbleText: '#958b5c',
+  messageBackGround: '#179b6f',
 };

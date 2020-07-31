@@ -60,35 +60,40 @@ class Actions extends React.Component {
       return this.props.icon()
     }
     return (
-      <View style={[styles.wrapper, this.props.wrapperStyle]}>
+      <View style={[styles.container, styles.wrapper, this.props.wrapperStyle]}>
+
+        <TouchableOpacity
+          style={[styles.wrapper, this.props.containerStyle]}
+          onPress={this.props.onPressActionButton || this.onActionsPress}
+        >
         <Image resizeMode='contain' source={clipIcon} style={[styles.iconText, this.props.iconTextStyle]} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.wrapper, this.props.containerStyle]}
+          onPress={this.props.onPressActionButton || this.onActionsPress}
+        >
         <Image resizeMode='contain' source={smileIcon} style={[styles.iconText, this.props.iconTextStyle]} />
-    </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
   render() {
-    return (
-      <TouchableOpacity
-        style={[styles.container, this.props.containerStyle]}
-        onPress={this.props.onPressActionButton || this.onActionsPress}
-      >
-        {this.renderIcon()}
-      </TouchableOpacity>
-    )
+    return this.renderIcon()
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 10,
     marginTop: 5,
   },
   wrapper: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 60,
+    paddingRight: 10,
+    top: -3,
+    right: -5,
   },
   iconText: {
     color: Color.defaultColor,
