@@ -7,4 +7,6 @@ export default {
   sendIcon: require('../components/assets/send.png'),
   galleryIcon: require('../components/assets/gallery.png'),
   cancelIcon: require('../components/assets/cancel.png'),
+  cancelIcon1: require('../components/assets/cancel1.png'),
+
 };

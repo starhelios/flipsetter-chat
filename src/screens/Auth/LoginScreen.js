@@ -45,7 +45,7 @@ class LoginScreen extends React.Component {
         }
     }
 
- checkEmailValid(value) {
+    checkEmailValid(value) {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (reg.test(value) === true) {
             return false

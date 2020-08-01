@@ -180,7 +180,7 @@ class RegisterScreen extends React.Component {
             ;
         }}>
             <Header style={styles.header} transparent>
-                <Left><TouchableOpacity onPress={() => this.props.navigation.goBack()}><Text>Back</Text></TouchableOpacity></Left>
+                <Left><TouchableOpacity onPress={() => this.props.navigation.goBack()}><Text style={styles.backText}>Back</Text></TouchableOpacity></Left>
                 <Body></Body>
                 <Right></Right>
             </Header>
@@ -188,7 +188,7 @@ class RegisterScreen extends React.Component {
             <KeyboardAvoidingView style={[styles.container, {flex:1}]} behavior={(Platform.OS === 'ios') && 'padding'} enabled>
                 <View style={styles.logo}>
                     <Text style={styles.logoText}>Register</Text>
-                    <Text>with FlipSetter</Text>
+                    <Text style={styles.backText}>with FlipSetter</Text>
                     <Text style={styles.error}>{this.state.msg}</Text>
                 </View>
                 <TextInput
@@ -255,7 +255,7 @@ class RegisterScreen extends React.Component {
                     style={styles.loginButton}
                     underlayColor='#04b600'
                 >
-                    <Text>Register</Text>
+                    <Text style={[styles.backText,{fontSize:20}]}>Register</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
         </Container>
@@ -267,12 +267,18 @@ class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#3d833e',
+        backgroundColor: '#25422e',
         alignItems: 'center',
         justifyContent: 'center',
     },
     header: {
-        backgroundColor: '#3d833e',
+        backgroundColor: '#25422e',
+    },
+    backText:{
+        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'white'
     },
     error: {
         color: '#000',
@@ -286,7 +292,7 @@ const styles = StyleSheet.create({
     logoText:{
         fontSize:25,
         marginTop:10,
-        color:'#000',
+        color:'#ffffff',
 
     },
     signup:{
@@ -296,12 +302,13 @@ const styles = StyleSheet.create({
     input: {
         width: 300,
         height: 44,
-        borderRadius: 22,
+        borderRadius: 8,
         backgroundColor: '#fff',
         padding: 10,
         borderWidth: 1,
         borderColor: 'black',
         marginBottom: 10,
+        textAlign:'center',
         color: '#000',
 
     },
@@ -312,7 +319,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent: 'center',
         color:'#000',
-        backgroundColor: "#04b600",
+        backgroundColor: "#25422e",
         marginTop: 25,
     },
 

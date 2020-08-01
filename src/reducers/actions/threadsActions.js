@@ -33,7 +33,7 @@ function setActiveThread(id){
 }
 
 function getThreads(){
-    // alert(`${config.api.messenger.get.type('threads')}`)
+
     return {
         type: actionTypes.GET_THREADS,
         payload: {

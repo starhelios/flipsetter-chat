@@ -3,10 +3,13 @@ import React, {Component} from "react";
 
 export default function Api () {
     let apiVersion = 0;
-    // let prefix = `api/v${apiVersion}`;
-let prefix = `api/v1`;
+    let prefix = `api/v${apiVersion}`;
+let prefix1 = `api/v1`;
 
     let uri = config.env === 'dev' ? `${config.dev.uri}/${prefix}` : `${config.prod.uri}/${prefix}`;
+    let uri1 = config.env === 'dev' ? `${config.dev.uri}/${prefix1}` : `${config.prod.uri}/${prefix1}`;
+
+   
     let endpoints = {
         client: {
             get: {
@@ -74,6 +77,8 @@ let prefix = `api/v1`;
     return {
         apiVersion: apiVersion,
         prefix: prefix,
+        prefix1:prefix1,
+        uri1:uri1,
         uri: uri,
         ...endpoints,
     }

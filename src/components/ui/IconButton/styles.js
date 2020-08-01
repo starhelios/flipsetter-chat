@@ -1,5 +1,18 @@
 import styled from 'styled-components/native';
 
-export const Touch = styled.TouchanbleOpacity``;
+import { Image } from '../Image';
 
-export const Icon = styled.Image``;
+import Colors from '../../../config/Colors';
+
+export const Touch = styled.TouchableOpacity``;
+
+export const Icon = styled(Image).attrs((props) => ({
+  resizeMode: 'contain',
+  tintColor: props.isChoosen ? Colors.choosenGreen : props.tintColor,
+}))``;
+
+export const IconWrapper = styled.View`
+  backgroundColor: ${(props) => (props.isChoosen ? Colors.choosenBackground : 'transparent')};
+  padding: 8px;
+  borderRadius: 6px;
+`;

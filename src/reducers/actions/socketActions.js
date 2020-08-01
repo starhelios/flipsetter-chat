@@ -69,7 +69,7 @@ function joinDevice(device_id, device_token, voip_token){
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
             request: {
-                url: `${config.api.client.post.deviceJoin}`,
+                url: `${config.prefix}/user/devices`,
                 data: {
                     "device_id": device_id,
                     // "device_type": (Platform.OS === 'android') ? 0 : 1,

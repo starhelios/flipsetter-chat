@@ -37,7 +37,10 @@ export function getUser(){
         payload: {
             request: {
                 method: 'GET',
-                url: `${config.api.user.get.info}`,
+                url: `${(config.env === "dev") ? `https://${config.dev.uri}`:`https://${config.dev.uri}`}${config.prefix}/user`,
+
+                // uri = config.env === 'dev' ? `${config.dev.uri}/${prefix}` : `${config.prod.uri}/${prefix}`;
+                // url:`${config.prefix}/user`,
                 headers:{
                     Authorization: null,
                     Accept: 'application/json',

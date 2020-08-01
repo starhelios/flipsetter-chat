@@ -34,6 +34,17 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
         maven { url "https://jitpack.io" }
-  
+
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion 28        // version of compile sdk used for project
+                buildToolsVersion '28.0.3'    // version of build tool used for project
+            }
+        }
     }
 }

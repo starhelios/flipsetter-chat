@@ -63,8 +63,9 @@ function appHeartbeat(){
         }
     }
 }
-function joinDevice(device_id, device_token, voip_token){
 
+
+function joinDevice(device_id, device_token, voip_token){
     DeviceInfo.getDeviceName().then(deviceName => {
         Constants.DEVICE_NAME = deviceName;
       });
@@ -72,7 +73,7 @@ function joinDevice(device_id, device_token, voip_token){
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
             request: {
-                url: `${config.api.client.post.deviceJoin}`,
+                url: `${config.prefix}/user/devices`,
                 data: {
                     "device_id": device_id,
                     // "device_type": (Platform.OS === 'android') ? 0 : 1,
@@ -96,7 +97,7 @@ function registerDevice(device_id, fcm_token, voip_token){
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
         payload: {
             request: {
-                url: `${config.api.client.post.deviceRegister}`,
+                url: `${config.prefix}/user/devices`,
                 data: {
                     "device_id": device_id,
                     "device_token": fcm_token,

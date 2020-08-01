@@ -9,7 +9,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 const CustomPickerView = (props) => {
     return (
-        <View style={{ bottom: 0, alignSelf: 'center', justifyContent: 'center', position: 'absolute',  backgroundColor:'transparent', height:Platform.OS === 'ios'? hp('11%'):hp('12.5%'), alignItems: 'center', width: '100%',marginBottom:Platform.OS ==='ios'? hp('9.5%'):hp('8%')}}>
+        <View style={{ bottom: 0, alignSelf: 'center', justifyContent: 'center', position: 'absolute',  backgroundColor:'transparent', height:Platform.OS === 'ios'? hp('11%'):hp('12.5%'), alignItems: 'center', width: '100%',marginBottom:Platform.OS ==='ios'? hp('9%'):hp('9%')}}>
                      <TouchableOpacity onPress={() => props.cancel()} style={{height:hp('4.5%'),width:hp('4.5%'),borderRadius:50, alignSelf: 'center', justifyContent: 'center',top:0,right:0,position:'absolute',marginRight:8,zIndex:1 }}>
                     <Image resizeMode='contain' source={Images.cancelIcon} style={{height:hp('4.5%'),width:hp('4.5%'), alignSelf: 'center' }} />
             </TouchableOpacity>

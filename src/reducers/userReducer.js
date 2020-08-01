@@ -22,8 +22,9 @@ export default function(state=initialState, action){
             return {...state, email: action.payload};
         case User.actionTypes.GET_USER_SUCCESS:
             let data = action.payload.data;
+            // alert(JSON.stringify(data))
             return {...state,
-                id: data.user_id,
+                id: data.user_id ? data.user_id : data.id,
                 first: data.first,
                 last: data.last,
                 email: data.email,

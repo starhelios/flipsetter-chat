@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-import { Touch, Icon } from './styles'
+import { Touch, Icon, IconWrapper } from './styles';
 
-export const IconButton = ({ iconSource }) => {
-  return <Touch><Icon source={{ uri: iconSource }} /></Touch>
-}
-
+export const IconButton = ({ isChoosen, iconSource, iconSize, tintColor, ...restProps }) => {
+  return (
+    <Touch {...restProps}>
+      <IconWrapper isChoosen={isChoosen}>
+        <Icon source={iconSource} size={iconSize} tintColor={tintColor} isChoosen={isChoosen} />
+      </IconWrapper>
+    </Touch>
+  );
+};

@@ -130,14 +130,14 @@ class Login extends Component<Props> {
 
                     <TouchableOpacity
                         style={styles.loginButton}
-                        underlayColor='#04b600'
+                        // underlayColor='#04b600'
                         onPress={this.props.loginButton}
                     >
                     <Text style={styles.loginText}>Login</Text>
                     </TouchableOpacity>
 
                     <Text style={styles.signup} onPress={this.props.signUp}>Sign Up</Text>
-                    <Text style={styles.signup} onPress={this.props.forgot}>Forgot Password</Text>
+                    <Text style={styles.signup} onPress={this.props.forgot}>Forgot Password ?</Text>
                 {/*</Animated.View>*/}
 
 
@@ -197,12 +197,13 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         height:30,
+        marginTop:5,
         width:100,
         borderRadius:15,
         alignItems:'center',
         justifyContent: 'center',
         color:'#000',
-        backgroundColor: "#04b600",
+        // backgroundColor: "#04b600",
     },
 
 });

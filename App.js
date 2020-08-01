@@ -104,15 +104,15 @@ class Main extends Component {
                                 NavigationService.setTopLevelNavigator(navigatorRef);
                             }
                         }}
-                        onNavigationStateChange={(prevState, currentState, action) => {
-                            const currentRouteName = getActiveRouteName(currentState);
-                            const previousRouteName = getActiveRouteName(prevState);
-                            if( previousRouteName !== currentRouteName){
-                                // console.log(currentRouteName);
-                                // console.log("__DEV__", __DEV__)
-                                this._updateRoute(currentRouteName);
-                            }
-                        }}
+                                      onNavigationStateChange={(prevState, currentState, action) => {
+                                          const currentRouteName = getActiveRouteName(currentState);
+                                          const previousRouteName = getActiveRouteName(prevState);
+                                          if( previousRouteName !== currentRouteName){
+                                              // console.log(currentRouteName);
+                                              // console.log("__DEV__", __DEV__)
+                                              this._updateRoute(currentRouteName);
+                                          }
+                                      }}
                             // appState={this.appState}
                         />
                         {/*</SafeAreaProvider>*/}
