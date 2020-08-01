@@ -1,18 +1,18 @@
 import React from 'react';
-import Sound from 'react-native-sound';
 
 import {
-  Header, Container, PortraitBoard, LandscapeBoard,
+  Header, ViewContainer, SafeContainer, PortraitBoard, LandscapeBoard,
 } from './styles';
 
 import { useOrientation } from '../../helper/useOrientation';
 
-const Whiteboard = () => {
+const Whiteboard = (props) => {
   const orientation = useOrientation();
+  const Container = orientation === 'LANDSCAPE' ? ViewContainer : SafeContainer;
 
   return (
     <Container>
-      <Header />
+      <Header {...props} />
       {orientation === 'PORTRAIT' && <PortraitBoard />}
       {orientation === 'LANDSCAPE' && <LandscapeBoard />}
     </Container>

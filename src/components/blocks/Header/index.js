@@ -10,7 +10,7 @@ import {
   VerticalMenuWrapper, HeaderMenu, HorizontalMenuWrapper, MoreIconWrapper,
 } from './styles';
 
-export const Header = () => {
+export const Header = (props) => {
   const [isOpenedMenu, onToggleMenu] = useState(false);
   const closeMenu = () => onToggleMenu(false);
   const orientation = useOrientation(closeMenu);
@@ -28,7 +28,7 @@ export const Header = () => {
 
   return (
     <>
-      <Container>
+      <Container landscape={orientation === 'LANDSCAPE'}>
         <LeftSide>
           <Logo />
           { orientation === 'LANDSCAPE' && <HeaderText>FlipSetter Whiteboard</HeaderText>}
@@ -48,13 +48,13 @@ export const Header = () => {
         as={Animated.View}
         style={{ height, padding }}
       >
-        <HeaderMenu />
+        <HeaderMenu {...props} />
       </VerticalMenuWrapper>
       <HorizontalMenuWrapper
         as={Animated.View}
         style={{ width }}
       >
-        <HeaderMenu />
+        <HeaderMenu {...props} />
       </HorizontalMenuWrapper>
     </>
   );

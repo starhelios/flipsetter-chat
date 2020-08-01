@@ -5,6 +5,8 @@ import Colors from '../../../../config/Colors';
 
 export { Text } from '../../../ui/Text';
 
+export const Touch = styled.TouchableOpacity``;
+
 export const Container = styled.View`  
   border-bottom-width: ${(props) => (props.isLast ? '0' : '2')}px;
   padding-vertical: 15px;

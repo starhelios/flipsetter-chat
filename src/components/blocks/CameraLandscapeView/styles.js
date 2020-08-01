@@ -8,23 +8,25 @@ import {
 
 import Colors from '../../../config/Colors';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
+
+const sizeOfContainer = (height > width) ? width : height;
 
 export const Container = styled.View`
-  height: ${height - 50}px;
+  height: ${sizeOfContainer - 50}px;
   background-color: ${Colors.headerMenuBackgroundColor};
-  width: ${(props) => (props.isFullScreen ? '100%' : '320px')};
+  width: ${(props) => (props.isFullScreen ? '100%' : '360px')};
   display: flex;
   max-width: 100%;
   flex-direction: row;
   position: absolute;
   right: 0px;
+  padding-right: 40px;
   z-index: 3;
 `;
 
 export const ButtonContainer = styled.View`
   width: 40px;
-  height:  ${height - 50}px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;

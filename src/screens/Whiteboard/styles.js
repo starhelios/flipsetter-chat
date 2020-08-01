@@ -6,7 +6,12 @@ export { Header, FooterMenu } from '../../components/blocks';
 export { LandscapeBoard } from './LandscapeBoard';
 export { PortraitBoard } from './PortraitBoard';
 
-export const Container = styled.SafeAreaView`
+export const SafeContainer = styled.SafeAreaView`
+  background-color: ${Colors.white};
+  flex: 1;
+`;
+
+export const ViewContainer = styled.View`
   background-color: ${Colors.white};
   flex: 1;
 `;

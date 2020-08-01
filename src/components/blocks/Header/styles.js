@@ -28,7 +28,7 @@ export const Container = styled.View`
   justify-content: space-between;
   width: 100%;
   height: 50px;
-  paddingHorizontal: 10px;
+  paddingHorizontal: ${(props) => (props.landscape ? 50 : 10)}px;
 `;
 
 export const LeftSide = styled.View`
