@@ -5,6 +5,11 @@ import Colors from '../../../../config/Colors';
 
 export { Text } from '../../../ui/Text';
 
+<<<<<<< HEAD
+=======
+export const Touch = styled.TouchableOpacity``;
+
+>>>>>>> artemBranch
 export const Container = styled.View`  
   border-bottom-width: ${(props) => (props.isLast ? '0' : '2')}px;
   padding-vertical: 15px;

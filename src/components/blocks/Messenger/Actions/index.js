@@ -96,11 +96,15 @@ const styles = StyleSheet.create({
     right: -5,
   },
   iconText: {
+<<<<<<< HEAD
     color: Color.defaultColor,
     fontWeight: 'bold',
     fontSize: 16,
     backgroundColor: Color.backgroundTransparent,
     textAlign: 'center',
+=======
+    backgroundColor: Color.backgroundTransparent,
+>>>>>>> artemBranch
     height: 25,
     width: 25,
   },

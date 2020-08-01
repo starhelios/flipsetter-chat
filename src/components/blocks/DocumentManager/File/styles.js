@@ -12,7 +12,10 @@ export const Image = styled.Image`
   background-color: grey;
   height: 140px;
   width: 140px;
+<<<<<<< HEAD
   
+=======
+>>>>>>> artemBranch
 `;
 
 export const FileNameLabel = styled(Text)`

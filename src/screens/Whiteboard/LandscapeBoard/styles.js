@@ -28,6 +28,7 @@ export const WorkBoard = styled.View`
   flex: 1;
   margin: 15px;
   justify-content: space-between;
+  padding-horizontal: 25px;
 `;
 
 export const TopWorkSide = styled.View`
