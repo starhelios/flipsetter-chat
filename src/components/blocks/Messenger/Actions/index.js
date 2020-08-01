@@ -96,11 +96,7 @@ const styles = StyleSheet.create({
     right: -5,
   },
   iconText: {
-    color: Color.defaultColor,
-    fontWeight: 'bold',
-    fontSize: 16,
     backgroundColor: Color.backgroundTransparent,
-    textAlign: 'center',
     height: 25,
     width: 25,
   },

@@ -12,7 +12,6 @@ export const Image = styled.Image`
   background-color: grey;
   height: 140px;
   width: 140px;
-  
 `;
 
 export const FileNameLabel = styled(Text)`

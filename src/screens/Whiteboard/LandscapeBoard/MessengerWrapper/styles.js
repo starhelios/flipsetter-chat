@@ -7,13 +7,14 @@ import { Text } from '../../../../components/ui';
 
 export { Messenger } from '../../../../components/blocks';
 
-const { height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
+const lessSize = height > width ? width : height;
 
 export const MenuWrapper = styled.View`
   padding-vertical: 20px;
   position: absolute;
   left: 0;
-  height: ${height - 50}px;
+  height: ${lessSize - 50}px;
   z-index: 3;
   display: flex;
   flex-direction: column;
