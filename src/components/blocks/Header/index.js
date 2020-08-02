@@ -10,11 +10,7 @@ import {
   VerticalMenuWrapper, HeaderMenu, HorizontalMenuWrapper, MoreIconWrapper,
 } from './styles';
 
-<<<<<<< HEAD
-export const Header = () => {
-=======
 export const Header = (props) => {
->>>>>>> artemBranch
   const [isOpenedMenu, onToggleMenu] = useState(false);
   const closeMenu = () => onToggleMenu(false);
   const orientation = useOrientation(closeMenu);
@@ -32,11 +28,7 @@ export const Header = (props) => {
 
   return (
     <>
-<<<<<<< HEAD
-      <Container>
-=======
       <Container landscape={orientation === 'LANDSCAPE'}>
->>>>>>> artemBranch
         <LeftSide>
           <Logo />
           { orientation === 'LANDSCAPE' && <HeaderText>FlipSetter Whiteboard</HeaderText>}
@@ -56,21 +48,13 @@ export const Header = (props) => {
         as={Animated.View}
         style={{ height, padding }}
       >
-<<<<<<< HEAD
-        <HeaderMenu />
-=======
         <HeaderMenu {...props} />
->>>>>>> artemBranch
       </VerticalMenuWrapper>
       <HorizontalMenuWrapper
         as={Animated.View}
         style={{ width }}
       >
-<<<<<<< HEAD
-        <HeaderMenu />
-=======
         <HeaderMenu {...props} />
->>>>>>> artemBranch
       </HorizontalMenuWrapper>
     </>
   );

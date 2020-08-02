@@ -8,7 +8,8 @@
     "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
-    "doctor": "npx @react-native-community/cli doctor"
+    "doctor": "npx @react-native-community/cli doctor",
+    "postinstall": "npx jetify"
   },
   "dependencies": {
     "@ndarilek/janus": "^0.5.1",

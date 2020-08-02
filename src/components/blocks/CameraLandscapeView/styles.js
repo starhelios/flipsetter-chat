@@ -8,14 +8,6 @@ import {
 
 import Colors from '../../../config/Colors';
 
-<<<<<<< HEAD
-const { height } = Dimensions.get('window');
-
-export const Container = styled.View`
-  height: ${height - 50}px;
-  background-color: ${Colors.headerMenuBackgroundColor};
-  width: ${(props) => (props.isFullScreen ? '100%' : '320px')};
-=======
 const { height, width } = Dimensions.get('window');
 
 const sizeOfContainer = (height > width) ? width : height;
@@ -24,25 +16,17 @@ export const Container = styled.View`
   height: ${sizeOfContainer - 50}px;
   background-color: ${Colors.headerMenuBackgroundColor};
   width: ${(props) => (props.isFullScreen ? '100%' : '360px')};
->>>>>>> artemBranch
   display: flex;
   max-width: 100%;
   flex-direction: row;
   position: absolute;
   right: 0px;
-<<<<<<< HEAD
-=======
   padding-right: 40px;
->>>>>>> artemBranch
   z-index: 3;
 `;
 
 export const ButtonContainer = styled.View`
   width: 40px;
-<<<<<<< HEAD
-  height:  ${height - 50}px;
-=======
->>>>>>> artemBranch
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
