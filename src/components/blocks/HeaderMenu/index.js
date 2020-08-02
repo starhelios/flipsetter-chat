@@ -42,10 +42,7 @@ export const HeaderMenu = withNavigation(({ navigation, thread_id }) => {
       id: 'leaveWhite',
       icon: leaveIcon,
       name: 'Leave whiteboard',
-      onPress: () => navigation.navigate('Messages', {
-        thread: thread_id,
-        callEnded: true,
-      }),
+      onPress: () => navigation.goBack(),
     },
   ];
 

@@ -142,7 +142,7 @@ class MessagesScreen extends Component<Props> {
 
   }
 
- 
+
   async componentDidMount() {
 //     const obj = {
 //       hello: "world"
@@ -679,6 +679,7 @@ class MessagesScreen extends Component<Props> {
       this.props.setCallStatus('initiated');
       this.props.appHeartbeat();
     }
+    this.props.navigation.navigate('Whiteboard')
   };
   openCamera = () => {
     this.setState({ openPicker: false });
@@ -709,7 +710,7 @@ class MessagesScreen extends Component<Props> {
           imgs.push(file)
         })
         this.setState({ showModal: true, selectedImages: images, fileToUploadArray: imgs });
-      
+
       })
       .catch(e => {
         // alert(e)
@@ -730,7 +731,7 @@ class MessagesScreen extends Component<Props> {
       multiple: true,
     })
       .then(images => {
-       
+
 console.log(JSON.stringify(images))
         let imgs = [];
         images.map((res) => {
@@ -890,7 +891,7 @@ console.log(JSON.stringify(images))
     );
   };
 
-  
+
   checkIfLink = link => {
     const reg = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     if (reg.test(link) === true) {
@@ -923,7 +924,7 @@ console.log(JSON.stringify(images))
         },
       }
       this.onSend(msg, 'img', res)      // alert(
-      
+
   })
       //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
       // );
@@ -1206,8 +1207,8 @@ console.log(JSON.stringify(images))
 
 
 
- 
-  
+
+
   renderMessage = props => {
     let thumbNail = false;
     var videoData = {};
@@ -1220,7 +1221,7 @@ console.log(JSON.stringify(images))
       }
       thumbNail = true
     }
-  
+
     return thumbNail ? (
       <View style={{
         borderRadius: 10, borderWidth: 1, margin: 5, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
@@ -1233,7 +1234,7 @@ console.log(JSON.stringify(images))
           }}
           url={props.currentMessage.text}
         />
-          
+
       </View>
 
     ) : (

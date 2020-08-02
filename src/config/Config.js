@@ -19,8 +19,8 @@ let config = {
         client_id: '5',
         client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
 
-    },
-}
+  },
+};
 
 export default config;
 
@@ -46,7 +46,6 @@ export default config;
 //
 // export default config;
 
-
 // export default config =  {
 //     env: (__DEV__) ? "dev" : "prod",
 //     apiVersion: 1,
@@ -63,4 +62,4 @@ export default config;
 //             client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
 //         }
 //     }
-//}
+// }

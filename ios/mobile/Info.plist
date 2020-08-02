@@ -34,6 +34,20 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>tippinweb.com</key>
+			<dict/>
+			<key>NSExceptionAllowsInsecureHTTPLoads</key>
+			<true/>
+			<key>flipsetter.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>flipsetter-mobile.firebaseio.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -43,16 +57,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>FlipSetter is requesting access to your camera</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>FlipSetter is requesting acces to your photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FlipSetter would like access to your photo gallery</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>FlipSetter is requesting access to your microphone</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>FlipSetter would like to save photos to your photo gallery</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>FlipSetter would like access to your photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto_medium.ttf</string>
