@@ -679,7 +679,9 @@ class MessagesScreen extends Component<Props> {
       this.props.setCallStatus('initiated');
       this.props.appHeartbeat();
     }
-    this.props.navigation.navigate('Whiteboard')
+    if(type === 2) {
+      this.props.navigation.navigate('Whiteboard');
+    }
   };
   openCamera = () => {
     this.setState({ openPicker: false });
