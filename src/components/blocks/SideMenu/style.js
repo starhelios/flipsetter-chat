@@ -22,21 +22,10 @@ export const Container = styled.View`
   height: ${lessSize - 50}px;
   width: 50px;
   z-index: 3;
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> artemBranch
   shadow-color: #000;
   shadow-offset: 1px 1px;
   shadow-opacity: 0.1;
-  shadow-radius: 5px;
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> artemBranch
-  border-top-width: 1px;
+  shadow-radius: 5px;  border-top-width: 1px;
   border-color: white;
   background-color: white;
 `;
