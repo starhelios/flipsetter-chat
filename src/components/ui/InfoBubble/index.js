@@ -13,5 +13,9 @@ export const InfoBubble = ({ label, ...props }) => {
 
 InfoBubble.propTypes = {
   label: PT.string.isRequired,
-  rounded: PT.bool.isRequired,
+  rounded: PT.bool,
+};
+
+InfoBubble.defaultProps = {
+  rounded: false,
 };

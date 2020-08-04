@@ -57,44 +57,6 @@ const DEFAULT_OPTION_TITLES = ['Call', 'Text', 'Cancel']
 
 
 class MessageText extends React.Component {
-  static contextTypes = {
-    actionSheet: PropTypes.func,
-  }
-
-  static defaultProps = {
-    position: 'left',
-    optionTitles: DEFAULT_OPTION_TITLES,
-    currentMessage: {
-      text: '',
-    },
-    containerStyle: {},
-    textStyle: {},
-    linkStyle: {},
-    customTextStyle: {},
-    textProps: {},
-    parsePatterns: () => [],
-  }
-
-  static propTypes = {
-    position: PropTypes.oneOf(['left', 'right']),
-    optionTitles: PropTypes.arrayOf(PropTypes.string),
-    currentMessage: PropTypes.object,
-    containerStyle: PropTypes.shape({
-      left: StylePropType,
-      right: StylePropType,
-    }),
-    textStyle: PropTypes.shape({
-      left: StylePropType,
-      right: StylePropType,
-    }),
-    linkStyle: PropTypes.shape({
-      left: StylePropType,
-      right: StylePropType,
-    }),
-    parsePatterns: PropTypes.func,
-    textProps: PropTypes.object,
-    customTextStyle: StylePropType,
-  }
 
   shouldComponentUpdate(nextProps) {
     return (
@@ -182,6 +144,43 @@ class MessageText extends React.Component {
       </View>
     )
   }
+}
+
+MessageText.contextTypes = {
+  actionSheet: PropTypes.func,
+}
+
+MessageText.defaultProps = {
+  position: 'left',
+  optionTitles: DEFAULT_OPTION_TITLES,
+  currentMessage: {
+    text: '',
+  },
+  containerStyle: {},
+  textStyle: {},
+  linkStyle: {},
+  textProps: {},
+  parsePatterns: () => [],
+}
+
+MessageText.propTypes = {
+  position: PropTypes.oneOf(['left', 'right']),
+  optionTitles: PropTypes.arrayOf(PropTypes.string),
+  currentMessage: PropTypes.object,
+  containerStyle: PropTypes.shape({
+    left: StylePropType,
+    right: StylePropType,
+  }),
+  textStyle: PropTypes.shape({
+    left: StylePropType,
+    right: StylePropType,
+  }),
+  linkStyle: PropTypes.shape({
+    left: StylePropType,
+    right: StylePropType,
+  }),
+  parsePatterns: PropTypes.func,
+  textProps: PropTypes.object,
 }
 
 export { MessageText }

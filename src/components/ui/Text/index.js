@@ -8,5 +8,5 @@ export const Text = ({ children, ...textProps }) => {
 };
 
 Text.propTypes = {
-  children: PT.string.isRequired,
+  children: PT.node.isRequired,
 };

@@ -25,3 +25,5 @@ export const Icon = styled(Image).attrs({
 export const Text = styled(TextUI)`
   color: ${Colors.headerBackgroundColor};
 `;
+
+export const Touch = styled.TouchableOpacity``;

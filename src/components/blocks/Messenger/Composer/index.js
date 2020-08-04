@@ -30,35 +30,7 @@ const styles = StyleSheet.create({
 })
 
 class Composer extends React.Component {
-  static defaultProps = {
-    composerHeight: MIN_COMPOSER_HEIGHT,
-    text: '',
-    placeholderTextColor: Color.defaultColor,
-    placeholder: DEFAULT_PLACEHOLDER,
-    textInputProps: null,
-    multiline: true,
-    disableComposer: false,
-    textInputStyle: {},
-    textInputAutoFocus: false,
-    keyboardAppearance: 'default',
-    onTextChanged: () => {},
-    onInputSizeChanged: () => {},
-  }
 
-  static propTypes = {
-    composerHeight: PropTypes.number,
-    text: PropTypes.string,
-    placeholder: PropTypes.string,
-    placeholderTextColor: PropTypes.string,
-    textInputProps: PropTypes.object,
-    onTextChanged: PropTypes.func,
-    onInputSizeChanged: PropTypes.func,
-    multiline: PropTypes.bool,
-    disableComposer: PropTypes.bool,
-    textInputStyle: StylePropType,
-    textInputAutoFocus: PropTypes.bool,
-    keyboardAppearance: PropTypes.string,
-  }
 
   contentSize = undefined
 
@@ -121,6 +93,34 @@ render() {
     />
   )
 }
+}
+
+Composer.propTypes = {
+  composerHeight: PropTypes.number,
+  text: PropTypes.string,
+  placeholder: PropTypes.string,
+  placeholderTextColor: PropTypes.string,
+  textInputProps: PropTypes.object,
+  onTextChanged: PropTypes.func,
+  onInputSizeChanged: PropTypes.func,
+  multiline: PropTypes.bool,
+  disableComposer: PropTypes.bool,
+  textInputAutoFocus: PropTypes.bool,
+  keyboardAppearance: PropTypes.string,
+}
+
+Composer.defaultProps = {
+  composerHeight: MIN_COMPOSER_HEIGHT,
+  text: '',
+  placeholderTextColor: Color.defaultColor,
+  placeholder: DEFAULT_PLACEHOLDER,
+  textInputProps: null,
+  multiline: true,
+  disableComposer: false,
+  textInputAutoFocus: false,
+  keyboardAppearance: 'default',
+  onTextChanged: () => {},
+  onInputSizeChanged: () => {},
 }
 
 export { Composer }

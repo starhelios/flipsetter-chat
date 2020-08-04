@@ -49,6 +49,15 @@ import man1Img from './pictures/man1.png';
 import man2Img from './pictures/man2.png';
 import man3Img from './pictures/man3.png';
 import man4Img from './pictures/man4.png';
+import blackboardPatternImg from './pictures/patterns/blackboard_pattern.jpg';
+import circlePatternImg from './pictures/patterns/circle_pattern.jpg';
+import fencePatternImg from './pictures/patterns/fence_pattern.jpg';
+import metalPatternImg from './pictures/patterns/metal_pattern.jpg';
+import orangePatternImg from './pictures/patterns/orange_pattern.png';
+import spacePatternImg from './pictures/patterns/space_pattern.jpg';
+import watterPatternImg from './pictures/patterns/water_pattern.jpg';
+import woodPatternImg from './pictures/patterns/wood_pattern.jpg';
+import wood2PatternImg from './pictures/patterns/wood_pattern2.jpg';
 
 export {
   addParticipantsIcon,
@@ -99,4 +108,13 @@ export {
   man2Img,
   man3Img,
   man4Img,
+  blackboardPatternImg,
+  circlePatternImg,
+  fencePatternImg,
+  metalPatternImg,
+  orangePatternImg,
+  spacePatternImg,
+  watterPatternImg,
+  wood2PatternImg,
+  woodPatternImg,
 };

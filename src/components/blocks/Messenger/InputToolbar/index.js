@@ -37,27 +37,7 @@ const styles = StyleSheet.create({
 
 
 class InputToolbar extends React.Component{
-  static defaultProps = {
-    renderAccessory: null,
-    renderActions: null,
-    renderSend: null,
-    renderComposer: null,
-    containerStyle: {},
-    primaryStyle: {},
-    accessoryStyle: {},
-    onPressActionButton: () => {},
-  }
 
-  static propTypes = {
-    renderAccessory: PropTypes.func,
-    renderActions: PropTypes.func,
-    renderSend: PropTypes.func,
-    renderComposer: PropTypes.func,
-    onPressActionButton: PropTypes.func,
-    containerStyle: StylePropType,
-    primaryStyle: StylePropType,
-    accessoryStyle: StylePropType,
-  }
 
   state = {
     position: 'absolute',
@@ -158,6 +138,22 @@ class InputToolbar extends React.Component{
       </View>
     )
   }
+}
+
+InputToolbar.propTypes = {
+  renderAccessory: PropTypes.func,
+  renderActions: PropTypes.func,
+  renderSend: PropTypes.func,
+  renderComposer: PropTypes.func,
+  onPressActionButton: PropTypes.func,
+}
+
+InputToolbar.defaultProps = {
+  renderAccessory: null,
+  renderActions: null,
+  renderSend: null,
+  renderComposer: null,
+  onPressActionButton: () => {},
 }
 
 export {InputToolbar}

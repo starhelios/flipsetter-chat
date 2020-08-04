@@ -376,36 +376,7 @@ class Bubble extends React.Component {
 Bubble.contextTypes = {
   actionSheet: PropTypes.func,
 }
-Bubble.defaultProps = {
-  touchableProps: {},
-  onLongPress: null,
-  renderMessageImage: null,
-  renderMessageVideo: null,
-  renderMessageAudio: null,
-  renderMessageText: null,
-  renderCustomView: null,
-  renderUsername: null,
-  renderTicks: null,
-  renderTime: null,
-  renderQuickReplies: null,
-  onQuickReply: null,
-  position: 'left',
-  optionTitles: DEFAULT_OPTION_TITLES,
-  currentMessage: {
-    text: null,
-    createdAt: null,
-    image: null,
-  },
-  nextMessage: {},
-  previousMessage: {},
-  containerStyle: {},
-  wrapperStyle: {},
-  bottomContainerStyle: {},
-  tickStyle: {},
-  usernameStyle: {},
-  containerToNextStyle: {},
-  containerToPreviousStyle: {},
-}
+
 
 Bubble.propTypes = {
   user: PropTypes.object.isRequired,
@@ -440,8 +411,6 @@ Bubble.propTypes = {
     left: StylePropType,
     right: StylePropType,
   }),
-  tickStyle: StylePropType,
-  usernameStyle: StylePropType,
   containerToNextStyle: PropTypes.shape({
     left: StylePropType,
     right: StylePropType,
@@ -450,5 +419,35 @@ Bubble.propTypes = {
     left: StylePropType,
     right: StylePropType,
   }),
+}
+
+Bubble.defaultProps = {
+  touchableProps: {},
+  onLongPress: null,
+  renderMessageImage: null,
+  renderMessageVideo: null,
+  renderMessageAudio: null,
+  renderMessageText: null,
+  renderCustomView: null,
+  renderUsername: null,
+  renderTicks: null,
+  renderTime: null,
+  renderQuickReplies: null,
+  onQuickReply: null,
+  position: 'left',
+  optionTitles: DEFAULT_OPTION_TITLES,
+  currentMessage: {
+    text: null,
+    createdAt: null,
+    image: null,
+  },
+  nextMessage: {},
+  previousMessage: {},
+  containerStyle: {},
+  wrapperStyle: {},
+  bottomContainerStyle: {},
+  tickStyle: {},
+  containerToNextStyle: {},
+  containerToPreviousStyle: {},
 }
 export { Bubble }

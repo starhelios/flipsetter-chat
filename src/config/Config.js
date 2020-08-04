@@ -1,23 +1,22 @@
-
-let config = {
-    env: (__DEV__) ? "dev" : "prod",
-    // env:"dev",
-    prefix: `/api/v1`,
-    prod: {
-        uri: "flipsetter.com",
-        janus: "/janus",
-        janusws: "/janus-ws",
-        echo: "/socket",
-        client_id: '10',
-        client_secret:'pFpBM7VznnzJTthOMPXQEnhCPkfgcM12XqCeol2n',
-    },
-    dev: {
-        uri: "tippinweb.com",
-        janus: "/janus",
-        janusws: "/janus-ws",
-        echo: "/socket",
-        client_id: '5',
-        client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
+const config = {
+  env: (__DEV__) ? 'dev' : 'prod',
+  // env:"dev",
+  prefix: '/api/v1',
+  prod: {
+    uri: 'flipsetter.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '10',
+    client_secret: 'pFpBM7VznnzJTthOMPXQEnhCPkfgcM12XqCeol2n',
+  },
+  dev: {
+    uri: 'tippinweb.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '5',
+    client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
 
   },
 };

@@ -13,29 +13,6 @@ import { clipIcon, smileIcon } from '../../../../images';
 
 
 class Actions extends React.Component {
-  static defaultProps = {
-    options: {},
-    optionTintColor: Color.optionTintColor,
-    icon: undefined,
-    containerStyle: {},
-    iconTextStyle: {},
-    wrapperStyle: {},
-  }
-
-  static propTypes = {
-    onSend: PropTypes.func,
-    options: PropTypes.object,
-    optionTintColor: PropTypes.string,
-    icon: PropTypes.func,
-    onPressActionButton: PropTypes.func,
-    wrapperStyle: StylePropType,
-    containerStyle: StylePropType,
-  }
-
-  static contextTypes = {
-    actionSheet: PropTypes.func,
-  }
-
   onActionsPress = () => {
     const { options } = this.props
     const optionKeys = Object.keys(options)
@@ -55,7 +32,7 @@ class Actions extends React.Component {
     )
   }
 
-  renderIcon() {
+  render() {
     if (this.props.icon) {
       return this.props.icon()
     }
@@ -66,22 +43,37 @@ class Actions extends React.Component {
           style={[styles.wrapper, this.props.containerStyle]}
           onPress={this.props.onPressActionButton || this.onActionsPress}
         >
-        <Image resizeMode='contain' source={clipIcon} style={[styles.iconText, this.props.iconTextStyle]} />
+          <Image resizeMode='contain' source={clipIcon} style={[styles.iconText, this.props.iconTextStyle]} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.wrapper, this.props.containerStyle]}
           onPress={this.props.onPressActionButton || this.onActionsPress}
         >
-        <Image resizeMode='contain' source={smileIcon} style={[styles.iconText, this.props.iconTextStyle]} />
+          <Image resizeMode='contain' source={smileIcon} style={[styles.iconText, this.props.iconTextStyle]} />
         </TouchableOpacity>
       </View>
     )
   }
+}
 
-  render() {
-    return this.renderIcon()
-  }
+Actions.contextTypes = {
+  actionSheet: PropTypes.func,
+}
+
+Actions.defaultProps = {
+  options: {},
+  optionTintColor: Color.optionTintColor,
+  icon: undefined,
+  iconTextStyle: {},
+}
+
+Actions.propTypes = {
+  onSend: PropTypes.func,
+  options: PropTypes.object,
+  optionTintColor: PropTypes.string,
+  icon: PropTypes.func,
+  onPressActionButton: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

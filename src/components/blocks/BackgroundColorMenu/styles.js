@@ -5,6 +5,7 @@ import Colors from '../../../config/Colors';
 import { Text as TextUI } from '../../ui';
 
 export { MenuListItem } from './MenuListItem';
+export { BackgroundPatternModal } from './BackgroundPatternModal';
 
 export const Container = styled.View`
     position: absolute;
