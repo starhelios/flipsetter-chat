@@ -43,8 +43,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>FlipSetter is requesting access to your camera</string>
-  	<key>NSPhotoLibraryUsageDescription</key>
-  	<string>FlipSetter is requesting acces to your photos</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>FlipSetter is requesting acces to your photos</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -107,7 +107,6 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

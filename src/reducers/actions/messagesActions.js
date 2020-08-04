@@ -19,7 +19,6 @@ const actionTypes = {
 /*
  * ACTION CREATORS
  */
-
 export function getMessages(id) {
     return {
         type: actionTypes.GET_MESSAGES,
@@ -52,11 +51,11 @@ export function sendMessage(id, message, type, file) {
         data = formData
 }
     else {
-        data = {
-            type: "store_message",
-            temp_id: message._id,
-            doc_file: file,
-        }
+        var formData = new FormData();
+        formData.append('type', 'store_message');
+        formData.append('temp_id', message._id);
+        formData.append('doc_file', file);
+        data = formData
 
     }
 
@@ -72,9 +71,7 @@ export function sendMessage(id, message, type, file) {
                 headers: {
                     Authorization: null,
                     Accept: 'application/json',
-                    // 'Content-Type': 'application/json',
-
-                    'Content-Type': type === 'img' ? 'multipart/form-data' : 'application/json',
+                    'Content-Type': type === 'message' ? 'application/json' : 'multipart/form-data',
                 }
             }
         }
@@ -91,19 +88,22 @@ export function markRead(id) {
         }
     }
 }
+
 export function addMessage(thread, message) {
     return { type: actionTypes.ADD_MESSAGE, payload: { thread, message } }
 }
+
 export function updateMessage(thread, message) {
     return { type: actionTypes.UPDATE_MESSAGE, payload: { thread, message } }
 }
+
 export function addMessages(thread, messages) {
     return { type: actionTypes.ADD_MESSAGES, payload: { thread, messages } }
 }
+
 function clearMessages() {
     return { type: actionTypes.CLEAR_MESSAGES }
 }
-
 
 export default {
     actionTypes, getMessages, sendMessage, markRead, addMessage, updateMessage, addMessages, clearMessages

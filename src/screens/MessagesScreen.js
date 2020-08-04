@@ -117,6 +117,8 @@ class MessagesScreen extends Component<Props> {
     Img: '',
     fileToUpload: {},
     fileToUploadArray: [],
+    isDoc:false
+
 
   };
 
@@ -499,9 +501,6 @@ class MessagesScreen extends Component<Props> {
     // .listenForWhisper('send_message_setting', data => {
   };
 
-  sendImg=(message = [], type, file)=>{
-
-  }
   async onSend(message = [], type, file) {
 // alert(JSON.stringify(message))
     this.playSound();
@@ -517,20 +516,32 @@ class MessagesScreen extends Component<Props> {
     // }));
     // console.log(this.state.messages);
     //Set the message fast, we can update later
-    let incoming = {
+   
+    let incoming;
+    if(type === 'img'){
+       incoming = {
+        _id: await message._id,
+        createdAt: message.createdAt,
+image:file.uri,
+        user: {
+          ...message.user,
+          // name: response.payload.data.message.name,
+        },
+        temp_id: await message._id,
+      };
+    }
+    else{
+    incoming = {
       _id: await message._id,
       createdAt: message.createdAt,
       text: message.text ? emojify(entities.decode(message.text), { output: 'unicode' }) : '',
-
-      // image_file: 'https://facebook.github.io/react/img/logo_og.png',
-      // doc_file:'https://youtu.be/LRcITExNvgg',
-
       user: {
         ...message.user,
         // name: response.payload.data.message.name,
       },
       temp_id: await message._id,
     };
+  }
 
 
     //add messages to store
@@ -556,7 +567,7 @@ class MessagesScreen extends Component<Props> {
     let threads = { ...this.props.threads.threads };
     let current = { ...threads[this.activeThread] };
     current.recent_message = {
-      body: message.text,
+      body: message.text ? message.text:'' ,
       message_type: 0,
       name: response.payload.data.message.name,
     };
@@ -684,11 +695,11 @@ class MessagesScreen extends Component<Props> {
     }
   };
   openCamera = () => {
-    this.setState({ openPicker: false });
+    this.setState({ openPicker: false,isDoc:false });
     ImagePicker.openCamera({
-      width: 300,
-      height: 400,
-      compressImageQuality: 0.8,
+      // width: 300,
+      // height: 400,
+      // compressImageQuality: 0.8,
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       mime: 'jpg',
@@ -701,13 +712,10 @@ class MessagesScreen extends Component<Props> {
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
-
-
           const file = {
             name: "img" + nm + ".jpg",
-            size:"67.912KB"
-            // type: res.mime,
-            // uri: Platform.OS === "android" ? res.path : res.path.replace("file://", ""),
+            type: res.mime,
+            uri: Platform.OS === "android" ? res.path : res.path.replace("file://", ""),
           }
           imgs.push(file)
         })
@@ -720,11 +728,11 @@ class MessagesScreen extends Component<Props> {
   };
 
   openGallery = () => {
-    this.setState({ openPicker: false });
+    this.setState({ openPicker: false ,isDoc:false});
     ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      compressImageQuality: 0.8,
+      // width: 300,
+      // height: 300,
+      // compressImageQuality: 0.8,
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       mime: 'jpg',
@@ -741,8 +749,6 @@ console.log(JSON.stringify(images))
           const file = {
             name: "img" + nm + ".jpg",
             type: res.mime,
-            // size:"67.912KB"
-            // uri: res.data
             uri: Platform.OS === "android" ? res.path : res.path.replace("file://", ""),
           }
 
@@ -756,14 +762,24 @@ console.log(JSON.stringify(images))
 
 
   async pickDocument() {
-    this.setState({ openPicker: false });
+    this.setState({ openPicker: false ,isDoc:false});
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
-      // alert(JSON.stringify(results))
-      this.setState({ doc: true, showModal: true, selectedImages: results });
-      let s = results.length > 1 ? 's' : '';
+      console.log(JSON.stringify(results))
+      let docs = [];
+      results.map((res) => {
+        // let nm = this.generateName();
+        const file = {
+          name: res.name,
+          type: res.type,
+          uri: res.uri,
+        }
+        docs.push(file)
+      })
+      this.setState({ doc: true,isDoc:true, showModal: true, selectedImages: results ,fileToUploadArray:docs});
+      // let s = results.length > 1 ? 's' : '';
       // alert("You have selected " +results.length + " Document"+s)
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -849,7 +865,7 @@ console.log(JSON.stringify(images))
 
   customSystemMessage = props => {
     return (
-      <View style={{ height: hp('9%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
+      <View style={{ height:Platform.OS === 'ios'? hp('6%') :hp('7.2%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
         <TouchableOpacity
           style={{
             alignSelf: 'center',
@@ -912,25 +928,23 @@ console.log(JSON.stringify(images))
   imageSelected = () => {
     this.setState({ showModal: false, doc: false }, () => {
       let s = this.state.selectedImages.length > 1 ? 's' : '';
-  // alert(JSON.stringify(this.state.fileToUploadArray))
-  this.state.fileToUploadArray.map((res)=>{
-    // alert(JSON.stringify(res))
-          let dt = Date.now();
-    var dateTime = new Date(dt);
-      let msg = {
-        _id: String(this.generateId()),
-        createdAt: dateTime.toISOString(),
-        user: {
-          _id: this.props.user.id,
-          avatar: `https://${config.api.uri}` + this.props.user.avatar,
-        },
-      }
-      this.onSend(msg, 'img', res)      // alert(
-
-  })
-      //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
-      // );
-    });
+      this.state.fileToUploadArray.map((res)=>{
+        // alert(JSON.stringify(res))
+              let dt = Date.now();
+        var dateTime = new Date(dt);
+          let msg = {
+            _id: String(this.generateId()),
+            createdAt: dateTime.toISOString(),
+            user: {
+              _id: this.props.user.id,
+              avatar: `https://${config.api.uri}` + this.props.user.avatar,
+            },
+          }
+          {this.state.isDoc ? this.onSend(msg, 'doc', res) :this.onSend(msg, 'img', res)}
+      })
+          //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
+          // );
+        });
   };
 
   cancelImage = index => {
@@ -1040,7 +1054,7 @@ console.log(JSON.stringify(images))
               // rel={true}
               // videoId={'Z1LmpiIGYNs'}
               play
-              controls={1}
+              // controls={1}
               // onProgress={(a)=>alert(a)}
               showinfo={false}
               videoId={this.state.videoUri}
@@ -1431,6 +1445,11 @@ console.log(JSON.stringify(images))
     // alert(JSON.stringify(props.currentMessage.image))
     return (
       <View style={[styles.container,{backgroundColor:'white'}]}>
+
+        {/* <TouchableOpacity style={{position:'absolute',zIndex:1,left:0}}>
+        <FontAwesome5 name="download" size={20} color="green" />        
+        </TouchableOpacity> */}
+        
         <Lightbox
           activeProps={{
             style: styles.imageActive,
@@ -1441,7 +1460,7 @@ console.log(JSON.stringify(images))
             source={{
               // uri: `https://${props.currentMessage.image}`,
               uri: props.currentMessage.image,
-
+// uri:'com.google.android.apps.docs.storage.legacy/enc%3DVPnCvHhDD6hIlEqVi7QSV1QnLijxLaoRdRutDh1QxLaf5jSqxhlEXT3pQZNIb9ocG_19Zjm_7vxl%0A0g7QxQEbfhGjXDtx2x1krPlomFH2CsmicPZUlrsZPV6rh6RUyqwId_wZiQ%3D%3D%0A',
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },

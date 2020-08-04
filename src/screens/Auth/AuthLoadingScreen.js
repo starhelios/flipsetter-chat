@@ -58,7 +58,7 @@ class AuthLoadingScreen extends React.Component {
             <Container style={styles.container}>
                 <View style={{flex: 1,  alignItems: 'center'}}>
                    <Image resizeMode='contain' style={{marginTop:'35%', alignSelf:'center',width:wp('50%'),height:wp('50%')}} source={logo}/>
-                   <Text style={{padding:15,textAlign:'center', fontSize:22,fontWeight:'bold'}}>FlipSetter</Text>
+                   <Text style={{padding:15,textAlign:'center', fontSize:22,fontWeight:'bold'}}>Collaborate</Text>
                   <View style={{bottom:0,position:'absolute',marginBottom:30,}}>
                   <View style={{flexDirection:'row',alignSelf:'center'}}>
                       <Text style={{ textAlign:'center', fontSize:17,fontWeight:'bold'}}>By</Text>
