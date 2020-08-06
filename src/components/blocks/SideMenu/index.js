@@ -139,7 +139,7 @@ export const SideMenu = () => {
             borderLeftWidth: isBackgroundColorMenuOpen ? 1 : 0,
           }}
         >
-          <BackgroundColorMenu />
+          <BackgroundColorMenu onClose={closeMenus} />
         </MenuWrapper>
         <MenuWrapper
           as={Animated.View}

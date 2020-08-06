@@ -283,6 +283,8 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-document-picker (3.5.4):
     - React
+  - react-native-draw-view (1.0.0):
+    - React
   - react-native-image-base64 (0.1.4):
     - React
   - react-native-image-picker (2.3.3):
@@ -434,6 +436,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-draw-view (from `../node_modules/react-native-draw-view`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-orientation (from `../node_modules/react-native-orientation`)
@@ -540,6 +543,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-draw-view:
+    :path: "../node_modules/react-native-draw-view"
   react-native-image-base64:
     :path: "../node_modules/react-native-image-base64"
   react-native-image-picker:
@@ -658,6 +663,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-document-picker: c5752781fbc0c126c627c1549b037c139444a4cf
+  react-native-draw-view: bb1083e2bd236c764c028ac870bd615018161817
   react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
   react-native-image-picker: a6c3d644751a388b0fc8b56822ff7cbd398a3008
   react-native-orientation: d4a97266b06ec8d45d74e626656a730ebbebbb6f

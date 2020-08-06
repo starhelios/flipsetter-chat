@@ -1,8 +1,5 @@
 import config from '../../config';
 
-/*
- * action types
- */
 const actionTypes = {
   CALL_HEARTBEAT: 'CALL_HEARTBEAT',
   SET_CALL_ID: 'SET_CALL_ID',
@@ -23,30 +20,34 @@ const actionTypes = {
   GET_WHITEBOARD: 'GET_WHITEBOARD',
 };
 
-/*
- * ACTION CREATORS
- */
 function setCallId(uuid) {
   return { type: actionTypes.SET_CALL_ID, payload: uuid };
 }
+
 function setCallStatus(status) {
   return { type: actionTypes.SET_CALL_STATUS, payload: status };
 }
+
 function setCallType(type) {
   return { type: actionTypes.SET_CALL_TYPE, payload: type };
 }
+
 function setCallRoom(room) {
   return { type: actionTypes.SET_CALL_ROOM, payload: room };
 }
+
 function setCallRoomPin(pin) {
   return { type: actionTypes.SET_CALL_ROOM_PIN, payload: pin };
 }
+
 function setCallerName(name) {
   return { type: actionTypes.SET_CALLER_NAME, payload: name };
 }
+
 function setCallThreadId(thread) {
   return { type: actionTypes.SET_CALL_THREAD_ID, payload: thread };
 }
+
 function joinCall(id) {
   return {
     type: actionTypes.JOIN_CALL,
@@ -130,6 +131,7 @@ function startVideoCall(id) {
     },
   };
 }
+
 function startWhiteboard(id) {
   return {
     type: actionTypes.START_WHITEBOARD,
@@ -150,6 +152,7 @@ function startWhiteboard(id) {
     },
   };
 }
+
 function callHeartbeat(threadId, callId, type) {
   return {
     type: actionTypes.CALL_HEARTBEAT,
@@ -180,5 +183,19 @@ function savePath(threadId, callId, path) {
 }
 
 export default {
-  actionTypes, callHeartbeat, setCallId, setCallStatus, setCallType, setCallRoom, setCallRoomPin, setCallerName, setCallThreadId, joinCall, leaveCall, startAudioCall, startVideoCall, startWhiteboard, savePath,
+  actionTypes,
+  callHeartbeat,
+  setCallId,
+  setCallStatus,
+  setCallType,
+  setCallRoom,
+  setCallRoomPin,
+  setCallerName,
+  setCallThreadId,
+  joinCall,
+  leaveCall,
+  startAudioCall,
+  startVideoCall,
+  startWhiteboard,
+  savePath,
 };

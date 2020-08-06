@@ -53,6 +53,7 @@
 		AF30C56AC0A049DF939BDA6D /* Nunito-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B89184E553EC4F1F8601B4F1 /* Nunito-Black.ttf */; };
 		B1D19681AF574AA39B226F2D /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AC23D3419C541C28A2FB788 /* Fontisto.ttf */; };
 		B614B840B63142A0A19CC0E6 /* Nunito-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 54F7CD1F09CC44DC820D5949 /* Nunito-Bold.ttf */; };
+		BB58B0C324DB27EB00572D1C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB58B0C224DB27EB00572D1C /* File.swift */; };
 		BBDD97F424D4C581001586F0 /* dingsoundeffect.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BBDD97F324D4C581001586F0 /* dingsoundeffect.mp3 */; };
 		D154136BF08C40D4B686D6A1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4C54A16A7D14FA094622526 /* AntDesign.ttf */; };
 		D49DA8AE1029475C9F253313 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E7BA3FA25DB649738A36565E /* SimpleLineIcons.ttf */; };
@@ -142,6 +143,7 @@
 		B319272AE79640D5AD47A324 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		B8413CE335925EB450017D07 /* Pods-mobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-mobile-tvOS/Pods-mobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		B89184E553EC4F1F8601B4F1 /* Nunito-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Black.ttf"; path = "../src/assets/fonts/Nunito-Black.ttf"; sourceTree = "<group>"; };
+		BB58B0C224DB27EB00572D1C /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		BBDD97F324D4C581001586F0 /* dingsoundeffect.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dingsoundeffect.mp3; path = ../android/app/src/main/res/raw/dingsoundeffect.mp3; sourceTree = "<group>"; };
 		C0AA152026D94883AF92252E /* Nunito-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Light.ttf"; path = "../src/assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		C1207E3192A24E658E55C3B3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				BB58B0C224DB27EB00572D1C /* File.swift */,
 			);
 			name = mobile;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = PY2JP9KZ76;
+						LastSwiftMigration = 1160;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -795,6 +799,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				BB58B0C324DB27EB00572D1C /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -848,6 +853,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4184566F4C355F8AF3CCF7D6 /* Pods-mobileTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -871,6 +877,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2B31FF2B7AFAB8D2C04BBEC2 /* Pods-mobileTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = mobileTests/Info.plist;
@@ -892,6 +899,7 @@
 			baseConfigurationReference = E9F33A39D99604E5ABAF35D0 /* Pods-mobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = mobile/mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -937,6 +945,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.flipsetter.mobile;
 				PRODUCT_NAME = Collaborate;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -947,6 +957,7 @@
 			baseConfigurationReference = 6CA2B38C5FDB5ECE85E71EF6 /* Pods-mobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = mobile/mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -991,6 +1002,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.flipsetter.mobile;
 				PRODUCT_NAME = Collaborate;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

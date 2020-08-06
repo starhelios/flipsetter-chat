@@ -2,45 +2,38 @@ import React from 'react';
 import PT from 'prop-types';
 import noop from 'lodash/noop';
 import map from 'lodash/map';
+import uuid from 'react-native-uuid';
 
-import {
-  blackboardPatternImg, circlePatternImg, fencePatternImg, metalPatternImg,
-  orangePatternImg, spacePatternImg, woodPatternImg, wood2PatternImg, watterPatternImg,
-} from '../../../../images';
+import { backgrondPatterns } from '../../../../consts/BackgroundPatterns';
 
 import {
   Modal, Scroller, Wrapper, Patterns, Container, Touch, ImagPreTouch,
 } from './styles';
 
-const BackgroundPatternModal = ({ visible, onClose }) => {
-  const backgrondPatterns = [{
-    id: 'asdasdf3443',
-    image: blackboardPatternImg,
-  }, {
-    id: 'asdasdf34431',
-    image: circlePatternImg,
-  }, {
-    id: 'asdasdf34432',
-    image: woodPatternImg,
-  }, {
-    id: 'asdasdf34433',
-    image: wood2PatternImg,
-  }, {
-    id: 'asdasdf3443ewfr',
-    image: fencePatternImg,
-  }, {
-    id: 'asdaswertdf34433',
-    image: metalPatternImg,
-  }, {
-    id: 'asdasdfsdf34433',
-    image: orangePatternImg,
-  }, {
-    id: 'asdasqw3rdf34433',
-    image: spacePatternImg,
-  }, {
-    id: 'asdasdf34434',
-    image: watterPatternImg,
-  }];
+const BackgroundPatternModal = ({
+  visible, onClose, onSavePath, call, user,
+}) => {
+  const onChoose = (pattern) => {
+    const fullData = {
+      id: uuid.v1(),
+      timestamp: (new Date()).getTime(),
+      user: {
+        id: user.id,
+        name: `${user.first} ${user.last}`,
+        type: 1,
+      },
+      data: {
+        color: 'rgba(0,0,0,1)',
+        src: pattern.pathWeb,
+        style: 5,
+      },
+      type: 20,
+    };
+
+    // call.whisper('change_back_pattern', fullData);
+    onSavePath(call.threadId, call.id, fullData);
+    onClose();
+  };
 
   return (
     <Modal visible={visible} onClose={onClose}>
@@ -51,7 +44,7 @@ const BackgroundPatternModal = ({ visible, onClose }) => {
               backgrondPatterns,
               (pattern) => (
                 <ImagPreTouch key={pattern.id}>
-                  <Touch onPress={onClose}>
+                  <Touch onPress={() => onChoose(pattern)}>
                     <Patterns source={pattern.image} />
                   </Touch>
                 </ImagPreTouch>
@@ -66,7 +59,10 @@ const BackgroundPatternModal = ({ visible, onClose }) => {
 
 BackgroundPatternModal.propTypes = {
   visible: PT.bool.isRequired,
+  user: PT.bool.isRequired,
+  call: PT.bool.isRequired,
   onClose: PT.func,
+  onSavePath: PT.func.isRequired,
 };
 
 BackgroundPatternModal.defaultProps = {

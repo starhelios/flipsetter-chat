@@ -334,9 +334,7 @@ class Slider extends PureComponent {
     return otherProps;
   }
 
-  _handleStartShouldSetPanResponder = (
-    e: Object /* gestureState: Object */,
-  ): boolean =>
+  _handleStartShouldSetPanResponder = (e) =>
     // Should we become active when the user presses down on the thumb?
     this._thumbHitTest(e);
 

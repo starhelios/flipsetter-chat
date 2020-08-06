@@ -1,44 +1,38 @@
 import React from 'react';
 import Echo from "laravel-echo";
 import io from "socket.io-client";
-import {App, Auth, User, Threads, Messages, Call} from "../reducers/actions";
-import {connect} from "react-redux";
-import config from "../config";
 import {emojify} from "react-emojione";
 import {AllHtmlEntities as entities} from "html-entities";
-import {GiftedChat} from "react-native-gifted-chat";
+import {connect} from "react-redux";
+
+import {App, Auth, User, Threads, Messages, Call} from "../reducers/actions";
+import config from "../config";
+
 const SocketContext = React.createContext(null);
 
 class SocketProvider extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            socket: false,
-            privateChannel: false,
-            listeners: false,
-            status: "disconnected",
-        }
+    state = {
+        socket: false,
+        privateChannel: false,
+        listeners: false,
+        status: "disconnected",
     }
 
-    async componentDidMount(): void{
-        // console.log(this.props);
-        let echo = await this.connectSocket();
+    async componentDidMount(){
+        await this.connectSocket();
         if(this.state.socket && this.state.socket.connector.socket.connected){
             this._listeners();
         }
-
-
-
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         if(this.state.socket){
             this.state.socket.disconnect();
         }
     }
 
-    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    componentDidUpdate(prevProps, prevState, snapshot) {
 
         if(!this.state.socket && this.props.auth.isLoggedIn){
            this.connectSocket();

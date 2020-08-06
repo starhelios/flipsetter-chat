@@ -5,6 +5,8 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
+    'prettier',
+    'prettier/react',
     'airbnb',
   ],
   globals: {
@@ -13,15 +15,19 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint',
+    ecmaVersion: 2018,
     ecmaFeatures: {
       jsx: true,
+      experimentalObjectRestSpread: true,
+      modules: true,
     },
-    ecmaVersion: 2018,
     sourceType: 'module',
   },
   plugins: [
     'react',
     'react-native',
+    'eslint-plugin-prettier',
+    'eslint-plugin-react',
   ],
   rules: {
     'import/prefer-default-export': 0,

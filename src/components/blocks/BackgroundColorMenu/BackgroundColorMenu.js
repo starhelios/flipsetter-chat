@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   Scroller, Container, MenuListItem, Text, ContainerHorizontal, BackgroundPatternModal,
@@ -14,7 +14,7 @@ import {
 
 import { useOrientation } from '../../../helper/useOrientation';
 
-const BackgroundColorMenu = () => {
+const BackgroundColorMenu = ({ onClose }) => {
   const [fillBackground, setFillBackground] = useState(false);
   const [addGraphPaper, setAddGraphPaper] = useState(false);
   const [addLinedPaper, setAddLinedPaper] = useState(false);

@@ -81,7 +81,7 @@ var Sound = require('react-native-sound');
 let VIDEO_DATA = {};
 
 
-class MessagesScreen extends Component<Props> {
+class MessagesScreen extends Component {
   messages = [];
   activeThread = this.props.navigation.getParam('thread');
 
@@ -516,7 +516,7 @@ class MessagesScreen extends Component<Props> {
     // }));
     // console.log(this.state.messages);
     //Set the message fast, we can update later
-   
+
     let incoming;
     if(type === 'img'){
        incoming = {
@@ -690,9 +690,9 @@ image:file.uri,
       this.props.setCallStatus('initiated');
       this.props.appHeartbeat();
     }
-    if(type === 2) {
-      this.props.navigation.navigate('Whiteboard');
-    }
+    // if(type === 2) {
+    //   this.props.navigation.navigate('Whiteboard');
+    // }
   };
   openCamera = () => {
     this.setState({ openPicker: false,isDoc:false });
@@ -1447,9 +1447,9 @@ console.log(JSON.stringify(images))
       <View style={[styles.container,{backgroundColor:'white'}]}>
 
         {/* <TouchableOpacity style={{position:'absolute',zIndex:1,left:0}}>
-        <FontAwesome5 name="download" size={20} color="green" />        
+        <FontAwesome5 name="download" size={20} color="green" />
         </TouchableOpacity> */}
-        
+
         <Lightbox
           activeProps={{
             style: styles.imageActive,
