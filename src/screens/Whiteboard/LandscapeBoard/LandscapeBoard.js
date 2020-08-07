@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import {Dimensions, PanResponder} from "react-native";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import get from "lodash/get";
+import uuid from "react-native-uuid";
 import Sound from 'react-native-sound';
+import Svg from "react-native-svg";
+import map from "lodash/map";
+import simplify from "simplify-js";
 
 import {
   Background, Container, SideMenu, WorkBoard, ShowSideMenuButton, BubbleInfo,
@@ -8,16 +16,8 @@ import {
   DocumentWrapper, CameraLandscapeView, MessengerWrapper, SVGWrapper,
 } from './styles';
 
-import {Dimensions, PanResponder} from "react-native";
-import find from "lodash/find";
-import filter from "lodash/filter";
-import get from "lodash/get";
-import uuid from "react-native-uuid";
 import Shape from "../../../components/SvgShape";
-import simplify from "simplify-js";
 import {backgrondPatterns} from "../../../consts/BackgroundPatterns";
-import Svg from "react-native-svg";
-import map from "lodash/map";
 
 const whoosh = new Sound('dingsoundeffect.mp3', Sound.MAIN_BUNDLE);
 
@@ -234,7 +234,7 @@ class LandscapeBoard extends React.Component{
       scale: {
         width: screenWidth,
         height: screenHeight,
-        yOffset: 100
+        yOffset: 50
       }
     });
   }
@@ -313,7 +313,11 @@ class LandscapeBoard extends React.Component{
               onPress={() => this.toogleDocManagerMenu(!showDocManagerMenu)}
             />
           </TopWorkSide>
-          <SVGWrapper {...this._panResponder.panHandlers} style={{flex: 1}} onLayout={(event) => this.getDimensions(event.nativeEvent.layout)}>
+          <SVGWrapper
+            {...this._panResponder.panHandlers}
+            style={{flex: 1}}
+            onLayout={(event) => this.getDimensions(event.nativeEvent.layout)}
+          >
             <Svg style={{flex: 1}}>
               {
                 map(paths, path =>(<Shape key={path.id} scale={scale} path={path} />))

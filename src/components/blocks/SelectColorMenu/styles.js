@@ -23,6 +23,9 @@ export const ContainerHorizontal = styled.View`
 export const Chooser = styled(Slider).attrs({
   minimumTrackTintColor: 'transparent',
   maximumTrackTintColor: 'transparent',
+  minimumValue: 0,
+  maximumValue: 255,
+  step: 1,
   showValue: false,
 })`
   width: 350px;
