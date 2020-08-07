@@ -10,7 +10,7 @@ import {
   VerticalMenuWrapper, HeaderMenu, HorizontalMenuWrapper, MoreIconWrapper,
 } from './styles';
 
-export const Header = (props) => {
+export const Header = () => {
   const [isOpenedMenu, onToggleMenu] = useState(false);
   const closeMenu = () => onToggleMenu(false);
   const orientation = useOrientation(closeMenu);
@@ -48,13 +48,13 @@ export const Header = (props) => {
         as={Animated.View}
         style={{ height, padding }}
       >
-        <HeaderMenu {...props} />
+        <HeaderMenu />
       </VerticalMenuWrapper>
       <HorizontalMenuWrapper
         as={Animated.View}
         style={{ width }}
       >
-        <HeaderMenu {...props} />
+        <HeaderMenu />
       </HorizontalMenuWrapper>
     </>
   );

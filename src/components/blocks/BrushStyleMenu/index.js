@@ -1,24 +1,17 @@
-import React from 'react';
+import { connect } from 'react-redux';
 
-import {
-  Chooser, Container, Text, ButtonWrapper, FatBrush, ThinBrush, ContainerHorizontal,
-} from './styles';
+import { Whiteboard } from '../../../reducers/actions';
 
-import { useOrientation } from '../../../helper/useOrientation';
+import Component from './BrushStyleMenu';
 
-export const BrushStyleMenu = () => {
-  const orientation = useOrientation();
-  const Wrapper = orientation === 'LANDSCAPE' ? ContainerHorizontal : Container;
-
-  return (
-    <Wrapper>
-      <Text>Brush style</Text>
-      <ButtonWrapper>
-        <ThinBrush />
-        <FatBrush />
-      </ButtonWrapper>
-      <Text>Brush size</Text>
-      <Chooser />
-    </Wrapper>
-  );
+const mapStateToProps = (state) => {
+  return {
+    whiteboard: state.whiteboard,
+  };
 };
+
+const mapDispatchToProps = {
+  onChangeWidth: Whiteboard.setBrushWeight,
+};
+
+export const BrushStyleMenu = connect(mapStateToProps, mapDispatchToProps)(Component);

@@ -1,28 +1,30 @@
-import React from 'react';
-import {Dimensions, PanResponder, View} from "react-native";
-import simplify from "simplify-js";
-import uuid from "react-native-uuid";
-import Svg from "react-native-svg";
-import get from 'lodash/get';
-import map from 'lodash/map';
-import find from 'lodash/find';
-import filter from 'lodash/filter';
-
-import Shape from "../../../components/SvgShape";
-
-import { backgrondPatterns } from '../../../consts/BackgroundPatterns';
+import React, { useEffect, useState } from 'react';
+import Sound from 'react-native-sound';
 
 import {
-  Background, Container, FooterMenu, WorkBoard, BubbleInfo, BottomLeftWorkSide,
+  Background, Container, SideMenu, WorkBoard, ShowSideMenuButton, BubbleInfo,
   TopWorkSide, BottomWorkSide, ShowDocManagerMenuButton, ShowChatButton,
-  TopLeftWorkSide, BottomRightWorkSide, ShowMicroPhoneButton, ShowCameraButton,
-  MessangerWrapper, DocumentWrapper, WebCamBlock, SVGWrapper,
+  BottomLeftWorkSide, BottomRightWorkSide, ShowMicroPhoneButton, ShowCameraButton,
+  DocumentWrapper, CameraLandscapeView, MessengerWrapper, SVGWrapper,
 } from './styles';
+
+import {Dimensions, PanResponder} from "react-native";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import get from "lodash/get";
+import uuid from "react-native-uuid";
+import Shape from "../../../components/SvgShape";
+import simplify from "simplify-js";
+import {backgrondPatterns} from "../../../consts/BackgroundPatterns";
+import Svg from "react-native-svg";
+import map from "lodash/map";
+
+const whoosh = new Sound('dingsoundeffect.mp3', Sound.MAIN_BUNDLE);
 
 const screenWidth = (Math.round(Dimensions.get('window').width)) ? Math.round(Dimensions.get('window').width) : 0;
 const screenHeight = (Math.round(Dimensions.get('window').height)) ? Math.round(Dimensions.get('window').height) : 0;
 
-class PortraitBoard extends React.Component {
+class LandscapeBoard extends React.Component{
   path = null;
   paths = [];
 
@@ -36,6 +38,7 @@ class PortraitBoard extends React.Component {
       yOffset: null
     },
     users: [],
+    showSideMenu: false,
     showCamera: false,
     showChat: false,
     showDocManagerMenu: false,
@@ -281,79 +284,98 @@ class PortraitBoard extends React.Component {
   toogleChat = () => this.setState({ showChat: !this.state.showChat })
   toogleMicrophone = () => this.setState({ showMicrophone: !this.state.showMicrophone })
   toogleCamera = () => this.setState({ showCamera: !this.state.showCamera })
+  toogleSideMenu = () => this.setState({ showSideMenu: !this.state.showSideMenu })
 
-  render() {
-    const {
-      showCamera,
-      showChat,
-      showDocManagerMenu,
-      showMicrophone,
-      scale,
-      users,
-      paths,
-    } = this.state
+ render()  {
+   const {
+     showCamera,
+     showChat,
+     showDocManagerMenu,
+     showMicrophone,
+     showSideMenu,
+     scale,
+     users,
+     paths,
+   } = this.state
 
-    return (
-      <Background source={this.getBackgroundSource()}>
-        <Container>
-          <WorkBoard>
-            <TopWorkSide>
-              <TopLeftWorkSide />
-              <BubbleInfo label="Dawson Wellman talking" />
-              <ShowDocManagerMenuButton
-                forward={showDocManagerMenu}
-                onPress={this.toogleDocManagerMenu}
+  return (
+    <Background source={this.getBackgroundSource()}>
+      <Container>
+        {showSideMenu && <SideMenu />}
+        <WorkBoard>
+          <TopWorkSide>
+            <ShowSideMenuButton
+              forward={showSideMenu}
+              onPress={() => this.toogleSideMenu(!showSideMenu)}
+            />
+            <ShowDocManagerMenuButton
+              forward={showDocManagerMenu}
+              onPress={() => this.toogleDocManagerMenu(!showDocManagerMenu)}
+            />
+          </TopWorkSide>
+          <SVGWrapper {...this._panResponder.panHandlers} style={{flex: 1}} onLayout={(event) => this.getDimensions(event.nativeEvent.layout)}>
+            <Svg style={{flex: 1}}>
+              {
+                map(paths, path =>(<Shape key={path.id} scale={scale} path={path} />))
+              }
+              {
+                (this.path) &&
+                <Shape
+                  key={this.path.id}
+                  scale={scale}
+                  path={this.path}
+                />
+
+              }
+              {map(users, user => <Shape key={user.drawer.id} scale={scale} path={user.drawer}/>)}
+            </Svg>
+          </SVGWrapper>
+          <BottomWorkSide>
+            <BottomLeftWorkSide>
+              <ShowChatButton
+                forward={showChat}
+                onPress={() => this.toogleChat(!showChat)}
               />
-            </TopWorkSide>
-            <SVGWrapper {...this._panResponder.panHandlers} style={{flex: 1}} onLayout={(event) => this.getDimensions(event.nativeEvent.layout)}>
-              <Svg style={{flex: 1}}>
-                {
-                  map(paths, path =>(<Shape key={path.id} scale={scale} path={path} />))
-                }
-                {
-                  (this.path) &&
-                  <Shape
-                    key={this.path.id}
-                    scale={scale}
-                    path={this.path}
-                  />
-
-                }
-                {map(users, user => <Shape key={user.drawer.id} scale={scale} path={user.drawer}/>)}
-              </Svg>
-            </SVGWrapper>
-            <BottomWorkSide>
-              <BottomLeftWorkSide>
-                <ShowChatButton
-                  forward={showChat}
-                  onPress={this.toogleChat}
-                />
-              </BottomLeftWorkSide>
-              <BottomRightWorkSide>
-                <ShowMicroPhoneButton
-                  muted={showMicrophone}
-                  onPress={this.toogleMicrophone}
-                />
-                <ShowCameraButton
-                  forward={showCamera}
-                  onPress={this.toogleCamera}
-                />
-              </BottomRightWorkSide>
-            </BottomWorkSide>
-          </WorkBoard>
-          {showCamera && <WebCamBlock />}
-          <FooterMenu />
-          <MessangerWrapper
-            isOpen={showChat}
-            onClose={this.toogleChat}
+              <BubbleInfo label="Dawson Wellman talking" />
+            </BottomLeftWorkSide>
+            <BottomRightWorkSide>
+              <ShowMicroPhoneButton
+                muted={showMicrophone}
+                onPress={() => this.toogleMicrophone(!showMicrophone)}
+              />
+              <ShowCameraButton
+                forward={showCamera}
+                onPress={() => this.toogleCamera(!showCamera)}
+              />
+            </BottomRightWorkSide>
+          </BottomWorkSide>
+        </WorkBoard>
+        <DocumentWrapper
+          isOpen={showDocManagerMenu}
+          onClose={() => this.toogleDocManagerMenu(!showDocManagerMenu)}
+        />
+        <MessengerWrapper
+          isOpen={showChat}
+          onClose={() => this.toogleChat(!showChat)}
+        />
+        { showCamera && (
+          <CameraLandscapeView
+            onClose={() => this.toogleCamera(!showCamera)}
           />
-          <DocumentWrapper isOpen={showDocManagerMenu} />
-        </Container>
-      </Background>
-    );
-  }
+        )}
+      </Container>
+    </Background>
+  )
+}}
 
+export default LandscapeBoard;
 
-}
-
-export default PortraitBoard;
+// const [showSideMenu, toogleSideMenu] = useState(false);
+// const [showDocManagerMenu, toogleDocManagerMenu] = useState(false);
+// const [showChat, toogleChat] = useState(false);
+// const [showMicrophone, toogleMicrophone] = useState(false);
+// const [showCamera, toogleCamera] = useState(false);
+//
+// useEffect(() => {
+//   if (whoosh.isLoaded()) whoosh.stop(() => whoosh.play());
+// }, [showDocManagerMenu, showCamera, showChat, showMicrophone]);

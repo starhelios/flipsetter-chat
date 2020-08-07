@@ -13,9 +13,9 @@ export { DocumentWrapper } from './DocumentWrapper';
 export { WebCamBlock } from './WebCamBlock';
 export { FooterMenu } from '../../../components/blocks';
 
-export const Background = styled.ImageBackground.attrs({
-  source: landscapeBackgroundImg,
-})`
+export const Background = styled.ImageBackground.attrs(props => ({
+  source: props.source ? props.source : landscapeBackgroundImg,
+}))`
   flex: 1;
 `;
 

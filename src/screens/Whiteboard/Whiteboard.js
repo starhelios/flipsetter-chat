@@ -7,7 +7,7 @@ import {
 
 import { useOrientation } from '../../helper/useOrientation';
 
-const Whiteboard = (props) => {
+const Whiteboard = () => {
   const orientation = useOrientation();
   const Container = orientation === 'LANDSCAPE' ? ViewContainer : SafeContainer;
   const isAndroid = Platform.OS !== 'ios';
@@ -15,7 +15,7 @@ const Whiteboard = (props) => {
   return (
     <Container>
       <StatusBar hidden={isAndroid} />
-      <Header {...props} />
+      <Header />
       {orientation === 'PORTRAIT' && <PortraitBoard />}
       {orientation === 'LANDSCAPE' && <LandscapeBoard />}
     </Container>

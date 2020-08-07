@@ -8,7 +8,8 @@ export const ValueText = styled(Text)`
   color: ${Colors.choosenGreen};
   position: absolute;
   top: -30px;
-  width: 40px;
+  left: -5px;
+  width: 50px;
   font-size: 18px;
   font-weight: bold;
 `;

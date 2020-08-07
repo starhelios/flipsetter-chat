@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 import Colors from '../../../config/Colors';
 
-import { thinBrushIcon, fatBrushIcon } from '../../../images'
+import { thinBrushIcon, fatBrushIcon } from '../../../images';
 
 import { IconButton, Text as TextUI, Slider } from '../../ui';
 
@@ -26,6 +26,10 @@ export const ContainerHorizontal = styled.View`
 export const Chooser = styled(Slider).attrs({
   minimumTrackTintColor: '#eff0f2',
   maximumTrackTintColor: '#eff0f2',
+  minimumValue: 1,
+  maximumValue: 15,
+  step: 1,
+  showValue: true,
 })`
   width: 350px;
   margin-bottom: 25px;
@@ -41,7 +45,7 @@ export const Text = styled(TextUI)`
 export const ThinBrush = styled(IconButton).attrs({
   iconSource: thinBrushIcon,
   iconSize: 34,
-  isChoosen: true
+  isChoosen: true,
 })``;
 
 export const FatBrush = styled(IconButton).attrs({

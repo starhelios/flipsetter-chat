@@ -12,9 +12,9 @@ export { DocumentWrapper } from './DocumentWrapper';
 export { MessengerWrapper } from './MessengerWrapper';
 export { SideMenu, CameraLandscapeView } from '../../../components/blocks';
 
-export const Background = styled.ImageBackground.attrs({
-  source: landscapeBackgroundImg,
-})`
+export const Background = styled.ImageBackground.attrs(props => ({
+  source: props.source ? props.source : landscapeBackgroundImg,
+}))`
   flex: 1;
 `;
 
@@ -35,6 +35,11 @@ export const TopWorkSide = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding-top: 15px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  z-index: 90;
 `;
 
 export const BottomWorkSide = styled.View`
@@ -117,3 +122,5 @@ export const BubbleInfo = styled(InfoBubble)`
   margin-left: 15px;
   margin-bottom: 5px;
 `;
+
+export const SVGWrapper = styled.View``;

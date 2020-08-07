@@ -1,19 +1,18 @@
-import React from 'react';
+import { connect } from 'react-redux';
 
-import {
-  Chooser, Container, Text, ContainerHorizontal,
-} from './styles';
+import { Whiteboard } from '../../../reducers/actions';
 
-import { useOrientation } from '../../../helper/useOrientation';
+import Component from './EraserSizeMenu';
 
-export const EraserSizeMenu = () => {
-  const orientation = useOrientation();
-  const Wrapper = orientation === 'LANDSCAPE' ? ContainerHorizontal : Container;
-
-  return (
-    <Wrapper>
-      <Text>Eraser size</Text>
-      <Chooser />
-    </Wrapper>
-  );
+const mapStateToProps = (state) => {
+  return {
+    whiteboard: state.whiteboard,
+  };
 };
+
+const mapDispatchToProps = {
+  onChangeWidth: Whiteboard.setBrushWeight,
+  onChangeColor: Whiteboard.setBrushColor,
+};
+
+export const EraserSizeMenu = connect(mapStateToProps, mapDispatchToProps)(Component);

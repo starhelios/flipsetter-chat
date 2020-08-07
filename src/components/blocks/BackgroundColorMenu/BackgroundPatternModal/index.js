@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
-import { Call } from '../../../../reducers/actions';
+
+import { Call, Whiteboard } from '../../../../reducers/actions';
 
 import Component from './BackgroundPatternModal';
 
@@ -12,5 +13,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   onSavePath: Call.savePath,
+  onChangeBackground: Whiteboard.setBackgroundPattern,
 };
+
 export const BackgroundPatternModal = connect(mapStateToProps, mapDispatchToProps)(Component);

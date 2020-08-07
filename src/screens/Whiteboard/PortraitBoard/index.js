@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
     user: state.user,
     friends: state.friends,
     call: state.call,
+    whiteboard: state.whiteboard,
   };
 };
 

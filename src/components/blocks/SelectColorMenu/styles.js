@@ -58,7 +58,9 @@ export const ChoosenColorView = styled.View`
   height: 40px;
   width: 40px;
   border-radius: 8px;
-  background-color: ${(props) => (props.color ? props.color : Colors.white)};
+  border-width: 0.5px;
+  border-color: ${Colors.black};
+  background-color: ${(props) => (props.color.length === 7 ? props.color : Colors.white)};
 `;
 
 export const ChoosenColorInput = styled.TextInput.attrs({

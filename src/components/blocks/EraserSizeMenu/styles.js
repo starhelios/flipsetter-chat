@@ -24,6 +24,10 @@ export const ContainerHorizontal = styled.View`
 export const Chooser = styled(Slider).attrs({
   minimumTrackTintColor: '#eff0f2',
   maximumTrackTintColor: '#eff0f2',
+  minimumValue: 1,
+  maximumValue: 15,
+  step: 1,
+  showValue: true,
 })`
   width: 350px;
   margin-bottom: 25px;

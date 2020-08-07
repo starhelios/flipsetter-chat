@@ -11,7 +11,7 @@ import {
 } from './styles';
 
 const BackgroundPatternModal = ({
-  visible, onClose, onSavePath, call, user,
+  visible, onClose, onSavePath, call, user, onChangeBackground,
 }) => {
   const onChoose = (pattern) => {
     const fullData = {
@@ -30,8 +30,8 @@ const BackgroundPatternModal = ({
       type: 20,
     };
 
-    // call.whisper('change_back_pattern', fullData);
     onSavePath(call.threadId, call.id, fullData);
+    onChangeBackground({ patternName: pattern.pathWeb });
     onClose();
   };
 
@@ -59,10 +59,11 @@ const BackgroundPatternModal = ({
 
 BackgroundPatternModal.propTypes = {
   visible: PT.bool.isRequired,
-  user: PT.bool.isRequired,
-  call: PT.bool.isRequired,
+  user: PT.object.isRequired,
+  call: PT.object.isRequired,
   onClose: PT.func,
   onSavePath: PT.func.isRequired,
+  onChangeBackground: PT.func.isRequired,
 };
 
 BackgroundPatternModal.defaultProps = {
