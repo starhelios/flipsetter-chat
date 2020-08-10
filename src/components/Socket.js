@@ -151,7 +151,7 @@ class SocketProvider extends React.Component {
             .listen('.new_message', (e) => {
                 console.log("NEW MESSAGE", e);
                 let check = Object.values(this.props.messages.messages[e.thread_id]).filter(message => {
-                    // console.log("LIST", message);
+                    console.log("LISTTTTTT", message);
                     if(message._id === e.temp_id || message._id === e.message_id || e.owner_id === this.props.user.id){
                         if(typeof message.temp_id !== "undefined"){
                             if(message.temp_id !== e._id){
@@ -194,6 +194,19 @@ class SocketProvider extends React.Component {
                                         }
                                     };
                                 break;
+                                case 2:
+                                    newMessage =
+                                        {
+                                            _id: e.message_id,
+                                            file: e.body,
+                                            createdAt: e.created_at,
+                                            user: {
+                                                _id: e.owner_id,
+                                                name: e.name,
+                                                avatar: `https://${config.api.uri}${e.avatar}`,
+                                            }
+                                        };
+                                    break;
                             case 89:
                                 newMessage =
                                     {
@@ -240,7 +253,7 @@ class SocketProvider extends React.Component {
                                 current.recent_message.body = `${newMessage.user.name} sent a photo`;
                             }
                             else if(e.message_type === 2){
-                                current.recent_message.body = `${newMessage.user.name} sent a video`;
+                                current.recent_message.body = `${newMessage.user.name} sent a file`;
                             }
                             if(this.props.threads.activeThread !== e.thread_id){
                                 current.unread = true;

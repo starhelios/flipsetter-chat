@@ -1,9 +1,5 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-<<<<<<< HEAD
 import { createStackNavigator} from "react-navigation-stack";
-=======
-
->>>>>>> 07a0e1ff440ab32ba2db0bb387abdeeb2536dc7a
 import AuthLoadingScreen from '../screens/Auth/AuthLoadingScreen';
 
 import MainTabNavigator from './MainTabNavigator';
@@ -28,18 +24,5 @@ export default createAppContainer(createSwitchNavigator(
         backgroundColor: '#24422e',
       },
     },
-<<<<<<< HEAD
-    {
-        initialRouteName: "AuthLoading",
-        defaultNavigationOptions: {
-            headerStyle: {
-                backgroundColor: "#24422e",
-            }
-        }
-    }
-
+  }
 ));
-=======
-  },
-));
->>>>>>> 07a0e1ff440ab32ba2db0bb387abdeeb2536dc7a

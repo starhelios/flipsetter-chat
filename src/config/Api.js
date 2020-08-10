@@ -67,6 +67,9 @@ let prefix1 = `api/v1`;
                 saveThread: (threadId) => `messenger/save/${threadId}`, //used to make call and other stuff, misleading
             }
         },
+        // https://tippinweb.com/api/v0/images/full/image/img_5f2c17a9a7c751.08213544.jpeg
+
+
         images: {
             groupAvatar: (threadId, thumb = false) => `images/messenger/groups/${threadId}/${(thumb) && thumb}`,
             messengerPhoto: (messageId, thumb = false) => `images/messenger/${messageId}/${(thumb) && thumb}`,

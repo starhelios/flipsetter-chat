@@ -61,15 +61,20 @@ function appHeartbeat(){
 }
 function joinDevice(device_id, device_token, voip_token){
 
-    DeviceInfo.getDeviceName().then(deviceName => {
-        Constants.DEVICE_NAME = deviceName;
-      });
+    // DeviceInfo.getDeviceName().then(deviceName => {
+    //     Constants.DEVICE_NAME = deviceName;
+    //     // alert("jj "+Constants.DEVICE_NAME)
+
+    //   });
 
     return {
         type: actionTypes.JOIN_DEVICE_TO_SITE,
         payload: {
             request: {
-                url: `${config.prefix}/user/devices`,
+                // url: `api/v1/user/devices`,
+                url: `${(config.env === "dev") ? `https://${config.dev.uri}`:`https://${config.dev.uri}`}${config.prefix}/user/devices`,
+
+                // url: `${config.prefix}/user/devices`,
                 data: {
                     "device_id": device_id,
                     // "device_type": (Platform.OS === 'android') ? 0 : 1,
@@ -87,15 +92,18 @@ function joinDevice(device_id, device_token, voip_token){
 function registerDevice(device_id, fcm_token, voip_token){
 
     // let deviceName = '';
-    DeviceInfo.getDeviceName().then(deviceName => {
-        Constants.DEVICE_NAME = deviceName;
-    });
+    // DeviceInfo.getDeviceName().then(deviceName => {
+    //     Constants.DEVICE_NAME = deviceName;
+    // });
 
     return {
         type: actionTypes.REGISTER_DEVICE_TO_ACCOUNT,
         payload: {
             request: {
-                url: `${config.prefix}/user/devices`,
+                // url: `${config.prefix}/user/devices`,
+                // url: `api/v1/user/devices`,
+                url: `${(config.env === "dev") ? `https://${config.dev.uri}`:`https://${config.dev.uri}`}${config.prefix}/user/devices`,
+
                 data: {
                     "device_id": device_id,
                     "device_token": fcm_token,

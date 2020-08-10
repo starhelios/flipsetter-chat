@@ -8,5 +8,12 @@ export default {
   galleryIcon: require('../components/assets/gallery.png'),
   cancelIcon: require('../components/assets/cancel.png'),
   cancelIcon1: require('../components/assets/cancel1.png'),
+  gif: require('../components/assets/gif.png'),
+ 
+  ppt: require('../components/assets/ppt.png'),
+  doc: require('../components/assets/doc.png'),
+  file: require('../components/assets/file.png'),
+  pdf: require('../components/assets/pdf.png'),
+  zip: require('../components/assets/zip.png'),
 
 };

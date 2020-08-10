@@ -25,14 +25,10 @@ import InCallManager from 'react-native-incall-manager';
 import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
 
 class CallScreen extends Component<Props> {
-
     state = { init: false, }
-
     constructor(props) {
         super(props);
-
     }
-
     componentDidMount(): void {
         InCallManager.start({media: 'video'}); //Add in checks for media type later
         this.setState({
@@ -81,7 +77,6 @@ const styles = StyleSheet.create({
     },
     remoteVideo: {
         flex: 1,
-
     },
 })
 

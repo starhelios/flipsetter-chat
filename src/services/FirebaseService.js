@@ -329,6 +329,9 @@ class FirebaseService extends Component<Props> {
         case 1:
           body = `${data.name} sent a photo`;
           break;
+        case 2:
+            body = `${data.name} sent a document`;
+         break;
         case 89:
           body = `${data.name} ${data.body}`;
           break;
@@ -353,6 +356,7 @@ class FirebaseService extends Component<Props> {
           const groupDisplay = new firebase.notifications.Notification().android
             .setChannelId(notification.data.channelId)
             .setNotificationId(data.thread_id)
+            .setSound('messagealert.mp3')
             .setSubtitle(
               data.thread_type === 2 ? data.thread_subject : data.name,
             )
@@ -375,6 +379,7 @@ class FirebaseService extends Component<Props> {
           .setNotificationId(data.message_id)
           .setTitle(data.thread_type === 2 ? data.thread_subject : data.name)
           .setBody(body)
+          .setSound('messagealert.mp3')
           .setData({
             ...data,
           });
@@ -457,6 +462,19 @@ class FirebaseService extends Component<Props> {
               avatar: `https://${config.api.uri}${data.avatar}`,
             },
           };
+          break;
+        case 2:
+            newMessage =
+                {
+                    _id: data.message_id,
+                    file: data.body,
+                    createdAt: data.created_at,
+                    user: {
+                        _id: data.owner_id,
+                        name: data.owner_name,
+                        avatar: `https://${config.api.uri}${data.avatar}`,
+                    }
+                };
           break;
         case 89:
           newMessage = {

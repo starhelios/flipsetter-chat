@@ -24,6 +24,9 @@ import { App, Auth, User } from "../../reducers/actions";
 import NavigationService from "../../services/NavigationService";
 import SplashScreen from "react-native-splash-screen";
 import Toast from 'react-native-simple-toast';
+import Constants from '../../components/Constants';
+import RingerMode from 'react-native-ringer-mode';
+var Sound = require('react-native-sound');
 
 // import FCM from "../../components/FCM";
 // import Api from "../../service/Api";
@@ -56,13 +59,62 @@ class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
+// alert(Constants.DEVICE_NAME)
+  
+    }
 
+    playSound = () => {
+        var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+          if (error) {
+            console.log('failed to load the sound', error);
+            return;
+          }
+          // loaded successfully
+          console.log(
+            'duration in seconds: ' +
+            whoosh.getDuration() +
+            'number of channels: ' +
+            whoosh.getNumberOfChannels(),
+          );
+          // Play the sound with an onEnd callback
+          whoosh.play(success => {
+            if (success) {
+              console.log('successfully finished playing');
+            } else {
+              console.log('playback failed due to audio decoding errors');
+            }
+          });
+        });
+      };
+
+    ringPhn=()=>{
+        if(Platform.OS === 'android'){
+        RingerMode.getRingerMode()
+        .then(mode => {
+          switch(mode){
+            case 'NORMAL': 
+            this.playSound()  ;   
+            return ;
+            case 'SILENT':
+            return;
+            case 'VIBRATE':
+
+            Vibration.vibrate(1000);
+            return;
+            default :
+            return;
+          }
+        });
+    }
+    else{
+        this.playSound();
+    }
     }
 
     loginButton = async () => {
         // alert(this.checkEmailValid(this.props.auth.username))
         this.setState({ loading: true })
-        Vibration.vibrate(1000);
+        this.ringPhn();
         if (this.props.auth.username === '') {
             this.setState({ loading: false })
             Toast.show('Please enter the Email Address to Login', Toast.LONG);
@@ -105,12 +157,12 @@ class LoginScreen extends React.Component {
     }
 
     signUp = () => {
-        Vibration.vibrate(1000);
+        this.ringPhn();
         this.props.navigation.navigate('Register');
     }
 
     forgot = () => {
-        Vibration.vibrate(1000);
+        this.ringPhn();
         this.props.navigation.navigate('Forgot');
     }
 

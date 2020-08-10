@@ -10,6 +10,8 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import RingerMode from 'react-native-ringer-mode';
+var Sound = require('react-native-sound');
 import Toast from 'react-native-simple-toast';
 import { withSocketContext } from "../../components/Socket";
 import { connect } from "react-redux";
@@ -82,8 +84,62 @@ class ForgotScreen extends React.Component {
         ]).start();
     };
 
+
+    playSound = () => {
+        var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+          if (error) {
+            console.log('failed to load the sound', error);
+            return;
+          }
+          // loaded successfully
+          console.log(
+            'duration in seconds: ' +
+            whoosh.getDuration() +
+            'number of channels: ' +
+            whoosh.getNumberOfChannels(),
+          );
+          // Play the sound with an onEnd callback
+          whoosh.play(success => {
+            if (success) {
+              console.log('successfully finished playing');
+            } else {
+              console.log('playback failed due to audio decoding errors');
+            }
+          });
+        });
+      };
+
+    ringPhn=()=>{
+       
+       if(Platform.OS === 'android') {
+        RingerMode.getRingerMode()
+        .then(mode => {
+          switch(mode){
+            case 'NORMAL': 
+            this.playSound()  ;   
+            return ;
+            case 'SILENT':
+            return;
+            case 'VIBRATE':
+
+            Vibration.vibrate(1000);
+            return;
+            default :
+            return;
+          }
+        });
+    }
+    else
+    {
+        this.playSound();
+    }
+        
+    }
+
+
     _login = () => {
-        Vibration.vibrate(1000);
+        this.ringPhn();
+
         this.props.navigation.goBack()
     }
 
@@ -101,7 +157,7 @@ class ForgotScreen extends React.Component {
 
     reset = async () => {
         this.setState({ loading: true })
-        Vibration.vibrate(1000);
+this.ringPhn();
         if (!this.state.email) {
             Toast.show('Enter Your Email', Toast.LONG);
             this.setState({loading:false, msg: "Enter Your Email" });
@@ -134,13 +190,17 @@ class ForgotScreen extends React.Component {
             }
         }
     }
+    goBackk=()=>{
+        this.ringPhn();
+        this.props.navigation.goBack();
+    }
 
     render() {
         return (
             <Container style={styles.container}>
                 {this.state.loading ? <ActivityLoader /> : null}
                 <Header style={styles.header} transparent>
-                    <Left><Text style={styles.resetText}>Back</Text></Left>
+                <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.resetText}>Back</Text></TouchableOpacity></Left>
                     <Body></Body>
                     <Right></Right>
                 </Header>

@@ -87,6 +87,20 @@ export default function(state =initialState, action){
                                 }
                             };
                         break;
+
+                        case 2:
+                            newMessage =
+                                {
+                                    _id: message.message_id,
+                                    file:message.body,
+                                    createdAt: message.created_at,
+                                    user: {
+                                        _id: message.owner_id,
+                                        name: message.owner_name,
+                                        avatar: `https://${config.api.uri}${message.avatar}`,
+                                    }
+                                };
+                            break;
                     case 89:
                         newMessage =
                             {

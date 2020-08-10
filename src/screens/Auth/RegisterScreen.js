@@ -25,7 +25,9 @@ import logo from "../../components/assets/Logo.png";
 import NativeStatusBarManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManager";
 import {SafeAreaConsumer} from 'react-native-safe-area-context';
 import NavigationService from "../../services/NavigationService";
+import RingerMode from 'react-native-ringer-mode';
 
+var Sound = require('react-native-sound');
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
@@ -59,6 +61,58 @@ class RegisterScreen extends React.Component {
     componentWillUnmount() {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
+    }
+
+
+
+    playSound = () => {
+        var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+          if (error) {
+            console.log('failed to load the sound', error);
+            return;
+          }
+          // loaded successfully
+          console.log(
+            'duration in seconds: ' +
+            whoosh.getDuration() +
+            'number of channels: ' +
+            whoosh.getNumberOfChannels(),
+          );
+          // Play the sound with an onEnd callback
+          whoosh.play(success => {
+            if (success) {
+              console.log('successfully finished playing');
+            } else {
+              console.log('playback failed due to audio decoding errors');
+            }
+          });
+        });
+      };
+
+    ringPhn=()=>{
+        if(Platform.OS === 'android'){
+        RingerMode.getRingerMode()
+        .then(mode => {
+          switch(mode){
+            case 'NORMAL': 
+            this.playSound()  ;   
+            return ;
+            case 'SILENT':
+            return;
+            case 'VIBRATE':
+
+            Vibration.vibrate(1000);
+            return;
+            default :
+            return;
+          }
+        });
+    }
+    else
+    {
+        this.playSound()
+    }
+        
     }
 
     keyboardDidShow = (event) => {
@@ -98,7 +152,8 @@ class RegisterScreen extends React.Component {
     register = async () => {
         const user = this.state;
         this.setState({ loading: true })
-        Vibration.vibrate(1000);
+        this.ringPhn();
+
         if (this.state.first === '') {
             this.setState({ loading: false })
             Toast.show('Please enter the First Name', Toast.LONG);
@@ -165,6 +220,10 @@ class RegisterScreen extends React.Component {
         }
         
     }
+    goBackk=()=>{
+        this.ringPhn();
+        this.props.navigation.goBack();
+    }
 
     render() {
         return (
@@ -180,7 +239,7 @@ class RegisterScreen extends React.Component {
             ;
         }}>
             <Header style={styles.header} transparent>
-                <Left><TouchableOpacity onPress={() => this.props.navigation.goBack()}><Text style={styles.backText}>Back</Text></TouchableOpacity></Left>
+                <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.backText}>Back</Text></TouchableOpacity></Left>
                 <Body></Body>
                 <Right></Right>
             </Header>

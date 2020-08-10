@@ -12,6 +12,8 @@ import { Button, Container, Header, Content, List, ListItem, Left, Body, Right, 
 import { withSocketContext } from "../../components/Socket";
 import {Auth, User} from "../../reducers/actions";
 import logo from '../../components/assets/Logo.png';
+import DeviceInfo from 'react-native-device-info';
+import Constants from '../../components/Constants';
 
 class AuthLoadingScreen extends React.Component {
     componentDidMount(){
@@ -20,6 +22,10 @@ class AuthLoadingScreen extends React.Component {
        }, 100);
 
        SplashScreen.hide();
+       DeviceInfo.getDeviceName().then(deviceName => {
+        Constants.DEVICE_NAME = deviceName;
+      });
+
     }
 
     // Fetch the token from storage then navigate to our appropriate place

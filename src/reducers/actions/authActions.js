@@ -57,18 +57,10 @@ function setErrorMsg(msg) {
 }
 
 
-
-
 function login(email, pass, fcm_token, voip_token) {
-    // alert(`${(config.env === "dev") ? `https://${config.dev.uri}`:`https://${config.prod.uri}`}${config.prefix}/auth/login`)
-    // var deviceName = '';
-//
-    DeviceInfo.getDeviceName().then(deviceName => {
-       Constants.DEVICE_NAME = deviceName;
-    });
-    // alert(Constants.DEVICE_NAME)
-
-
+    //  DeviceInfo.getDeviceName().then(deviceName => {
+    //    Constants.DEVICE_NAME = deviceName;
+    // });
     return {
         type: actionTypes.LOGIN,
         payload: {

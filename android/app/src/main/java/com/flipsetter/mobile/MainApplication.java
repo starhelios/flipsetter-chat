@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.RNRingerModePackage;
+import com.reactnativegiphyui.GiphyUiPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -40,7 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
 //            packages.add(new WebRTCModulePackage());
 
-            // packages.add(new RNSoundPackage());
+            // packages.add(new RNFSPackage());
             packages.add(new RNFirebaseMessagingPackage());
             packages.add(new RNFirebaseNotificationsPackage());
             return packages;

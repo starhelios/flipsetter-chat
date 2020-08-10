@@ -4,7 +4,7 @@ import {
   Alert,
   StyleSheet,
   Platform,
-  Image,
+  Image, Linking,
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
@@ -12,13 +12,14 @@ import {
   Keyboard,
   BackHandler,
 } from 'react-native';
-
+// import { downloadFile, ExternalStorageDirectoryPath, DocumentDirectoryPath, MainBundlePath } from "react-native-fs";
 import Images from '../config/Images';
 import Video from 'react-native-video';
 import { Thumbnail } from '../components/react-native-thumbnail-video';
 import YoutubePlayer from 'react-native-yt-player';
 import VideoPlayer from 'react-native-video-player';
 import YouTube from 'react-native-youtube';
+import RNFetchBlob from "rn-fetch-blob";
 
 // import ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -35,7 +36,7 @@ import {
   Right,
   Text,
   Title,
-  Button,
+  Button,Vibration
 } from 'native-base';
 
 import { withNavigationFocus, TabRouter } from 'react-navigation';
@@ -72,13 +73,16 @@ import { links } from 'react-native-firebase';
 import { returnRejectedPromiseOnError } from 'redux-axios-middleware';
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
+import RingerMode from 'react-native-ringer-mode';
 var Sound = require('react-native-sound');
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
+import { GiphyUi } from 'react-native-giphy-ui';
 
 
 let VIDEO_DATA = {};
+GiphyUi.configure('g1zE0iMVRsYdw03HXZfRd3ivUjxEywFB');
 
 
 class MessagesScreen extends Component {
@@ -106,6 +110,7 @@ class MessagesScreen extends Component {
     activeCall: null,
     typedMsg: '',
     openPicker: false,
+    openGif: false,
     showEmoji: false,
     showModal: false,
     doc: false,
@@ -117,7 +122,7 @@ class MessagesScreen extends Component {
     Img: '',
     fileToUpload: {},
     fileToUploadArray: [],
-    isDoc:false
+    isDoc: false
 
 
   };
@@ -136,25 +141,28 @@ class MessagesScreen extends Component {
     );
   }
 
-  generateId(){
-    return Math.random().toString(36).substring(2, 10)+'-'+Math.random().toString(36).substring(2, 6) +'-'+ Math.random().toString(36).substring(2, 6)+'-'+Math.random().toString(36).substring(2, 14);
+  generateId() {
+    return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 14);
   }
-  generateName(){
-    return Math.random().toString(36).substring(2, 10)+'-'+Math.random().toString(36).substring(2, 6);
 
+  generateName() {
+    return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6);
   }
 
 
   async componentDidMount() {
-//     const obj = {
-//       hello: "world"
-//     };
-//     const json = JSON.stringify(obj);
-// const blob = new Blob([json])
-// alert(JSON.stringify(blob))
-// alert(JSON.stringify(this.props.user.id))
 
-// this.props.getUser()
+    this.props.getUser()
+    // console.log("mesg "+JSON.stringify(this.state.messages))
+    //     const obj = {
+    //       hello: "world"
+    //     };
+    //     const json = JSON.stringify(obj);
+    // const blob = new Blob([json])
+    // alert(JSON.stringify(blob))
+    // alert(JSON.stringify(this.props.user.id))
+
+    // this.props.getUser()
 
     this.props.setActiveThread(this.activeThread);
     //Let's update the thread
@@ -277,7 +285,7 @@ class MessagesScreen extends Component {
         ],
       });
     }
-// alert(JSON.stringify(this.props.socket))
+    // alert("kk "+JSON.stringify(this.props.socket))
     //Make Sure socket is connected and if disconnects re-subscribe to restore connecction
     if (
       this.props.socket.status !== prevProps.socket.status &&
@@ -374,6 +382,57 @@ class MessagesScreen extends Component {
     return true;
   }
 
+
+  playSound = () => {
+    var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+      // loaded successfully
+      console.log(
+        'duration in seconds: ' +
+        whoosh.getDuration() +
+        'number of channels: ' +
+        whoosh.getNumberOfChannels(),
+      );
+      // Play the sound with an onEnd callback
+      whoosh.play(success => {
+        if (success) {
+          console.log('successfully finished playing');
+        } else {
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  };
+
+ringPhn=()=>{
+  if(Platform.OS === 'android')
+  {
+        RingerMode.getRingerMode()
+    .then(mode => {
+      switch(mode){
+        case 'NORMAL': 
+        this.playSound()  ;   
+        return ;
+        case 'SILENT':
+        return;
+        case 'VIBRATE':
+
+        Vibration.vibrate(1000);
+        return;
+        default :
+        return;
+      }
+    });
+  }
+  else
+  {
+    this.playSound();
+  }
+}
+
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -397,29 +456,7 @@ class MessagesScreen extends Component {
     this.player.seekTo(s);
   };
 
-  playSound = () => {
-    var whoosh = new Sound('messagealert.mp3', Sound.MAIN_BUNDLE, error => {
-      if (error) {
-        console.log('failed to load the sound', error);
-        return;
-      }
-      // loaded successfully
-      console.log(
-        'duration in seconds: ' +
-        whoosh.getDuration() +
-        'number of channels: ' +
-        whoosh.getNumberOfChannels(),
-      );
-      // Play the sound with an onEnd callback
-      whoosh.play(success => {
-        if (success) {
-          console.log('successfully finished playing');
-        } else {
-          console.log('playback failed due to audio decoding errors');
-        }
-      });
-    });
-  };
+  
 
   _listeners = () => {
     // this.private = this.echo.private(`user_notify_${this.user.user_id}`);
@@ -502,8 +539,9 @@ class MessagesScreen extends Component {
   };
 
   async onSend(message = [], type, file) {
-// alert(JSON.stringify(message))
-    this.playSound();
+    // alert(JSON.stringify(message))
+this.ringPhn();
+
     this.setState({ openPicker: false, showEmoji: false });
     let messages = [
       ...this.props.messages.messages[this.props.navigation.getParam('thread')],
@@ -518,11 +556,11 @@ class MessagesScreen extends Component {
     //Set the message fast, we can update later
 
     let incoming;
-    if(type === 'img'){
-       incoming = {
+    if (type === 'img') {
+      incoming = {
         _id: await message._id,
         createdAt: message.createdAt,
-image:file.uri,
+        image: file.uri,
         user: {
           ...message.user,
           // name: response.payload.data.message.name,
@@ -530,18 +568,32 @@ image:file.uri,
         temp_id: await message._id,
       };
     }
-    else{
-    incoming = {
-      _id: await message._id,
-      createdAt: message.createdAt,
-      text: message.text ? emojify(entities.decode(message.text), { output: 'unicode' }) : '',
-      user: {
-        ...message.user,
-        // name: response.payload.data.message.name,
-      },
-      temp_id: await message._id,
-    };
-  }
+    else if (type === 'message') {
+      incoming = {
+        _id: await message._id,
+        createdAt: message.createdAt,
+        text: message.text ? emojify(entities.decode(message.text), { output: 'unicode' }) : '',
+        user: {
+          ...message.user,
+          // name: response.payload.data.message.name,
+        },
+        temp_id: await message._id,
+      };
+    }
+    else {
+      let dt = Date.now()
+      let type = file.type.replace("application/", ".");
+      incoming = {
+        _id: await message._id,
+        createdAt: message.createdAt,
+        file: file.name + "_" + dt + type,
+        user: {
+          ...message.user,
+          // name: response.payload.data.message.name,
+        },
+        temp_id: await message._id,
+      };
+    }
 
 
     //add messages to store
@@ -567,7 +619,7 @@ image:file.uri,
     let threads = { ...this.props.threads.threads };
     let current = { ...threads[this.activeThread] };
     current.recent_message = {
-      body: message.text ? message.text:'' ,
+      body: message.text ? message.text : '',
       message_type: 0,
       name: response.payload.data.message.name,
     };
@@ -671,6 +723,7 @@ image:file.uri,
   };
 
   startCall = async type => {
+    this.ringPhn();
     let response;
     type === 1
       ? (response = await this.props.startVideoCall(this.activeThread))
@@ -695,7 +748,7 @@ image:file.uri,
     // }
   };
   openCamera = () => {
-    this.setState({ openPicker: false,isDoc:false });
+    this.setState({ openPicker: false, isDoc: false });
     ImagePicker.openCamera({
       // width: 300,
       // height: 400,
@@ -728,7 +781,7 @@ image:file.uri,
   };
 
   openGallery = () => {
-    this.setState({ openPicker: false ,isDoc:false});
+    this.setState({ openPicker: false, isDoc: false });
     ImagePicker.openPicker({
       // width: 300,
       // height: 300,
@@ -742,7 +795,7 @@ image:file.uri,
     })
       .then(images => {
 
-console.log(JSON.stringify(images))
+        console.log(JSON.stringify(images))
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
@@ -762,7 +815,7 @@ console.log(JSON.stringify(images))
 
 
   async pickDocument() {
-    this.setState({ openPicker: false ,isDoc:false});
+    this.setState({ openPicker: false, isDoc: false });
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
@@ -770,6 +823,7 @@ console.log(JSON.stringify(images))
       console.log(JSON.stringify(results))
       let docs = [];
       results.map((res) => {
+        // alert(JSON.stringify(res))
         // let nm = this.generateName();
         const file = {
           name: res.name,
@@ -778,7 +832,7 @@ console.log(JSON.stringify(images))
         }
         docs.push(file)
       })
-      this.setState({ doc: true,isDoc:true, showModal: true, selectedImages: results ,fileToUploadArray:docs});
+      this.setState({ doc: true, isDoc: true, showModal: true, selectedImages: results, fileToUploadArray: docs });
       // let s = results.length > 1 ? 's' : '';
       // alert("You have selected " +results.length + " Document"+s)
     } catch (err) {
@@ -859,13 +913,31 @@ console.log(JSON.stringify(images))
   };
 
   openEmoji = () => {
+  
     Keyboard.dismiss();
+  
+    this.ringPhn()
+    // this.ringPhn();
     this.setState({ showEmoji: true, openPicker: false });
   };
 
   customSystemMessage = props => {
     return (
-      <View style={{ height:Platform.OS === 'ios'? hp('6%') :hp('7.2%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
+      <View style={{ height: Platform.OS === 'ios' ? hp('6%') : hp('7.2%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
+        <TouchableOpacity
+          style={{
+            margin: 3,
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => this.setState({ openGif: true, openPicker: false, showEmoji: false },()=>this.ringPhn() )}>
+
+          <Image
+            resizeMode="contain"
+            source={Images.gif}
+            style={{ width: 28, height: 28, alignSelf: 'center' }}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           style={{
             alignSelf: 'center',
@@ -884,7 +956,7 @@ console.log(JSON.stringify(images))
             alignSelf: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => this.setState({ openPicker: true, showEmoji: false })}>
+          onPress={() => this.setState({ openPicker: true, showEmoji: false },()=>this.ringPhn())}>
           <Image
             resizeMode="contain"
             source={Images.attachmentIcon}
@@ -928,26 +1000,91 @@ console.log(JSON.stringify(images))
   imageSelected = () => {
     this.setState({ showModal: false, doc: false }, () => {
       let s = this.state.selectedImages.length > 1 ? 's' : '';
-      this.state.fileToUploadArray.map((res)=>{
+      this.state.fileToUploadArray.map((res) => {
         // alert(JSON.stringify(res))
-              let dt = Date.now();
+        let dt = Date.now();
         var dateTime = new Date(dt);
-          let msg = {
-            _id: String(this.generateId()),
-            createdAt: dateTime.toISOString(),
-            user: {
-              _id: this.props.user.id,
-              avatar: `https://${config.api.uri}` + this.props.user.avatar,
-            },
-          }
-          {this.state.isDoc ? this.onSend(msg, 'doc', res) :this.onSend(msg, 'img', res)}
+        let msg = {
+          _id: String(this.generateId()),
+          createdAt: dateTime.toISOString(),
+          user: {
+            _id: this.props.user.id,
+            avatar: `https://${config.api.uri}` + this.props.user.avatar,
+          },
+        }
+        { this.state.isDoc ? this.onSend(msg, 'doc', res) : this.onSend(msg, 'img', res) }
       })
-          //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
-          // );
-        });
+      //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
+      // );
+    });
   };
 
+  downloadPkPassFile = (imgUrl = "") => {
+console.log("img "+imgUrl)
+
+let imageName = "/IMG" + new Date().getTime() + ".png";
+
+let dirs = RNFetchBlob.fs.dirs;
+let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.PictureDir + imageName;
+
+
+    if (Platform.OS == 'android') {
+
+      RNFetchBlob.config({
+        fileCache: true,
+        appendExt: 'png',
+        indicator: true,
+        IOSBackgroundTask: true,
+        path: path,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          path: path,
+          description: 'Image'
+        },
+  
+      }).fetch("GET", imgUrl).then(res => {
+        console.log(res, 'end downloaded')
+      })
+      .catch((error) => {
+              alert(error)
+            })
+    } 
+    
+   
+
+
+
+  //   new Promise((resolve, reject) => {
+  //     let fileName = "IMG" + new Date().getTime() + ".png";
+  //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;    
+  //     // const destPathAndroid = `${DocumentDirectoryPath}` +'/' + fileName;
+  //     const destPathIOS = `${DocumentDirectoryPath}` + "/MyCollaborateFiles/" + fileName;
+  //  console.log(destPathAndroid)
+  //  console.log(MainBundlePath +"ff")
+
+  //     const destPath = Platform.OS === 'ios' ? destPathIOS : destPathAndroid;
+  //     downloadFile({
+  //       fromUrl: fileUrl,
+  //       toFile: destPath
+  //     }).promise.then(result => {
+  //       if (result.statusCode == 200) {
+  //         alert("done")
+  //         resolve(destPath);
+  //       }
+  //       else {
+  //         reject("Unable to download");
+  //       }
+
+  //     }).catch((error) => {
+  //       // alert(error)
+  //       reject("Unable to download");
+  //     })
+  //   });
+  }
+
   cancelImage = index => {
+    this.ringPhn();
     var array = this.state.selectedImages;
     array.splice(index, 1);
     if (array.length <= 0) {
@@ -963,6 +1100,7 @@ console.log(JSON.stringify(images))
   };
 
   goBack = () => {
+    this.ringPhn();
     if (this.state.showWebView) {
       this.setState({ showWebView: false });
     } else {
@@ -971,6 +1109,7 @@ console.log(JSON.stringify(images))
       });
     }
   };
+
   render() {
     // if(!this.state.isLoading) {
     return (
@@ -1051,8 +1190,6 @@ console.log(JSON.stringify(images))
           <View>
             <YouTube
               apiKey="AIzaSyBxDfNPaaWHcudKkcsmudIaY5tlcLGMHD0" // Your YouTube Developer API Key
-              // rel={true}
-              // videoId={'Z1LmpiIGYNs'}
               play
               // controls={1}
               // onProgress={(a)=>alert(a)}
@@ -1150,10 +1287,45 @@ console.log(JSON.stringify(images))
           />
         ) : null}
 
+
+        {
+          this.state.openGif ?
+            GiphyUi.present(
+              {
+                theme: 'light',
+                layout: 'waterfall',
+                rating: 'ratedG',
+                showConfirmationScreen: true,
+                mediaTypes: ['gfs'],
+                trayHeightMultiplier: 0.5
+              },
+
+              selectedMedia => {
+                console.log('Picked media', selectedMedia);
+
+                let gifs = [];
+
+                const file = {
+                  name: selectedMedia.title,
+                  type: 'image/gif',
+                  uri: selectedMedia.images.downsized.url,
+                }
+                gifs.push(file)
+                this.setState({ fileToUploadArray: gifs, openGif: false, isDoc: false }, () => {
+                  this.imageSelected()
+                })
+              },
+              onDismiss => {
+                this.setState({ openGif: false })
+              },
+            )
+            : null
+        }
+
         {this.state.showEmoji ? (
           <EmojiSelector
             columns={9}
-            onCancel={() => this.setState({ showEmoji: false })}
+            onCancel={() => this.setState({ showEmoji: false },()=>this.ringPhn())}
             onEmojiSelected={emoji => this.addEmoji(emoji)}
             // onEmojiSelected={emoji => this.setState({typedMsg:emoji})}
             showSearchBar={true}
@@ -1226,6 +1398,7 @@ console.log(JSON.stringify(images))
 
 
   renderMessage = props => {
+    // console.log(JSON.stringify(props.currentMessage))
     let thumbNail = false;
     var videoData = {};
     let youtube_id = '';
@@ -1237,6 +1410,7 @@ console.log(JSON.stringify(images))
       }
       thumbNail = true
     }
+    // alert(string.split('.')[1].trim())
 
     return thumbNail ? (
       <View style={{
@@ -1254,14 +1428,33 @@ console.log(JSON.stringify(images))
       </View>
 
     ) : (
-        <Message
-          {...props}
-          containerStyle={{
-            left: {
-              marginBottom: 0,
-            },
-          }}
-        />
+
+        props.currentMessage.file ?
+          <TouchableOpacity style={{
+            borderColor: 'grey', alignItems: 'center',width:wp('60%'),
+            borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
+            alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end', 
+          }} >
+            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
+        <FontAwesome5 name="download" size={10} color="green" /> 
+        <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>       
+        </TouchableOpacity>
+        <View style={{flexDirection:'row',alignItems:'center'}}>
+            <Image source={props.currentMessage.file.split('.')[1].trim() === 'ppt' ? Images.ppt : props.currentMessage.file.split('.')[1].trim() === 'zip' ? Images.zip :
+              props.currentMessage.file.split('.')[1].trim() === 'docx' ? Images.doc : props.currentMessage.file.split('.')[1].trim() === 'pdf' ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
+            <Text style={{ color: 'black', textAlign: props.position === 'left' ? 'left' : 'right', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>{props.currentMessage.file}</Text>
+            </View>
+          </TouchableOpacity>
+          :
+
+          <Message
+            {...props}
+            containerStyle={{
+              left: {
+                marginBottom: 0,
+              },
+            }}
+          />
       );
 
   };
@@ -1443,32 +1636,46 @@ console.log(JSON.stringify(images))
 
   renderImage = props => {
     // alert(JSON.stringify(props.currentMessage.image))
+    
     return (
-      <View style={[styles.container,{backgroundColor:'white'}]}>
+      <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
+        {props.position === 'right' ?
+        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadPkPassFile(props.currentMessage.image)}>
+                <FontAwesome5 name="download" size={15} color="green" /> 
+                {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
+                </TouchableOpacity>
+        : null }
+
 
         {/* <TouchableOpacity style={{position:'absolute',zIndex:1,left:0}}>
         <FontAwesome5 name="download" size={20} color="green" />
         </TouchableOpacity> */}
 
         <Lightbox
-          activeProps={{
-            style: styles.imageActive,
-          }}>
+          activeProps={{ style:styles.imageActive
+          }}
+          >
           <FastImage
-            style={[styles.image]}
+            style={[styles.image,]}
             resizeMode={FastImage.resizeMode.cover}
             source={{
               // uri: `https://${props.currentMessage.image}`,
               uri: props.currentMessage.image,
-// uri:'com.google.android.apps.docs.storage.legacy/enc%3DVPnCvHhDD6hIlEqVi7QSV1QnLijxLaoRdRutDh1QxLaf5jSqxhlEXT3pQZNIb9ocG_19Zjm_7vxl%0A0g7QxQEbfhGjXDtx2x1krPlomFH2CsmicPZUlrsZPV6rh6RUyqwId_wZiQ%3D%3D%0A',
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },
-              priority: FastImage.priority.high,
+              // priority: FastImage.priority.high,
             }}
-            resizeMode={'contain'}
+            resizeMode={'cover'}
           />
         </Lightbox>
+
+        {props.position === 'left' ?
+<TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
+        <FontAwesome5 name="download" size={15} color="green" /> 
+        {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
+        </TouchableOpacity>
+: null }
       </View>
     );
   };
@@ -1625,10 +1832,10 @@ const styles = StyleSheet.create({
     color: '#878787',
   },
   image: {
-    width: 150,
+    width: 100,
     height: 100,
     borderRadius: 13,
-    marginTop: 3,marginBottom:3,
+    marginTop: 3, marginBottom: 3,
     resizeMode: 'cover',
   },
   imageActive: {

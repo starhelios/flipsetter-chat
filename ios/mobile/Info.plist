@@ -42,17 +42,17 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>FlipSetter is requesting access to your camera</string>
+	<string>Collaborate is requesting access to your camera</string>
   <key>NSPhotoLibraryUsageDescription</key>
-  <string>FlipSetter is requesting acces to your photos</string>
+  <string>Collaborate is requesting acces to your photos</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>FlipSetter is requesting access to your microphone</string>
+	<string>Collaborate is requesting access to your microphone</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>FlipSetter would like to save photos to your photo gallery</string>
+	<string>Collaborate would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>FlipSetter would like access to your photo gallery</string>
+	<string>Collaborate would like access to your photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto_medium.ttf</string>

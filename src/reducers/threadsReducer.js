@@ -38,7 +38,7 @@ export default function(state=initialState, action){
                     thread.recent_message.body = `${thread.recent_message.name} sent a photo`;
                 }
                 if(thread.recent_message.message_type === 2){
-                    thread.recent_message.body = `${thread.recent_message.name} sent a video`;
+                    thread.recent_message.body = `${thread.recent_message.name} sent a document`;
                 }
                 thread.recent_message.body = emojify(entities.decode(thread.recent_message.body), {output: 'unicode'})
                 threads[thread.thread_id] = thread
