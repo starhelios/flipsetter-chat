@@ -215,7 +215,6 @@ class LandscapeBoard extends React.Component{
       path: null,
       paths: [...paths, this.path],
     });
-    console.tron.log(this.path)
     savePath(call.threadId, call.id, this.path);
     this.path = null;
   }
