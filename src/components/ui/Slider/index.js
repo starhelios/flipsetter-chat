@@ -292,6 +292,9 @@ class Slider extends PureComponent {
           renderToHardwareTextureAndroid
           style={[mainStyles.track, trackStyle, minimumTrackStyle]}
         />
+        {this._renderThumbImage({
+          transform: [{ translateX: thumbLeft }, { translateY: 0 }],
+        })}
         <Animated.View
           onLayout={this._measureThumb}
           renderToHardwareTextureAndroid
@@ -304,9 +307,7 @@ class Slider extends PureComponent {
               ...valueVisibleStyle,
             },
           ]}
-        >
-          {this._renderThumbImage()}
-        </Animated.View>
+        />
         <View
           renderToHardwareTextureAndroid
           style={[defaultStyles.touchArea, touchOverflowStyle]}
@@ -561,12 +562,15 @@ class Slider extends PureComponent {
     );
   };
 
-  _renderThumbImage = () => {
+  _renderThumbImage = (style) => {
     const { showValue } = this.props
 
     if(!showValue) return null
 
-    return <ValueText>{this.props.value} px</ValueText>;
+    return <ValueText
+      as={Animated.Text}
+      style={style}
+    >{this.props.value} px</ValueText>;
   };
 }
 
@@ -586,6 +590,7 @@ var defaultStyles = StyleSheet.create({
     borderRadius: THUMB_SIZE / 2,
     borderColor: Colors.headerMenuBorder,
     borderWidth: .2,
+    overflow: 'visible',
 
     shadowColor: '#000',
     shadowOffset: {

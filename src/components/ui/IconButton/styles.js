@@ -1,10 +1,11 @@
 import styled from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Image } from '../Image';
 
 import Colors from '../../../config/Colors';
 
-export const Touch = styled.TouchableOpacity``;
+export const Touch = styled(TouchableOpacity)``;
 
 export const Icon = styled(Image).attrs((props) => ({
   resizeMode: 'contain',

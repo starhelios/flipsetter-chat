@@ -80,6 +80,7 @@ class LandscapeBoard extends React.Component{
 
   componentDidMount() {
     const { thread_id, call_id } = this.props
+    console.tron.log('Open Landscape')
 
     if(typeof this.echo.socket.connector.channels[`presence-call_${thread_id}_${call_id}`] !== "undefined"){
       this.echo.socket.connector.channels[`presence-call_${thread_id}_${call_id}`].subscribe();
@@ -99,7 +100,8 @@ class LandscapeBoard extends React.Component{
     // let response = Api.post(route, JSON.stringify({
     //     type: 'leave_call'
     // }));
-    this.call.unsubscribe();
+    console.tron.log('Close Landscape')
+    // this.call.unsubscribe();
   }
 
   listeners(){
@@ -178,7 +180,7 @@ class LandscapeBoard extends React.Component{
     };
 
     if(!shape) {
-      this.call.whisper('start_draw', this.path);
+      // this.call.whisper('start_draw', this.path);
       this.setState({path: this.path});
     }
   }
@@ -196,7 +198,7 @@ class LandscapeBoard extends React.Component{
     if(!shape){
       let whisper = {...this.path};
       whisper.data = [{x: newX, y: newY}];
-      this.call.whisper('draw', whisper);
+      // this.call.whisper('draw', whisper);
     }
 
     return <Shape key={path.id} pathId={path.id} path={path} />
@@ -207,7 +209,7 @@ class LandscapeBoard extends React.Component{
     const {shape, paths} = this.state
 
     if(!shape) {
-      this.call.whisper('end_draw', this.path);
+      // this.call.whisper('end_draw', this.path);
       this.path.data = simplify(this.path.data, 1, true);
     }
     this.setState({

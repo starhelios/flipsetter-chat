@@ -7,7 +7,6 @@ import { Text as TextUI } from '../../ui';
 export { MenuListItem } from './MenuListItem';
 
 export const Container = styled.View`
-    position: absolute;
     background-color: ${Colors.white};
     bottom: 0px;
     flex-direction: column;

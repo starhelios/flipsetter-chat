@@ -4,7 +4,7 @@ import { mix, useTransition } from 'react-native-redash';
 import Sound from 'react-native-sound';
 
 import {
-  Container, Icon, BackgroundColorMenu, MenuWrapper,
+  Container, Icon, BackgroundColorMenu, MenuWrapper, Wrapper,
   InsertFileMenu, BrushStyleMenu, EraserSizeMenu, SelectColorMenu,
 } from './style';
 
@@ -58,7 +58,7 @@ export const SideMenu = () => {
   const widthSelectColorMenu = mix(transitionSelectColorMenu, 0, 400);
 
   return (
-    <>
+    <Wrapper>
       <Container>
         <Icon iconSource={magicPointerIcon} onPress={closeMenus} />
         <Icon
@@ -101,57 +101,57 @@ export const SideMenu = () => {
             onToggleInsertFileMenu(!isInsertFileMenuOpen);
           }}
         />
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            width: widthBrushStyleMenu,
-            borderRightWidth: isBrushStyleMenuOpen ? 1 : 0,
-            borderLeftWidth: isBrushStyleMenuOpen ? 1 : 0,
-          }}
-        >
-          <BrushStyleMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            width: widthEraserMenu,
-            borderRightWidth: isEraserMenuOpen ? 1 : 0,
-            borderLeftWidth: isEraserMenuOpen ? 1 : 0,
-          }}
-        >
-          <EraserSizeMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            width: widthSelectColorMenu,
-            borderRightWidth: isSelectColorMenuOpen ? 1 : 0,
-            borderLeftWidth: isSelectColorMenuOpen ? 1 : 0,
-          }}
-        >
-          <SelectColorMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            width: widthBackgroundColorMenu,
-            borderRightWidth: isBackgroundColorMenuOpen ? 1 : 0,
-            borderLeftWidth: isBackgroundColorMenuOpen ? 1 : 0,
-          }}
-        >
-          <BackgroundColorMenu onClose={closeMenus} />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            width: widthInsertFileMenu,
-            borderRightWidth: isInsertFileMenuOpen ? 1 : 0,
-            borderLeftWidth: isInsertFileMenuOpen ? 1 : 0,
-          }}
-        >
-          <InsertFileMenu />
-        </MenuWrapper>
       </Container>
-    </>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          width: widthBrushStyleMenu,
+          borderRightWidth: isBrushStyleMenuOpen ? 1 : 0,
+          borderLeftWidth: isBrushStyleMenuOpen ? 1 : 0,
+        }}
+      >
+        <BrushStyleMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          width: widthEraserMenu,
+          borderRightWidth: isEraserMenuOpen ? 1 : 0,
+          borderLeftWidth: isEraserMenuOpen ? 1 : 0,
+        }}
+      >
+        <EraserSizeMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          width: widthSelectColorMenu,
+          borderRightWidth: isSelectColorMenuOpen ? 1 : 0,
+          borderLeftWidth: isSelectColorMenuOpen ? 1 : 0,
+        }}
+      >
+        <SelectColorMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          width: widthBackgroundColorMenu,
+          borderRightWidth: isBackgroundColorMenuOpen ? 1 : 0,
+          borderLeftWidth: isBackgroundColorMenuOpen ? 1 : 0,
+        }}
+      >
+        <BackgroundColorMenu onClose={closeMenus} />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          width: widthInsertFileMenu,
+          borderRightWidth: isInsertFileMenuOpen ? 1 : 0,
+          borderLeftWidth: isInsertFileMenuOpen ? 1 : 0,
+        }}
+      >
+        <InsertFileMenu />
+      </MenuWrapper>
+    </Wrapper>
   );
 };

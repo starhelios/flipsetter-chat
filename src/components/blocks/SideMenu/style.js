@@ -36,9 +36,6 @@ export const Icon = styled(IconButton).attrs({
 })``;
 
 export const MenuWrapper = styled.View`
-  position: absolute;
-  top: 0px;
-  left: 50px;
   height: ${lessSize - 50}px;
   
   backgroundColor: ${Colors.white};
@@ -51,4 +48,9 @@ export const MenuWrapper = styled.View`
   shadow-radius: 5px;
   
   border-color: ${Colors.menuSideSeparator};
+`;
+
+export const Wrapper = styled.View`
+  display: flex;
+  flex-direction: row;
 `;

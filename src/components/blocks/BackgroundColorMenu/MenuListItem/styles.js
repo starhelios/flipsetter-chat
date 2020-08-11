@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Image } from '../../../ui/Image';
 import Colors from '../../../../config/Colors';
@@ -26,4 +27,4 @@ export const Text = styled(TextUI)`
   color: ${Colors.headerBackgroundColor};
 `;
 
-export const Touch = styled.TouchableOpacity``;
+export const Touch = styled(TouchableOpacity)``;

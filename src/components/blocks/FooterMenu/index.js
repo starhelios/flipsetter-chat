@@ -5,7 +5,7 @@ import Sound from 'react-native-sound';
 
 import {
   Container, Icon, BackgroundColorMenu, MenuWrapper, InsertFileMenu,
-  BrushStyleMenu, EraserSizeMenu, SelectColorMenu,
+  BrushStyleMenu, EraserSizeMenu, SelectColorMenu, Wrapper,
 } from './style';
 
 import {
@@ -58,7 +58,57 @@ export const FooterMenu = () => {
   const heightSelectColorMenu = mix(transitionSelectColorMenu, 0, 330);
 
   return (
-    <>
+    <Wrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          height: heightBrushStyleMenu,
+          borderTopWidth: isBrushStyleMenuOpen ? 1 : 0,
+          borderBottomWidth: isBrushStyleMenuOpen ? 1 : 0,
+        }}
+      >
+        <BrushStyleMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          height: heightEraserMenu,
+          borderTopWidth: isEraserMenuOpen ? 1 : 0,
+          borderBottomWidth: isEraserMenuOpen ? 1 : 0,
+        }}
+      >
+        <EraserSizeMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          height: heightSelectColorMenu,
+          borderTopWidth: isSelectColorMenuOpen ? 1 : 0,
+          borderBottomWidth: isSelectColorMenuOpen ? 1 : 0,
+        }}
+      >
+        <SelectColorMenu />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          height: heightBackgroundColorMenu,
+          borderTopWidth: isBackgroundColorMenuOpen ? 1 : 0,
+          borderBottomWidth: isBackgroundColorMenuOpen ? 1 : 0,
+        }}
+      >
+        <BackgroundColorMenu onClose={closeMenus} />
+      </MenuWrapper>
+      <MenuWrapper
+        as={Animated.View}
+        style={{
+          height: heightInsertFileMenu,
+          borderTopWidth: isInsertFileMenuOpen ? 1 : 0,
+          borderBottomWidth: isInsertFileMenuOpen ? 1 : 0,
+        }}
+      >
+        <InsertFileMenu />
+      </MenuWrapper>
       <Container>
         <Icon iconSource={magicPointerIcon} onPress={closeMenus} />
         <Icon
@@ -101,57 +151,7 @@ export const FooterMenu = () => {
             onToggleInsertFileMenu(!isInsertFileMenuOpen);
           }}
         />
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            height: heightBrushStyleMenu,
-            borderTopWidth: isBrushStyleMenuOpen ? 1 : 0,
-            borderBottomWidth: isBrushStyleMenuOpen ? 1 : 0,
-          }}
-        >
-          <BrushStyleMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            height: heightEraserMenu,
-            borderTopWidth: isEraserMenuOpen ? 1 : 0,
-            borderBottomWidth: isEraserMenuOpen ? 1 : 0,
-          }}
-        >
-          <EraserSizeMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            height: heightSelectColorMenu,
-            borderTopWidth: isSelectColorMenuOpen ? 1 : 0,
-            borderBottomWidth: isSelectColorMenuOpen ? 1 : 0,
-          }}
-        >
-          <SelectColorMenu />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            height: heightBackgroundColorMenu,
-            borderTopWidth: isBackgroundColorMenuOpen ? 1 : 0,
-            borderBottomWidth: isBackgroundColorMenuOpen ? 1 : 0,
-          }}
-        >
-          <BackgroundColorMenu onClose={closeMenus} />
-        </MenuWrapper>
-        <MenuWrapper
-          as={Animated.View}
-          style={{
-            height: heightInsertFileMenu,
-            borderTopWidth: isInsertFileMenuOpen ? 1 : 0,
-            borderBottomWidth: isInsertFileMenuOpen ? 1 : 0,
-          }}
-        >
-          <InsertFileMenu />
-        </MenuWrapper>
       </Container>
-    </>
+    </Wrapper>
   );
 };
