@@ -5,6 +5,7 @@ const actionTypes = {
   SET_BACKGROUND_PATTERN: 'SET_BACKGROUND_PATTERN',
   SET_BRUSH_COLOR: 'SET_BRUSH_COLOR',
   SET_BRUSH_WEIGHT: 'SET_BRUSH_WEIGHT',
+  RESET: 'RESET',
 };
 
 /*
@@ -20,10 +21,14 @@ function setBrushColor(payload) {
 function setBrushWeight(payload) {
   return { type: actionTypes.SET_BRUSH_WEIGHT, payload };
 }
+function reset(payload) {
+  return { type: actionTypes.RESET, payload };
+}
 
 export default {
   actionTypes,
   setBackgroundPattern,
   setBrushColor,
   setBrushWeight,
+  reset,
 };

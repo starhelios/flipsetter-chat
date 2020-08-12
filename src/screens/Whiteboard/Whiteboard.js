@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, Platform } from 'react-native';
 
 import {
@@ -7,7 +7,8 @@ import {
 
 import { useOrientation } from '../../helper/useOrientation';
 
-const Whiteboard = () => {
+const Whiteboard = ({ initReset }) => {
+  useEffect(() => { initReset(); }, [initReset]);
   const orientation = useOrientation();
   const Container = orientation === 'LANDSCAPE' ? ViewContainer : SafeContainer;
   const isAndroid = Platform.OS !== 'ios';

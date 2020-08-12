@@ -4,7 +4,7 @@ import { withNavigationFocus } from 'react-navigation';
 
 import { withSocketContext } from '../../components/Socket';
 
-import { Call, Friends } from '../../reducers/actions';
+import { Call, Friends, Whiteboard } from '../../reducers/actions';
 
 import Component from './Whiteboard';
 
@@ -20,6 +20,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  initReset: Whiteboard.reset,
   getList: Friends.getList,
   savePath: Call.savePath,
   callHeartbeat: Call.callHeartbeat,

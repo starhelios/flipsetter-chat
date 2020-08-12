@@ -14,6 +14,8 @@ export default function whiteboardReducer(state = initialState, action) {
       return { ...state, color: action.payload.color };
     case Whiteboard.actionTypes.SET_BRUSH_WEIGHT:
       return { ...state, width: action.payload.weight };
+    case Whiteboard.actionTypes.RESET:
+      return { ...state, ...initialState };
     default:
       return state;
   }

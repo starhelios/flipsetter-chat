@@ -80,7 +80,6 @@ class LandscapeBoard extends React.Component{
 
   componentDidMount() {
     const { thread_id, call_id } = this.props
-    console.tron.log('Open Landscape')
 
     if(typeof this.echo.socket.connector.channels[`presence-call_${thread_id}_${call_id}`] !== "undefined"){
       this.echo.socket.connector.channels[`presence-call_${thread_id}_${call_id}`].subscribe();
@@ -100,7 +99,6 @@ class LandscapeBoard extends React.Component{
     // let response = Api.post(route, JSON.stringify({
     //     type: 'leave_call'
     // }));
-    console.tron.log('Close Landscape')
     // this.call.unsubscribe();
   }
 
