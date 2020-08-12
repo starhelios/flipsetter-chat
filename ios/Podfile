@@ -3,9 +3,7 @@ platform :ios, '11.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'mobile' do
-  use_frameworks!
   # Pods for mobile
-  pod 'Giphy', :modular_headers => true
 
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
@@ -44,16 +42,13 @@ target 'mobile' do
   pod 'RNSound', :path => '../node_modules/react-native-sound'
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-  
+
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
   pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
   pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
-
-
-  pod 'react-native-giphy-ui', :path => '../node_modules/react-native-giphy-ui'
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 

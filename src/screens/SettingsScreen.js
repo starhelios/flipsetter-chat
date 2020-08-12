@@ -4,18 +4,13 @@ import { Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Th
 import {App, User, Auth} from "../reducers/actions";
 import {connect} from "react-redux";
 import {withSocketContext} from "../components/Socket";
-import RingerMode from 'react-native-ringer-mode';
+// import RingerMode from 'react-native-ringer-mode';
 
 var Sound = require('react-native-sound');
 
 class SettingsScreen extends Component<Props> {
+      _onPress = () => {
 
-    constructor(props) {
-        super(props);
-    }
-
-    _onPress = () => {
-    
         this.ringPhn();
         this.props.setIsLoggedIn(null);
         this.props.setAccessToken('');
@@ -49,28 +44,28 @@ class SettingsScreen extends Component<Props> {
 
     ringPhn=()=>{
         if(Platform.OS === 'android'){
-        RingerMode.getRingerMode()
-        .then(mode => {
-          switch(mode){
-            case 'NORMAL': 
-            this.playSound()  ;   
-            return ;
-            case 'SILENT':
-            return;
-            case 'VIBRATE':
-
-            Vibration.vibrate(1000);
-            return;
-            default :
-            return;
-          }
-        });
+        // RingerMode.getRingerMode()
+        // .then(mode => {
+        //   switch(mode){
+        //     case 'NORMAL':
+        //     this.playSound()  ;
+        //     return ;
+        //     case 'SILENT':
+        //     return;
+        //     case 'VIBRATE':
+        //
+        //     Vibration.vibrate(1000);
+        //     return;
+        //     default :
+        //     return;
+        //   }
+        // });
     }
     else
     {
         this.playSound()
     }
-        
+
     }
 
     render(){

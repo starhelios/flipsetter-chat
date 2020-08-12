@@ -25,7 +25,7 @@ import NavigationService from "../../services/NavigationService";
 import SplashScreen from "react-native-splash-screen";
 import Toast from 'react-native-simple-toast';
 import Constants from '../../components/Constants';
-import RingerMode from 'react-native-ringer-mode';
+// import RingerMode from 'react-native-ringer-mode';
 var Sound = require('react-native-sound');
 
 // import FCM from "../../components/FCM";
@@ -60,7 +60,7 @@ class LoginScreen extends React.Component {
 
     componentDidMount() {
 // alert(Constants.DEVICE_NAME)
-  
+
     }
 
     playSound = () => {
@@ -89,22 +89,22 @@ class LoginScreen extends React.Component {
 
     ringPhn=()=>{
         if(Platform.OS === 'android'){
-        RingerMode.getRingerMode()
-        .then(mode => {
-          switch(mode){
-            case 'NORMAL': 
-            this.playSound()  ;   
-            return ;
-            case 'SILENT':
-            return;
-            case 'VIBRATE':
-
-            Vibration.vibrate(1000);
-            return;
-            default :
-            return;
-          }
-        });
+        // RingerMode.getRingerMode()
+        // .then(mode => {
+        //   switch(mode){
+        //     case 'NORMAL':
+        //     this.playSound()  ;
+        //     return ;
+        //     case 'SILENT':
+        //     return;
+        //     case 'VIBRATE':
+        //
+        //     Vibration.vibrate(1000);
+        //     return;
+        //     default :
+        //     return;
+        //   }
+        // });
     }
     else{
         this.playSound();
@@ -127,7 +127,7 @@ class LoginScreen extends React.Component {
             this.setState({ loading: false })
             Toast.show('Please enter Password', Toast.LONG);
         }
-        
+
         else {
             let email = this.props.auth.username;
             let pass = this.props.auth.password;

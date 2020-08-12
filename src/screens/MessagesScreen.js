@@ -73,16 +73,16 @@ import { links } from 'react-native-firebase';
 import { returnRejectedPromiseOnError } from 'redux-axios-middleware';
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
-import RingerMode from 'react-native-ringer-mode';
+// import RingerMode from 'react-native-ringer-mode';
 var Sound = require('react-native-sound');
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
-import { GiphyUi } from 'react-native-giphy-ui';
+// import { GiphyUi } from 'react-native-giphy-ui';
 
 
 let VIDEO_DATA = {};
-GiphyUi.configure('g1zE0iMVRsYdw03HXZfRd3ivUjxEywFB');
+// GiphyUi.configure('g1zE0iMVRsYdw03HXZfRd3ivUjxEywFB');
 
 
 class MessagesScreen extends Component {
@@ -408,24 +408,23 @@ class MessagesScreen extends Component {
   };
 
 ringPhn=()=>{
-  if(Platform.OS === 'android')
-  {
-        RingerMode.getRingerMode()
-    .then(mode => {
-      switch(mode){
-        case 'NORMAL': 
-        this.playSound()  ;   
-        return ;
-        case 'SILENT':
-        return;
-        case 'VIBRATE':
-
-        Vibration.vibrate(1000);
-        return;
-        default :
-        return;
-      }
-    });
+  if(Platform.OS === 'android') {
+    //     RingerMode.getRingerMode()
+    // .then(mode => {
+    //   switch(mode){
+    //     case 'NORMAL':
+    //     this.playSound()  ;
+    //     return ;
+    //     case 'SILENT':
+    //     return;
+    //     case 'VIBRATE':
+    //
+    //     Vibration.vibrate(1000);
+    //     return;
+    //     default :
+    //     return;
+    //   }
+    // });
   }
   else
   {
@@ -456,7 +455,7 @@ ringPhn=()=>{
     this.player.seekTo(s);
   };
 
-  
+
 
   _listeners = () => {
     // this.private = this.echo.private(`user_notify_${this.user.user_id}`);
@@ -913,9 +912,9 @@ this.ringPhn();
   };
 
   openEmoji = () => {
-  
+
     Keyboard.dismiss();
-  
+
     this.ringPhn()
     // this.ringPhn();
     this.setState({ showEmoji: true, openPicker: false });
@@ -1042,22 +1041,22 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
           path: path,
           description: 'Image'
         },
-  
+
       }).fetch("GET", imgUrl).then(res => {
         console.log(res, 'end downloaded')
       })
       .catch((error) => {
               alert(error)
             })
-    } 
-    
-   
+    }
+
+
 
 
 
   //   new Promise((resolve, reject) => {
   //     let fileName = "IMG" + new Date().getTime() + ".png";
-  //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;    
+  //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;
   //     // const destPathAndroid = `${DocumentDirectoryPath}` +'/' + fileName;
   //     const destPathIOS = `${DocumentDirectoryPath}` + "/MyCollaborateFiles/" + fileName;
   //  console.log(destPathAndroid)
@@ -1288,39 +1287,39 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
         ) : null}
 
 
-        {
-          this.state.openGif ?
-            GiphyUi.present(
-              {
-                theme: 'light',
-                layout: 'waterfall',
-                rating: 'ratedG',
-                showConfirmationScreen: true,
-                mediaTypes: ['gfs'],
-                trayHeightMultiplier: 0.5
-              },
+        {/*{*/}
+        {/*  this.state.openGif ?*/}
+        {/*    GiphyUi.present(*/}
+        {/*      {*/}
+        {/*        theme: 'light',*/}
+        {/*        layout: 'waterfall',*/}
+        {/*        rating: 'ratedG',*/}
+        {/*        showConfirmationScreen: true,*/}
+        {/*        mediaTypes: ['gfs'],*/}
+        {/*        trayHeightMultiplier: 0.5*/}
+        {/*      },*/}
 
-              selectedMedia => {
-                console.log('Picked media', selectedMedia);
+        {/*      selectedMedia => {*/}
+        {/*        console.log('Picked media', selectedMedia);*/}
 
-                let gifs = [];
+        {/*        let gifs = [];*/}
 
-                const file = {
-                  name: selectedMedia.title,
-                  type: 'image/gif',
-                  uri: selectedMedia.images.downsized.url,
-                }
-                gifs.push(file)
-                this.setState({ fileToUploadArray: gifs, openGif: false, isDoc: false }, () => {
-                  this.imageSelected()
-                })
-              },
-              onDismiss => {
-                this.setState({ openGif: false })
-              },
-            )
-            : null
-        }
+        {/*        const file = {*/}
+        {/*          name: selectedMedia.title,*/}
+        {/*          type: 'image/gif',*/}
+        {/*          uri: selectedMedia.images.downsized.url,*/}
+        {/*        }*/}
+        {/*        gifs.push(file)*/}
+        {/*        this.setState({ fileToUploadArray: gifs, openGif: false, isDoc: false }, () => {*/}
+        {/*          this.imageSelected()*/}
+        {/*        })*/}
+        {/*      },*/}
+        {/*      onDismiss => {*/}
+        {/*        this.setState({ openGif: false })*/}
+        {/*      },*/}
+        {/*    )*/}
+        {/*    : null*/}
+        {/*}*/}
 
         {this.state.showEmoji ? (
           <EmojiSelector
@@ -1433,11 +1432,11 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
           <TouchableOpacity style={{
             borderColor: 'grey', alignItems: 'center',width:wp('60%'),
             borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
-            alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end', 
+            alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
           }} >
             <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
-        <FontAwesome5 name="download" size={10} color="green" /> 
-        <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>       
+        <FontAwesome5 name="download" size={10} color="green" />
+        <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
         </TouchableOpacity>
         <View style={{flexDirection:'row',alignItems:'center'}}>
             <Image source={props.currentMessage.file.split('.')[1].trim() === 'ppt' ? Images.ppt : props.currentMessage.file.split('.')[1].trim() === 'zip' ? Images.zip :
@@ -1636,12 +1635,12 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
   renderImage = props => {
     // alert(JSON.stringify(props.currentMessage.image))
-    
+
     return (
       <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
         {props.position === 'right' ?
         <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadPkPassFile(props.currentMessage.image)}>
-                <FontAwesome5 name="download" size={15} color="green" /> 
+                <FontAwesome5 name="download" size={15} color="green" />
                 {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
                 </TouchableOpacity>
         : null }
@@ -1672,7 +1671,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
         {props.position === 'left' ?
 <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
-        <FontAwesome5 name="download" size={15} color="green" /> 
+        <FontAwesome5 name="download" size={15} color="green" />
         {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
         </TouchableOpacity>
 : null }

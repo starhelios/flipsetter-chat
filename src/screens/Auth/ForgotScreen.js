@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import RingerMode from 'react-native-ringer-mode';
+// import RingerMode from 'react-native-ringer-mode';
 var Sound = require('react-native-sound');
 import Toast from 'react-native-simple-toast';
 import { withSocketContext } from "../../components/Socket";
@@ -110,30 +110,30 @@ class ForgotScreen extends React.Component {
       };
 
     ringPhn=()=>{
-       
-       if(Platform.OS === 'android') {
-        RingerMode.getRingerMode()
-        .then(mode => {
-          switch(mode){
-            case 'NORMAL': 
-            this.playSound()  ;   
-            return ;
-            case 'SILENT':
-            return;
-            case 'VIBRATE':
 
-            Vibration.vibrate(1000);
-            return;
-            default :
-            return;
-          }
-        });
+       if(Platform.OS === 'android') {
+        // RingerMode.getRingerMode()
+        // .then(mode => {
+        //   switch(mode){
+        //     case 'NORMAL':
+        //     this.playSound()  ;
+        //     return ;
+        //     case 'SILENT':
+        //     return;
+        //     case 'VIBRATE':
+        //
+        //     Vibration.vibrate(1000);
+        //     return;
+        //     default :
+        //     return;
+        //   }
+        // });
     }
     else
     {
         this.playSound();
     }
-        
+
     }
 
 
@@ -153,7 +153,7 @@ class ForgotScreen extends React.Component {
         }
     }
 
-   
+
 
     reset = async () => {
         this.setState({ loading: true })

@@ -25,7 +25,7 @@ import logo from "../../components/assets/Logo.png";
 import NativeStatusBarManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManager";
 import {SafeAreaConsumer} from 'react-native-safe-area-context';
 import NavigationService from "../../services/NavigationService";
-import RingerMode from 'react-native-ringer-mode';
+// import RingerMode from 'react-native-ringer-mode';
 
 var Sound = require('react-native-sound');
 const window = Dimensions.get('window');
@@ -91,28 +91,28 @@ class RegisterScreen extends React.Component {
 
     ringPhn=()=>{
         if(Platform.OS === 'android'){
-        RingerMode.getRingerMode()
-        .then(mode => {
-          switch(mode){
-            case 'NORMAL': 
-            this.playSound()  ;   
-            return ;
-            case 'SILENT':
-            return;
-            case 'VIBRATE':
-
-            Vibration.vibrate(1000);
-            return;
-            default :
-            return;
-          }
-        });
+        // RingerMode.getRingerMode()
+        // .then(mode => {
+        //   switch(mode){
+        //     case 'NORMAL':
+        //     this.playSound()  ;
+        //     return ;
+        //     case 'SILENT':
+        //     return;
+        //     case 'VIBRATE':
+        //
+        //     Vibration.vibrate(1000);
+        //     return;
+        //     default :
+        //     return;
+        //   }
+        // });
     }
     else
     {
         this.playSound()
     }
-        
+
     }
 
     keyboardDidShow = (event) => {
@@ -186,7 +186,7 @@ class RegisterScreen extends React.Component {
             this.setState({ loading: false })
             Toast.show('Password not matched', Toast.LONG);
         }
-        
+
         else {
             // first,last,email,pass1,pass2
             let first = this.state.first;
@@ -218,7 +218,7 @@ class RegisterScreen extends React.Component {
 
 
         }
-        
+
     }
     goBackk=()=>{
         this.ringPhn();
@@ -229,7 +229,7 @@ class RegisterScreen extends React.Component {
         return (
         <Container style={{flex:1}} onStartShouldSetResponder={() => {
             // this.passwordInput.blur(); this.usernameInput.blur();
-        
+
             this.firstInput.isFocused() ? this.firstInput.blur() :
                 this.lastInput.isFocused() ? this.lastInput.blur() :
                     this.passwordInput.isFocused() ? this.passwordInput.blur() :
@@ -395,7 +395,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-   
+
     register: Auth.register,
 };
 

@@ -127,16 +127,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-     dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
     defaultConfig {
         applicationId "com.flipsetter.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -193,15 +190,17 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-ringer-mode')
+//     implementation project(':react-native-ringer-mode')
     // implementation project(':react-native-fs')
-    implementation project(':react-native-giphy-ui')
+//     implementation project(':react-native-giphy-ui')
     implementation project(':react-native-orientation')
     implementation project(':react-native-device-info')
     implementation project(':react-native-reanimated')
     implementation project(':@react-native-community_slider')
     implementation project(':react-native-webview')
     implementation project(':react-native-sound')
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     implementation project(':react-native-document-picker')
     implementation fileTree(dir: "libs", include: ["*.jar"])
