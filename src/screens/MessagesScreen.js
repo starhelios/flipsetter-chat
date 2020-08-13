@@ -1,89 +1,66 @@
 import React, {Component} from 'react';
 import {
-  KeyboardAvoidingView,
-  Alert,
   StyleSheet,
   Platform,
-  Image, Linking,
-  FlatList,
+  Image,
   TouchableOpacity,
   ActivityIndicator,
-  StatusBar,
   Keyboard,
   BackHandler,
 } from 'react-native';
-// import { downloadFile, ExternalStorageDirectoryPath, DocumentDirectoryPath, MainBundlePath } from "react-native-fs";
-import Images from '../config/Images';
-import Video from 'react-native-video';
-import { Thumbnail } from '../components/react-native-thumbnail-video';
-import YoutubePlayer from 'react-native-yt-player';
-import VideoPlayer from 'react-native-video-player';
+import noop from 'lodash/noop'
+
+// import imageToBlob from 'react-native-image-to-blob'
+// Import the react-native-sound module
+import Sound from 'react-native-sound';
 import YouTube from 'react-native-youtube';
 import RNFetchBlob from "rn-fetch-blob";
 
-// import ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {
   Container,
   Header,
-  Icon,
-  Content,
   View,
-  List,
-  ListItem,
   Left,
   Body,
   Right,
   Text,
-  Title,
-  Button,Vibration
+  Button
 } from 'native-base';
 
-import { withNavigationFocus, TabRouter } from 'react-navigation';
-import DeviceInfo, { hasNotch } from 'react-native-device-info';
+import { withNavigationFocus } from 'react-navigation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
+import {GiftedChat, Send} from 'react-native-gifted-chat';
 import Lightbox from 'react-native-lightbox';
 import { emojify } from 'react-emojione';
 import { withSocketContext } from '../components/Socket';
 import { App, Auth, User, Threads, Messages, Call } from '../reducers/actions';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
-import Avatar from 'react-native-gifted-chat/lib/Avatar';
 import Bubble from 'react-native-gifted-chat/lib/Bubble';
 import Message from 'react-native-gifted-chat/lib/Message';
-import MessageText from 'react-native-gifted-chat/lib/MessageText';
 import { AllHtmlEntities as entities } from 'html-entities';
 import { DotsLoader } from 'react-native-indicator';
 import { isSameUser, isSameDay } from 'react-native-gifted-chat/lib/utils';
-import config from '../config';
-import Colors from '../config/Colors';
-import CustomPickerView from '../components/PickerView';
-import DocumentPicker from 'react-native-document-picker';
-import CustomModal from '../components/CustomModal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import CustomViewPlayerView from '../components/CustomViewPlayerView';
-// import EmojiSelector, {Categories} from 'react-native-emoji-selector';
+import config from '../config';
+import CustomPickerView from '../components/PickerView';
+import DocumentPicker from 'react-native-document-picker';
+import CustomModal from '../components/CustomModal';
 import EmojiSelector, { Categories } from '../components/react-native-emoji-selector';
-import WebView from 'react-native-webview';
-import { links } from 'react-native-firebase';
-import { returnRejectedPromiseOnError } from 'redux-axios-middleware';
-// import imageToBlob from 'react-native-image-to-blob'
-// Import the react-native-sound module
-// import RingerMode from 'react-native-ringer-mode';
-var Sound = require('react-native-sound');
+
+import Images from '../config/Images';
+
+import { Thumbnail } from '../components/react-native-thumbnail-video';
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
 // import { GiphyUi } from 'react-native-giphy-ui';
 
-
-let VIDEO_DATA = {};
 // GiphyUi.configure('g1zE0iMVRsYdw03HXZfRd3ivUjxEywFB');
-
 
 class MessagesScreen extends Component {
   messages = [];
@@ -123,15 +100,12 @@ class MessagesScreen extends Component {
     fileToUpload: {},
     fileToUploadArray: [],
     isDoc: false
-
-
   };
 
   constructor(props) {
     super(props);
-    this.echo = this.props.socket;
+    this.echo = props.socket;
     this.typeInterval = 0;
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   componentWillMount() {
@@ -149,20 +123,9 @@ class MessagesScreen extends Component {
     return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6);
   }
 
-
   async componentDidMount() {
 
     this.props.getUser()
-    // console.log("mesg "+JSON.stringify(this.state.messages))
-    //     const obj = {
-    //       hello: "world"
-    //     };
-    //     const json = JSON.stringify(obj);
-    // const blob = new Blob([json])
-    // alert(JSON.stringify(blob))
-    // alert(JSON.stringify(this.props.user.id))
-
-    // this.props.getUser()
 
     this.props.setActiveThread(this.activeThread);
     //Let's update the thread
@@ -203,7 +166,6 @@ class MessagesScreen extends Component {
       app.heartbeat !== null &&
       app.heartbeat.data != null &&
       app.heartbeat.data.states &&
-      app.heartbeat.data.states != null &&
       app.heartbeat.data.states.active_calls != null
     )
       activeCall = this.props.app.heartbeat.data.states.active_calls.filter(
@@ -224,10 +186,10 @@ class MessagesScreen extends Component {
   }
 
   async componentDidUpdate(
-    prevProps: Readonly<P>,
-    prevState: Readonly<S>,
-    snapshot: SS,
-  ): void {
+    prevProps,
+    prevState,
+    snapshot,
+  ) {
     //check if messages updated and if most recent message matches the sender's recent message
     // console.log("MESSAGES", this.state.messages)
     //Check if we need to refresh for a new thread (e.g. navigating to messages while already on it)
@@ -259,7 +221,7 @@ class MessagesScreen extends Component {
             messages: this.props.messages.messages[this.activeThread],
             isLoading: false,
             renderMessages: true,
-          });
+          }, this.ringPhn);
         }
       }
     }
@@ -283,7 +245,7 @@ class MessagesScreen extends Component {
           this.props.navigation.getParam('thread')
           ],
         ],
-      });
+      },this.ringPhn);
     }
     // alert("kk "+JSON.stringify(this.props.socket))
     //Make Sure socket is connected and if disconnects re-subscribe to restore connecction
@@ -316,7 +278,6 @@ class MessagesScreen extends Component {
       app.heartbeat !== null &&
       app.heartbeat.data != null &&
       app.heartbeat.data.states &&
-      app.heartbeat.data.states != null &&
       app.heartbeat.data.states.active_calls != null
     ) {
       if (
@@ -355,7 +316,7 @@ class MessagesScreen extends Component {
             ]
             : null,
           renderMessages: true,
-        });
+        }, this.ringPhn);
       }
     }
     if (
@@ -371,7 +332,7 @@ class MessagesScreen extends Component {
   // email: kamron63@example.com
   // pass: Flipsetter1!
 
-  handleBackButtonClick() {
+  handleBackButtonClick = () => {
     if (this.state.showWebView) {
       this.setState({ showWebView: false });
     } else {
@@ -384,7 +345,7 @@ class MessagesScreen extends Component {
 
 
   playSound = () => {
-    var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+    const whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log('failed to load the sound', error);
         return;
@@ -408,28 +369,7 @@ class MessagesScreen extends Component {
   };
 
 ringPhn=()=>{
-  if(Platform.OS === 'android') {
-    //     RingerMode.getRingerMode()
-    // .then(mode => {
-    //   switch(mode){
-    //     case 'NORMAL':
-    //     this.playSound()  ;
-    //     return ;
-    //     case 'SILENT':
-    //     return;
-    //     case 'VIBRATE':
-    //
-    //     Vibration.vibrate(1000);
-    //     return;
-    //     default :
-    //     return;
-    //   }
-    // });
-  }
-  else
-  {
-    this.playSound();
-  }
+  this.playSound();
 }
 
   componentWillUnmount() {
@@ -454,8 +394,6 @@ ringPhn=()=>{
   seekTo = s => {
     this.player.seekTo(s);
   };
-
-
 
   _listeners = () => {
     // this.private = this.echo.private(`user_notify_${this.user.user_id}`);
@@ -539,12 +477,7 @@ ringPhn=()=>{
 
   async onSend(message = [], type, file) {
     // alert(JSON.stringify(message))
-this.ringPhn();
-
     this.setState({ openPicker: false, showEmoji: false });
-    let messages = [
-      ...this.props.messages.messages[this.props.navigation.getParam('thread')],
-    ];
 
     // this.setState(prevState => ({
     //     messages: GiftedChat.append(prevState.messages, incoming),
@@ -923,20 +856,20 @@ this.ringPhn();
   customSystemMessage = props => {
     return (
       <View style={{ height: Platform.OS === 'ios' ? hp('6%') : hp('7.2%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
-        <TouchableOpacity
-          style={{
-            margin: 3,
-            alignSelf: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={() => this.setState({ openGif: true, openPicker: false, showEmoji: false },()=>this.ringPhn() )}>
+        {/*<TouchableOpacity*/}
+        {/*  style={{*/}
+        {/*    margin: 3,*/}
+        {/*    alignSelf: 'center',*/}
+        {/*    justifyContent: 'center',*/}
+        {/*  }}*/}
+        {/*  onPress={() => this.setState({ openGif: true, openPicker: false, showEmoji: false },()=>this.ringPhn() )}>*/}
 
-          <Image
-            resizeMode="contain"
-            source={Images.gif}
-            style={{ width: 28, height: 28, alignSelf: 'center' }}
-          />
-        </TouchableOpacity>
+        {/*  <Image*/}
+        {/*    resizeMode="contain"*/}
+        {/*    source={Images.gif}*/}
+        {/*    style={{ width: 28, height: 28, alignSelf: 'center' }}*/}
+        {/*  />*/}
+        {/*</TouchableOpacity>*/}
         <TouchableOpacity
           style={{
             alignSelf: 'center',
@@ -955,7 +888,7 @@ this.ringPhn();
             alignSelf: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => this.setState({ openPicker: true, showEmoji: false },()=>this.ringPhn())}>
+          onPress={() => this.setState({ openPicker: true, showEmoji: false },this.ringPhn)}>
           <Image
             resizeMode="contain"
             source={Images.attachmentIcon}
@@ -980,20 +913,13 @@ this.ringPhn();
     );
   };
 
-
   checkIfLink = link => {
     const reg = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
-    if (reg.test(link) === true) {
-
-      return true;
-    } else {
-      return false;
-    }
+    return reg.test(link) === true;
   };
+
   onPressHashtag = (link, index) => {
     this.setState({ showWebView: true, selectedLink: link });
-    // console.log(a+" j "+b)
-
   };
 
   imageSelected = () => {
@@ -1019,7 +945,6 @@ this.ringPhn();
   };
 
   downloadPkPassFile = (imgUrl = "") => {
-console.log("img "+imgUrl)
 
 let imageName = "/IMG" + new Date().getTime() + ".png";
 
@@ -1027,7 +952,7 @@ let dirs = RNFetchBlob.fs.dirs;
 let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.PictureDir + imageName;
 
 
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
 
       RNFetchBlob.config({
         fileCache: true,
@@ -1228,32 +1153,25 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
             </View>
           )}
           <GiftedChat
-            isInitialized={true}
-            // parsePatterns={(linkStyle) => [
-            //     { pattern: /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/, style: linkStyle,
-            //    onPress :
-            //     (key, index) => this.onPressHashtag(key, index) }
-            //     ]}
+            isInitialized
             text={this.state.typedMsg}
-            renderSend={props => this.customSystemMessage(props)}
+            renderSend={this.customSystemMessage}
             messages={this.state.messages}
             // messageIdGenerator={(messages)=>this.messageIdGenerator(messages)}
             extraData={this.state.participants}
-            alwaysShowSend={true}
+            alwaysShowSend
             onSend={messages => this.onSend(messages[0], 'message', this.state.fileToUpload)}
             focusTextInput={() => this.setState({ showEmoji: false })}
             user={{
-              // 9126998a-3892-40df-b41d-34fc75a0373f
               _id: this.props.user.id,
               avatar: `https://${config.api.uri}` + this.props.user.avatar,
             }}
             // showUserAvatar
             renderLoading={() => <ActivityIndicator color="#0000ff" />}
             maxInputLength={350}
-            onInputTextChanged={text => this.inputTextChanged(text)}
-            renderTime={() => {
-              return null;
-            }}
+            minInputToolbarHeight={60}
+            onInputTextChanged={this.inputTextChanged}
+            renderTime={noop}
             shouldUpdateMessage={(props, nextProps) => {
               if (this.state.renderMessages) {
                 this.setState({
@@ -1263,28 +1181,22 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
               }
             }}
 
-            // showAvatarForEveryMessage={true}
-
             renderMessage={this.renderMessage}
-            // onPressActionButton={()=>alert('hh')}
             renderAvatar={this.renderAvatar}
-            // onPressAvatar={()=>alert('hh')}
             renderBubble={this.renderBubble}
             renderMessageImage={this.renderImage}
             renderFooter={this.renderFooter}
-          // bottomOffset={(DeviceInfo.hasNotch() && Platform.OS === 'ios') ? 0:}
           />
-          {/*<KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={48} enabled={(Platform.OS === 'android')}/>*/}
         </View>
 
-        {this.state.openPicker ? (
+        {this.state.openPicker && (
           <CustomPickerView
-            openGallery={() => this.openGallery()}
-            openCamera={() => this.openCamera()}
-            pickDocument={() => this.pickDocument()}
+            openGallery={this.openGallery}
+            openCamera={this.openCamera}
+            pickDocument={this.pickDocument}
             cancel={() => this.setState({ openPicker: false })}
           />
-        ) : null}
+        )}
 
 
         {/*{*/}
@@ -1321,29 +1233,29 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
         {/*    : null*/}
         {/*}*/}
 
-        {this.state.showEmoji ? (
+        {this.state.showEmoji && (
           <EmojiSelector
             columns={9}
-            onCancel={() => this.setState({ showEmoji: false },()=>this.ringPhn())}
-            onEmojiSelected={emoji => this.addEmoji(emoji)}
+            onCancel={() => this.setState({ showEmoji: false },this.ringPhn)}
+            onEmojiSelected={this.addEmoji}
             // onEmojiSelected={emoji => this.setState({typedMsg:emoji})}
-            showSearchBar={true}
-            showTabs={true}
+            showSearchBar
+            showTabs
             // aria-setsize={5}
             // showHistory={true}
-            showSectionTitles={true}
+            showSectionTitles
             category={Categories.all}
           />
-        ) : null}
+        )}
 
-        {this.state.showModal ? (
+        {this.state.showModal && (
           <CustomModal
             doc={this.state.doc}
             data={this.state.selectedImages}
-            imageSelected={() => this.imageSelected()}
-            cancel={index => this.cancelImage(index)}
+            imageSelected={this.imageSelected}
+            cancel={this.cancelImage}
           />
-        ) : null}
+        )}
       </Container>
     );
     // }
@@ -1397,9 +1309,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
 
   renderMessage = props => {
-    // console.log(JSON.stringify(props.currentMessage))
     let thumbNail = false;
-    var videoData = {};
     let youtube_id = '';
     if (this.checkIfLink(props.currentMessage.text)) {
       if (props.currentMessage.text.match('http://(www.)?youtube|youtu.be')) {
@@ -1409,7 +1319,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
       }
       thumbNail = true
     }
-    // alert(string.split('.')[1].trim())
 
     return thumbNail ? (
       <View style={{
@@ -1634,8 +1543,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
   };
 
   renderImage = props => {
-    // alert(JSON.stringify(props.currentMessage.image))
-
     return (
       <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
         {props.position === 'right' ?
@@ -1665,22 +1572,19 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
               },
               // priority: FastImage.priority.high,
             }}
-            resizeMode={'cover'}
           />
         </Lightbox>
 
-        {props.position === 'left' ?
-<TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
+        {Boolean(props.position === 'left') &&
+        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
         <FontAwesome5 name="download" size={15} color="green" />
         {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
-        </TouchableOpacity>
-: null }
+        </TouchableOpacity>}
       </View>
     );
   };
 
   renderVideo = props => {
-    // alert(JSON.stringify(props.currentMessage.image))
     return (
       <View style={[styles.container]}>
         <Lightbox
@@ -1692,7 +1596,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
             source={{
               // uri: `https://${props.currentMessage.image}`,
               uri: props.currentMessage.image,
-
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },
@@ -1706,8 +1609,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
   };
 
   renderFooter = props => {
-    // this.setState({showEmoji:false})
-    // if(props.currentMessage){
     let typers = Object.values(this.state.participants).filter(
       (participant, index, arr) => {
         if (participant.typing) {
@@ -1816,11 +1717,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
         </View>
       </View>
     );
-    // }
-    // return (
-    //     <View style={{flexDirection: 'row', alignItems: 'center', height: 25, width: config.layout.window.width}}>
-    //     </View>
-    // );
   };
 }
 

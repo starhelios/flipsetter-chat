@@ -25,7 +25,6 @@ import logo from "../../components/assets/Logo.png";
 import NativeStatusBarManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManager";
 import {SafeAreaConsumer} from 'react-native-safe-area-context';
 import NavigationService from "../../services/NavigationService";
-// import RingerMode from 'react-native-ringer-mode';
 
 var Sound = require('react-native-sound');
 const window = Dimensions.get('window');
@@ -90,29 +89,7 @@ class RegisterScreen extends React.Component {
       };
 
     ringPhn=()=>{
-        if(Platform.OS === 'android'){
-        // RingerMode.getRingerMode()
-        // .then(mode => {
-        //   switch(mode){
-        //     case 'NORMAL':
-        //     this.playSound()  ;
-        //     return ;
-        //     case 'SILENT':
-        //     return;
-        //     case 'VIBRATE':
-        //
-        //     Vibration.vibrate(1000);
-        //     return;
-        //     default :
-        //     return;
-        //   }
-        // });
-    }
-    else
-    {
         this.playSound()
-    }
-
     }
 
     keyboardDidShow = (event) => {

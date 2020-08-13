@@ -433,9 +433,9 @@ class WebRTC extends Component<Props> {
                         thread_id={this.props.call.threadId}
                         call_id={this.props.call.id}
                     />
-                    {   this.state.remoteSpeaker &&
-                        <RTCView style={{...styles.remoteVideoWhiteboard, height: 200, width: 100, zIndex: 10}} streamURL={this.state.remoteList[this.state.remoteSpeaker]} objectFit={"contain"}/>
-                    }
+                    {/*{   this.state.remoteSpeaker &&*/}
+                    {/*    <RTCView style={{...styles.remoteVideoWhiteboard, height: 200, width: 100, zIndex: 10}} streamURL={this.state.remoteList[this.state.remoteSpeaker]} objectFit={"contain"}/>*/}
+                    {/*}*/}
                     {/*<View style={{flex: 1}}>*/}
                     {/*    /!*{this.state.remoteList && Object.keys(this.state.remoteList).map((key, index) => {*!/*/}
                     {/*    /!*    console.log("RemoteList", key)*!/*/}

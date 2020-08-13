@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
+import Sound from 'react-native-sound';
 
 import Shape from "../../../components/SvgShape";
 
@@ -276,10 +277,34 @@ class PortraitBoard extends React.Component {
     return get(find(backgrondPatterns, pattern => pattern.pathWeb === whiteboard.backgroundPattern), 'image', null)
   }
 
-  toogleDocManagerMenu = () => this.setState({ showDocManagerMenu: !this.state.showDocManagerMenu })
-  toogleChat = () => this.setState({ showChat: !this.state.showChat })
-  toogleMicrophone = () => this.setState({ showMicrophone: !this.state.showMicrophone })
-  toogleCamera = () => this.setState({ showCamera: !this.state.showCamera })
+  playSound = () => {
+    var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+      // loaded successfully
+      console.log(
+        'duration in seconds: ' +
+        whoosh.getDuration() +
+        'number of channels: ' +
+        whoosh.getNumberOfChannels(),
+      );
+      // Play the sound with an onEnd callback
+      whoosh.play(success => {
+        if (success) {
+          console.log('successfully finished playing');
+        } else {
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  };
+
+  toogleDocManagerMenu = () => this.setState({ showDocManagerMenu: !this.state.showDocManagerMenu }, this.playSound)
+  toogleChat = () => this.setState({ showChat: !this.state.showChat }, this.playSound)
+  toogleMicrophone = () => this.setState({ showMicrophone: !this.state.showMicrophone }, this.playSound)
+  toogleCamera = () => this.setState({ showCamera: !this.state.showCamera }, this.playSound)
 
   render() {
     const {

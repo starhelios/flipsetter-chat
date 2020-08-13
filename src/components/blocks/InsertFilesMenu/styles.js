@@ -17,6 +17,7 @@ export const Container = styled.View`
 export const ContainerHorizontal = styled.View`
     position: absolute;
     background-color: ${Colors.white};
+    height: 100%;
     padding-top: 20px;
     top: 0px;
     flex-direction: column;
