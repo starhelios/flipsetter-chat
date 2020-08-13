@@ -1622,7 +1622,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
           flexDirection: 'row',
           alignItems: 'center',
           height: 25,
-          width: config.layout.window.width,
         }}>
         <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
           {this.state.messages &&
