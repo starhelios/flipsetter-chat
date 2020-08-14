@@ -9,6 +9,7 @@ import {
   BackHandler,
 } from 'react-native';
 import noop from 'lodash/noop'
+import map from 'lodash/map'
 
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
@@ -692,23 +693,23 @@ ringPhn=()=>{
       includeBase64: true,
       multiple: true,
     })
-      .then(images => {
+      .then(imag => {
 
-        let imgs = [];
-        images.map((res) => {
-          let nm = this.generateName();
-          const file = {
-            name: "img" + nm + ".jpg",
-            type: res.mime,
-            uri: Platform.OS === "android" ? res.path : res.path.replace("file://", ""),
-          }
-          imgs.push(file)
-        })
-        this.setState({ showModal: true, selectedImages: images, fileToUploadArray: imgs });
+
+        let nm = this.generateName();
+        const file = {
+          name: "img" + nm + ".jpg",
+          type: imag.mime,
+          uri: Platform.OS === "android" ? imag.path : imag.path.replace("file://", ""),
+        }
+
+        const imgs = [file]
+
+        this.setState({ showModal: true, selectedImages: [imag], fileToUploadArray: imgs });
 
       })
       .catch(e => {
-        // alert(e)
+        alert(e)
       });
   };
 
@@ -726,8 +727,6 @@ ringPhn=()=>{
       multiple: true,
     })
       .then(images => {
-
-        console.log(JSON.stringify(images))
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
@@ -746,7 +745,7 @@ ringPhn=()=>{
 
 
 
-  async pickDocument() {
+   pickDocument = async () => {
     this.setState({ openPicker: false, isDoc: false });
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -1036,8 +1035,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
   render() {
     // if(!this.state.isLoading) {
-    console.log(this.props.user)
-    console.log(this.state.messages)
     return (
       <Container>
         <Header>
@@ -1781,15 +1778,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(withSocketContext(withNavigationFocus(MessagesScreen)));
-
-const TopBar = ({ play, fullScreen }) => (
-  <View
-    style={{
-      alignSelf: 'center',
-      position: 'absolute',
-      top: 0,
-      zIndex: 1,
-    }}>
-    {!fullScreen && <Text style={{ color: '#FFF' }}> Custom Top bar</Text>}
-  </View>
-);
