@@ -17,6 +17,7 @@
     "@react-native-community/art": "^1.1.2",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/masked-view": "^0.1.5",
+    "@react-native-community/netinfo": "^5.9.6",
     "@react-native-community/slider": "^3.0.2",
     "@react-native-community/toolbar-android": "0.1.0-rc.2",
     "appcenter": "^3.0.0",

@@ -1036,6 +1036,8 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
   render() {
     // if(!this.state.isLoading) {
+    console.log(this.props.user)
+    console.log(this.state.messages)
     return (
       <Container>
         <Header>
