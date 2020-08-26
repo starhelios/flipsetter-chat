@@ -3,6 +3,10 @@ platform :ios, '11.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'mobile' do
+
+  config = use_native_modules!
+
+
   # Pods for mobile
 
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
@@ -45,7 +49,6 @@ target 'mobile' do
 
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-  pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
   pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
@@ -58,6 +61,14 @@ target 'mobile' do
   end
 
   use_native_modules!
+
+    post_install do |installer|
+      installer.pods_project.targets.each do |target|
+       target.build_configurations.each do |config|
+         config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+       end
+      end
+    end
 end
 
 target 'mobile-tvOS' do
@@ -68,4 +79,11 @@ target 'mobile-tvOS' do
     # Pods for testing
   end
 
+end
+
+target 'ShareExtension' do\
+use_native_modules!
+
+  pod 'RNShareMenu', :path => '../node_modules/react-native-share-menu'
+  # Manually link packages here to keep your extension bundle size minimal
 end

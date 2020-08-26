@@ -1,10 +1,9 @@
 import React from 'react';
 import color from 'color';
 
-import { palitraImg, bluePalitraImg, blackGradientImg } from '../../../images';
-
 import {
-  Chooser, Container, Text, ChooserBackground, ChooserWrapper, ChoosenColorInput, ChoosenColorView, ChoosenColorWrapper, ContainerHorizontal,
+  Chooser, Container, Text, ChooserWrapper, ChoosenColorInput, ChoosenColorView,
+  ChoosenColorWrapper, ContainerHorizontal, RedBackView, BlueBackView, GreenBackView,
 } from './styles';
 import { useOrientation } from '../../../helper/useOrientation';
 
@@ -20,21 +19,21 @@ export default ({ whiteboard, onChangeColor }) => {
     <Wrapper>
       <Text>Select color</Text>
       <ChooserWrapper>
-        <ChooserBackground source={palitraImg} />
+        <RedBackView />
         <Chooser
           value={Number(red)}
           onValueChange={(val) => onChangeColor({ color: color(whiteboard.color).red(val).hex() })}
         />
       </ChooserWrapper>
       <ChooserWrapper>
-        <ChooserBackground source={bluePalitraImg} />
+        <BlueBackView />
         <Chooser
           value={Number(blue)}
           onValueChange={(val) => onChangeColor({ color: color(whiteboard.color).blue(val).hex() })}
         />
       </ChooserWrapper>
       <ChooserWrapper>
-        <ChooserBackground source={blackGradientImg} />
+        <GreenBackView />
         <Chooser
           value={Number(green)}
           onValueChange={(val) => onChangeColor({ color: color(whiteboard.color).green(val).hex() })}

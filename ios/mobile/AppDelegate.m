@@ -30,6 +30,7 @@
 #import <AppCenterReactNativeAnalytics.h>
 #import <AppCenterReactNativeCrashes.h>
 
+#import <RNShareMenu/ShareMenuManager.h>
 
 @implementation AppDelegate
 
@@ -131,6 +132,13 @@ completion();
   return [RNCallKeep application:application
            continueUserActivity:userActivity
              restorationHandler:restorationHandler];
+}
+
+- (BOOL)application:(UIApplication *)app
+        openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [ShareMenuManager application:app openURL:url options:options];
 }
 
 #if RCT_DEV

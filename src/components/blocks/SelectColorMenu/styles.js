@@ -41,13 +41,31 @@ export const Text = styled(TextUI)`
 
 export const ChooserWrapper = styled.View``;
 
-export const ChooserBackground = styled.Image.attrs({
-  resizeMode: 'contain',
-})`
+export const RedBackView = styled.View`
+  background-color: red;
   height: 16px;
   width: 350px;
   position: absolute;
   top: 12px;
+  border-radius: 8px;
+`;
+
+export const GreenBackView = styled.View`
+  background-color: green;
+  height: 16px;
+  width: 350px;
+  position: absolute;
+  top: 12px;
+  border-radius: 8px;
+`;
+
+export const BlueBackView = styled.View`
+  background-color: blue;
+  height: 16px;
+  width: 350px;
+  position: absolute;
+  top: 12px;
+  border-radius: 8px;
 `;
 
 export const ChoosenColorWrapper = styled.View`
