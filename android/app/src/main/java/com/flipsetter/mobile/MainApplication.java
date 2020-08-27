@@ -20,9 +20,6 @@ import java.util.List;
 
 //import com.oney.WebRTCModule.WebRTCModulePackage;
 
-import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
-
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -41,8 +38,6 @@ public class MainApplication extends Application implements ReactApplication {
 //            packages.add(new WebRTCModulePackage());
 
             // packages.add(new RNFSPackage());
-            packages.add(new RNFirebaseMessagingPackage());
-            packages.add(new RNFirebaseNotificationsPackage());
             return packages;
         }
 
