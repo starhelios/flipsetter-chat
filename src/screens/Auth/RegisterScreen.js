@@ -1,15 +1,12 @@
 import React from 'react';
 import {
     Animated,
-    Button, Dimensions,
-    Image, Keyboard,
+    Dimensions,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
-    SafeAreaView,
-    ScrollView,
     StyleSheet,
-    TextInput,Vibration,
-    StatusBar,
+    TextInput,
     TouchableOpacity,
     View,
 } from 'react-native';
@@ -19,12 +16,8 @@ import { App, Auth, User } from "../../reducers/actions";
 import { connect } from "react-redux";
 import { withSocketContext } from "../../components/Socket";
 
-import { Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title} from 'native-base';
+import { Container, Header,  Left, Body, Right, Text} from 'native-base';
 import { withNavigationFocus } from 'react-navigation';
-import logo from "../../components/assets/Logo.png";
-import NativeStatusBarManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManager";
-import {SafeAreaConsumer} from 'react-native-safe-area-context';
-import NavigationService from "../../services/NavigationService";
 
 var Sound = require('react-native-sound');
 const window = Dimensions.get('window');

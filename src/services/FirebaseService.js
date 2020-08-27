@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform} from 'react-native';
 import {connect} from 'react-redux';
-import firebase, {notifications} from 'react-native-firebase';
+import messaging from '@react-native-firebase/messaging';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import {App, Auth, Threads, Messages, Call} from '../reducers/actions';
 import DeviceInfo from 'react-native-device-info';
@@ -26,7 +26,7 @@ class FirebaseService extends Component<Props> {
 
   async componentDidMount(): void {
     this._checkPermission();
-    const device_token = await firebase.messaging().getToken();
+    const device_token = await messaging().getToken();
     this.props.setDeviceToken(device_token);
     this.props.setDeviceID(await DeviceInfo.getUniqueId());
 
@@ -34,7 +34,7 @@ class FirebaseService extends Component<Props> {
     //     this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null);
     // }
     //User Opened Notification while app was closed
-    notifications()
+    messaging()
       .getInitialNotification()
       .then(notificationOpen => {
         if (notificationOpen) {
@@ -108,7 +108,7 @@ class FirebaseService extends Component<Props> {
   }
 
   _checkPermission = async () => {
-    const enabled = await firebase.messaging().hasPermission();
+    const enabled = await messaging().hasPermission();
 
     if (enabled) {
       if (Platform.OS === 'ios') {
@@ -116,8 +116,7 @@ class FirebaseService extends Component<Props> {
       }
       this._listeners();
     } else {
-      firebase
-        .messaging()
+        messaging()
         .requestPermission()
         .then(() => {
           //User has Authorised
@@ -132,11 +131,11 @@ class FirebaseService extends Component<Props> {
 
   async _listeners() {
     console.log('Listeners');
-    this.fcmTokenListener = firebase.messaging().onTokenRefresh(fcmToken => {
+    this.fcmTokenListener = messaging().onTokenRefresh(fcmToken => {
       this.props.setDeviceToken(fcmToken);
     });
     console.log('Message listener');
-    this.messageListener = firebase.messaging().onMessage(message => {
+    this.messageListener = messaging().onMessage(message => {
       console.log('Message', message);
       let data = JSON.parse(message._data.extraPayload);
       switch (data.notification_type) {
@@ -156,7 +155,7 @@ class FirebaseService extends Component<Props> {
     //notification received
     console.log('notification listener');
 
-    this.removeNotificationListener = notifications().onNotification(
+    this.removeNotificationListener = messaging().onNotification(
       async (notification: Notification) => {
         console.log('Notification', notification);
         let data = JSON.parse(notification._data.extraPayload);
@@ -183,17 +182,17 @@ class FirebaseService extends Component<Props> {
     console.log('Notification displayed listener');
 
     //Notification was displayed
-    this.removeNotificationDisplayedListener = notifications().onNotificationDisplayed(
+    this.removeNotificationDisplayedListener = messaging().onNotificationDisplayed(
       async (notification: Notification) => {
         // console.log("N1", notification);
         // console.log(this.props.threads.activeThread);
 
         //notification displayed but not opened
         if (notification._data.thread_id !== this.props.threads.activeThread) {
-          const badgeCount = await notifications().getBadge();
-          notifications().setBadge(badgeCount + 1);
+          const badgeCount = await messaging().getBadge();
+          messaging().setBadge(badgeCount + 1);
         }
-        // firebase.notifications().badge(5)
+        // firebase.messaging().badge(5)
         // Process your notification as required
         // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
       },
@@ -201,12 +200,12 @@ class FirebaseService extends Component<Props> {
 
     //User Opened/interacted with the notification
     console.log('Notification opened');
-    this.notificationOpenedListener = notifications().onNotificationOpened(
+    this.notificationOpenedListener = messaging().onNotificationOpened(
       async (notificationOpen: NotificationOpen) => {
         // Get the action triggered by the notification being opened
         //notification displayed but not opened
-        // const badgeCount = await notifications().getBadge();
-        // notifications().setBadge(badgeCount - 1);
+        // const badgeCount = await messaging().getBadge();
+        // messaging().setBadge(badgeCount - 1);
         // const action = notificationOpen;
         // console.log("notificationOpen", notificationOpen)
         // console.log("action",action);
@@ -345,15 +344,15 @@ class FirebaseService extends Component<Props> {
         data.thread_id !== this.props.threads.activeThread &&
         this.props.user.id !== data.owner_id
       ) {
-        const channel = new firebase.notifications.Android.Channel(
+        const channel = new messaging.Android.Channel(
           'default',
           'Default Channel',
-          firebase.notifications.Android.Importance.Max,
+          messaging.Android.Importance.Max,
         ).setDescription('Default channel');
-        await firebase.notifications().android.createChannel(channel);
+        await messaging().android.createChannel(channel);
 
         if (Platform.OS === 'android') {
-          const groupDisplay = new firebase.notifications.Notification().android
+          const groupDisplay = new messaging.Notification().android
             .setChannelId(notification.data.channelId)
             .setNotificationId(data.thread_id)
             .setSound('messagealert.mp3')
@@ -370,11 +369,11 @@ class FirebaseService extends Component<Props> {
             .android.setGroupSummary(true)
             .android.setColor('#24422e')
             .android.setGroupAlertBehaviour(
-              firebase.notifications.Android.GroupAlert.Children,
+              messaging.Android.GroupAlert.Children,
             );
         }
 
-        let display = new firebase.notifications.Notification();
+        let display = new messaging.Notification();
         display
           .setNotificationId(data.message_id)
           .setTitle(data.thread_type === 2 ? data.thread_subject : data.name)
@@ -392,7 +391,7 @@ class FirebaseService extends Component<Props> {
             .android.setTag(data.name)
             .android.setGroup(data.thread_id)
             .android.setGroupAlertBehaviour(
-              firebase.notifications.Android.GroupAlert.Children,
+              messaging.Android.GroupAlert.Children,
             );
         }
         if (Platform.OS === 'ios') {
@@ -413,8 +412,7 @@ class FirebaseService extends Component<Props> {
         // console.log("display", display);
         if (Platform.OS === 'android') {
           try {
-            firebase
-              .notifications()
+            messaging()
               .displayNotification(groupDisplay)
               .catch(err => {
                 console.log('send notif err', err);
@@ -425,8 +423,7 @@ class FirebaseService extends Component<Props> {
           }
         }
         try {
-          firebase
-            .notifications()
+          messaging()
             .displayNotification(display)
             .catch(err => {
               console.log('send notif err', err);
