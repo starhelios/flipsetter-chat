@@ -141,17 +141,23 @@ export default class Thumbnail extends PureComponent {
         activeOpacity={0.7}
         onPress={this.onPress}
       >
-        <View style={containerStyle}>
-        <Text style={{
+        <View style={[containerStyle, {width: '100%',
           borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-          fontWeight: 'bold',
-          fontSize: 10,
-          padding: 3,
-          backgroundColor: 'green',
-          color: 'white',
-          textAlign: 'center',
-        }}>{this.props.url}</Text>
+          borderTopRightRadius: 10,}]}>
+          <View style={{
+            backgroundColor: 'green',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,}} >
+          <Text style={{
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+            fontWeight: 'bold',
+            fontSize: 10,
+            padding: 3,
+            color: 'white',
+            textAlign: 'center',
+          }}>{this.props.url}</Text>
+          </View>
 
         <ImageBackground
           resizeMode='cover'

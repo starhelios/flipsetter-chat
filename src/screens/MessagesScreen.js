@@ -1325,13 +1325,14 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
     return thumbNail ? (
       <View style={{
-        borderRadius: 10, borderWidth: 1, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
+        borderRadius: 10, borderWidth: 0, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
         alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
       }}>
         <Thumbnail
           onPress={() => this.setState({ showWebView: true, videoUri: youtube_id })}
           containerStyle={{
             alignSelf: 'center',
+            borderRadius: 10,
           }}
           url={props.currentMessage.text}
         />
