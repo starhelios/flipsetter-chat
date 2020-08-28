@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import noop from 'lodash/noop'
 import map from 'lodash/map'
+import ShareMenu, { ShareMenuReactView } from "react-native-share-menu";
 
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
@@ -109,13 +110,6 @@ class MessagesScreen extends Component {
     this.typeInterval = 0;
   }
 
-  componentWillMount() {
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
-  }
-
   generateId() {
     return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 14);
   }
@@ -125,6 +119,16 @@ class MessagesScreen extends Component {
   }
 
   async componentDidMount() {
+
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+
+    ShareMenuReactView.data().then(({ mimeType, data }) => {
+      console.tron.log(data);
+      console.tron.log(mimeType);
+    });
 
     this.props.getUser()
 
@@ -1321,7 +1325,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
 
     return thumbNail ? (
       <View style={{
-        borderRadius: 10, borderWidth: 1, margin: 5, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
+        borderRadius: 10, borderWidth: 1, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
         alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
       }}>
         <Thumbnail
@@ -1337,21 +1341,21 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
     ) : (
 
         props.currentMessage.file ?
-          <TouchableOpacity style={{
-            borderColor: 'grey', alignItems: 'center',width:wp('60%'),
+          <View style={{
+            borderColor: 'grey', alignItems: 'center', width:wp('60%'),
             borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
             alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
-          }} >
+          }}>
             <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
-        <FontAwesome5 name="download" size={10} color="green" />
-        <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
-        </TouchableOpacity>
-        <View style={{flexDirection:'row',alignItems:'center'}}>
-            <Image source={props.currentMessage.file.split('.')[1].trim() === 'ppt' ? Images.ppt : props.currentMessage.file.split('.')[1].trim() === 'zip' ? Images.zip :
-              props.currentMessage.file.split('.')[1].trim() === 'docx' ? Images.doc : props.currentMessage.file.split('.')[1].trim() === 'pdf' ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
-            <Text style={{ color: 'black', textAlign: props.position === 'left' ? 'left' : 'right', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>{props.currentMessage.file}</Text>
+              <FontAwesome5 name="download" size={10} color="green" />
+              <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
+            </TouchableOpacity>
+            <View style={{flexDirection:'row',alignItems:'center', width: '100%'}}>
+              <Image source={props.currentMessage.file.split('.')[1].trim() === 'ppt' ? Images.ppt : props.currentMessage.file.split('.')[1].trim() === 'zip' ? Images.zip :
+                props.currentMessage.file.split('.')[1].trim() === 'docx' ? Images.doc : props.currentMessage.file.split('.')[1].trim() === 'pdf' ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
+              <Text style={{ color: 'black', textAlign: props.position === 'left' ? 'left' : 'right', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold', flex: 1, }} numberOfLines={1} ellipsizeMode='head'>{props.currentMessage.file}</Text>
             </View>
-          </TouchableOpacity>
+          </View>
           :
 
           <Message

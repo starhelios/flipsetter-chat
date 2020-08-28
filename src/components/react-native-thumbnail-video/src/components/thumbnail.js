@@ -1,18 +1,18 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {
   TouchableOpacity,
   ImageBackground,
   Image,
   ViewPropTypes,
-  ImagePropTypes,
+  View,
   Linking,
-  StyleSheet,Text
+  StyleSheet, Text
 } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
-import { DEFAULT_WIDTH, TYPES } from './constants';
-import { getVideoId } from '../helpers';
+import {DEFAULT_WIDTH, TYPES} from './constants';
+import {getVideoId} from '../helpers';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,8 +24,8 @@ export default class Thumbnail extends PureComponent {
 
     this.state = {
       videoId: getVideoId(props.url),
-      title:'',
-      provider:''
+      title: '',
+      provider: ''
     };
   }
 
@@ -54,15 +54,16 @@ export default class Thumbnail extends PureComponent {
     type: 'high',
     imageHeight: 200,
     imageWidth: DEFAULT_WIDTH,
-    onPressError: () => {},
+    onPressError: () => {
+    },
     showPlayIcon: true
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const videoId = getVideoId(nextProps.url);
 
-    if(videoId !== prevState.videoId){
-      return { videoId };
+    if (videoId !== prevState.videoId) {
+      return {videoId};
     }
 
     return null;
@@ -81,7 +82,7 @@ export default class Thumbnail extends PureComponent {
   getType = () => TYPES[this.props.type];
 
   onPress = () => {
-    const { url, onPress, onPressError } = this.props;
+    const {url, onPress, onPressError} = this.props;
 
     if (onPress) {
       return onPress(url);
@@ -96,26 +97,26 @@ export default class Thumbnail extends PureComponent {
     }).catch(onPressError);
   };
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.videoDetail()
   }
 
-  videoDetail=()=>{
-    let url = 'https://www.youtube.com/oembed?url='+this.props.url+'&format=json';
+  videoDetail = () => {
+    let url = 'https://www.youtube.com/oembed?url=' + this.props.url + '&format=json';
     RNFetchBlob
-      .fetch('GET', url)
+      .fetch('GET',url)
       .then((res) => {
         let mm = res.json();
-        this.setState({ title: mm.title,provider:mm.provider_url },()=>{
+        this.setState({title: mm.title, provider: mm.provider_url}, () => {
         })
-      })    }
+      })
+  }
 
 
   render() {
-    const { videoId } = this.state;
+    const {videoId} = this.state;
 
-    if(!videoId){
+    if (!videoId) {
       if (process.env.NODE_ENV !== 'production') {
         console.warn(`Invalid "url" could not extract videoId from "${this.props.url}"`);
       }
@@ -135,60 +136,61 @@ export default class Thumbnail extends PureComponent {
 
     const imageURL = `https://img.youtube.com/vi/${videoId}/${this.getType()}.jpg`;
 
-
-    
-
-
-
     return (
       <TouchableOpacity
         activeOpacity={0.7}
-        style={containerStyle}
         onPress={this.onPress}
       >
-              <Text style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10,fontWeight:'bold', fontSize: 10, padding: 3, backgroundColor: 'green', color: 'white', textAlign: 'center' }}>{this.props.url}</Text>
+        <View style={containerStyle}>
+        <Text style={{
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+          fontWeight: 'bold',
+          fontSize: 10,
+          padding: 3,
+          backgroundColor: 'green',
+          color: 'white',
+          textAlign: 'center',
+        }}>{this.props.url}</Text>
 
         <ImageBackground
-        resizeMode='cover'
-          source={{ uri: imageURL }}
+          resizeMode='cover'
+          source={{uri: imageURL}}
           style={[
             styles.imageContainer,
-            {alignSelf:'center',
-              width:wp('48%') ,height:hp('15%'),
-              alignSelf:'center', borderRadius: 10,backgroundColor:'green',opacity:0.8
+            {
+              width: wp('48%'), height: hp('15%'),
+              alignSelf: 'center', borderRadius: 10, backgroundColor: 'green', opacity: 0.8
             },
           ]}
           testId='thumbnail-image-background'
           {...props}
         >
-        {
-          showPlayIcon ? (
-            <Image
-            resizeMode='contain'
-              source={require('../assets/play.png')}
-              style={[styles.playIcon, iconStyle]}
-              testId='thumbnail-image'
-            />
-          ) : (
-            null
-          )
-        }
+          {
+            showPlayIcon && (
+              <Image
+                resizeMode='contain'
+                source={require('../assets/play.png')}
+                style={[styles.playIcon, iconStyle]}
+                testId='thumbnail-image'
+              />
+            )
+          }
           {children}
         </ImageBackground>
-        
+
         <Text style={{
           fontSize: 11, fontWeight: 'bold', margin: 3, backgroundColor: 'black',
-          color: 'white', textAlign:'center'
+          color: 'white', textAlign: 'center'
         }}>{this.state.title}</Text>
 
-  <Text style={{
-          borderBottomRightRadius: 10, fontWeight: '900', 
-          borderBottomLeftRadius: 10, fontSize: 10, paddingLeft: 5, 
-          paddingBottom: 5, backgroundColor: 'green',fontWeight:'900',
+        <Text style={{
+          borderBottomRightRadius: 10, fontWeight: '900',
+          borderBottomLeftRadius: 10, fontSize: 10, paddingLeft: 5,
           color: 'white', textAlign: 'center'
         }}>{this.state.provider}</Text>
 
-
+        </View>
       </TouchableOpacity>
     );
   }
@@ -201,6 +203,6 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     tintColor: 'white',
-    height:30,width:30
+    height: 30, width: 30
   },
 });
