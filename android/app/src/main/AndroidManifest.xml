@@ -43,7 +43,15 @@
                 android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
                 android:windowSoftInputMode="adjustResize"
                 android:launchMode="singleTop"
+                android:documentLaunchMode="never"
             >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*" />
+                <!-- Any other mime types you want to support -->
+            </intent-filter>
             <meta-data
                     android:name="com.google.firebase.messaging.default_notification_icon"
                     android:resource="@drawable/ic_stat_flipsetter_iconpng_transparent" />
