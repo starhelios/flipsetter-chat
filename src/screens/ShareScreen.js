@@ -8,6 +8,7 @@ const Share = () => {
 
   useEffect(() => {
     ShareMenuReactView.data().then(({ mimeType, data }) => {
+      console.tron.log(mimeType, data)
       setSharedData(data);
       setSharedMimeType(mimeType);
     });

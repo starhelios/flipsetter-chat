@@ -5,11 +5,19 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flipsetter</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.flipsetter</string>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>ShareMenuModuleComponent</string>
+				<string>flipsetter</string>
 			</array>
 		</dict>
 	</array>
