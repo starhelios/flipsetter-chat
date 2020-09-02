@@ -8,8 +8,10 @@ import {
   Keyboard,
   BackHandler,
 } from 'react-native';
+import Share from 'react-native-share'
 import noop from 'lodash/noop'
 import map from 'lodash/map'
+import get from 'lodash/get'
 import ShareMenu, { ShareMenuReactView } from "react-native-share-menu";
 
 // import imageToBlob from 'react-native-image-to-blob'
@@ -936,13 +938,12 @@ ringPhn=()=>{
 
   downloadPkPassFile = (imgUrl = "") => {
 
-let imageName = "/IMG" + new Date().getTime() + ".png";
+    let imageName = "/IMG" + new Date().getTime() + ".png";
 
-let dirs = RNFetchBlob.fs.dirs;
-let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.PictureDir + imageName;
+    let dirs = RNFetchBlob.fs.dirs;
+    let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.PictureDir + imageName;
 
 
-    if (Platform.OS === 'android') {
 
       RNFetchBlob.config({
         fileCache: true,
@@ -958,12 +959,11 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
         },
 
       }).fetch("GET", imgUrl).then(res => {
-        console.log(res, 'end downloaded')
+        console.tron.log(res, 'end downloaded')
       })
       .catch((error) => {
               alert(error)
             })
-    }
 
 
 
@@ -1025,6 +1025,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
   };
 
   render() {
+    console.tron.log(this.state.messages)
     // if(!this.state.isLoading) {
     return (
       <Container>
@@ -1271,6 +1272,73 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
     // }
   }
 
+  downloadFileFromServ = (url) => {
+
+      let imageName = "/IMG" + new Date().getTime() + ".png";
+
+      let dirs = RNFetchBlob.fs.dirs.DocumentDir;
+      let path = `${dirs}/${url}`;
+console.tron.log(url)
+      const newUrl = url.includes('tippinweb.com/') ? 'https://tippinweb.com/api/v0/images/messenger/91162558-286f-4e0d-b42a-6a32501c48ac' : `https://tippinweb.com/download/messenger/${url}`
+
+     RNFetchBlob.config({
+          indicator: true,
+          path: path,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: path,
+          },
+        }).fetch("GET", newUrl, {
+       Authorization: `Bearer ${this.props.auth.accessToken}`,
+    }).then( res => {
+         if (res && res.path()) {
+           const filePath = res.path()
+           let options = {
+             type: get(res,'respInfo.headers.Content-Type'),
+             url: filePath
+           }
+           Share.open(options)
+         }
+          console.tron.log(res, 'end downloaded')
+        })
+          .catch((error) => {
+            alert(error)
+          })
+
+
+
+
+
+
+      //   new Promise((resolve, reject) => {
+      //     let fileName = "IMG" + new Date().getTime() + ".png";
+      //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;
+      //     // const destPathAndroid = `${DocumentDirectoryPath}` +'/' + fileName;
+      //     const destPathIOS = `${DocumentDirectoryPath}` + "/MyCollaborateFiles/" + fileName;
+      //  console.log(destPathAndroid)
+      //  console.log(MainBundlePath +"ff")
+
+      //     const destPath = Platform.OS === 'ios' ? destPathIOS : destPathAndroid;
+      //     downloadFile({
+      //       fromUrl: fileUrl,
+      //       toFile: destPath
+      //     }).promise.then(result => {
+      //       if (result.statusCode == 200) {
+      //         alert("done")
+      //         resolve(destPath);
+      //       }
+      //       else {
+      //         reject("Unable to download");
+      //       }
+
+      //     }).catch((error) => {
+      //       // alert(error)
+      //       reject("Unable to download");
+      //     })
+      //   });
+  }
+
   renderAvatar = props => {
     return (
       <FastImage
@@ -1329,7 +1397,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
             borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
             alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
           }}>
-            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
+            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.file)}>
               <FontAwesome5 name="download" size={10} color="green" />
               <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
             </TouchableOpacity>
@@ -1532,7 +1600,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
     return (
       <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
         {props.position === 'right' ?
-        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadPkPassFile(props.currentMessage.image)}>
+        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.image)}>
                 <FontAwesome5 name="download" size={15} color="green" />
                 {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
                 </TouchableOpacity>
@@ -1562,7 +1630,7 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
         </Lightbox>
 
         {Boolean(props.position === 'left') &&
-        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>alert(JSON.stringify(props.currentMessage))}>
+        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.image)}>
         <FontAwesome5 name="download" size={15} color="green" />
         {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
         </TouchableOpacity>}
