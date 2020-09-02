@@ -1279,7 +1279,7 @@ ringPhn=()=>{
       let dirs = RNFetchBlob.fs.dirs.DocumentDir;
       let path = `${dirs}/${url}`;
 console.tron.log(url)
-      const newUrl = url.includes('tippinweb.com/') ? 'https://tippinweb.com/api/v0/images/messenger/91162558-286f-4e0d-b42a-6a32501c48ac' : `https://tippinweb.com/download/messenger/${url}`
+      const newUrl = url.includes('tippinweb.com/') ? url : `https://tippinweb.com/download/messenger/${url}`
 
      RNFetchBlob.config({
           indicator: true,
