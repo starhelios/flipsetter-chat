@@ -324,6 +324,8 @@ PODS:
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
   - React-jsinspector (0.63.2)
+  - react-native-cameraroll (4.0.0):
+    - React
   - react-native-document-picker (3.5.4):
     - React
   - react-native-draw-view (1.0.0):
@@ -529,6 +531,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-draw-view (from `../node_modules/react-native-draw-view`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
@@ -650,6 +653,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-cameraroll:
+    :path: "../node_modules/@react-native-community/cameraroll"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-draw-view:
@@ -790,6 +795,7 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
+  react-native-cameraroll: ae0a7c0cc8462508855707ff623b1e789b692865
   react-native-document-picker: 4921045c5c6c78243010f784eae0a3f4b2af7799
   react-native-draw-view: bb1083e2bd236c764c028ac870bd615018161817
   react-native-image-base64: 2ff9ac788639c87a91361ab6652cc95e871b1e54

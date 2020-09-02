@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Keyboard,
+  Alert,
   BackHandler,
 } from 'react-native';
 import Share from 'react-native-share'
 import noop from 'lodash/noop'
 import map from 'lodash/map'
 import get from 'lodash/get'
+import CameraRoll from '@react-native-community/cameraroll';
 import ShareMenu, { ShareMenuReactView } from "react-native-share-menu";
 
 // import imageToBlob from 'react-native-image-to-blob'
@@ -1274,10 +1276,10 @@ ringPhn=()=>{
 
   downloadFileFromServ = (url) => {
 
-      let imageName = "/IMG" + new Date().getTime() + ".png";
+      let imageName = "/IMG" + new Date().getTime() + ".jpg";
 
       let dirs = RNFetchBlob.fs.dirs.DocumentDir;
-      let path = `${dirs}/${url}`;
+      let path = `${dirs}/${url}`+imageName ;
 console.tron.log(url)
       const newUrl = url.includes('tippinweb.com/') ? url : `https://tippinweb.com/download/messenger/${url}`
 
@@ -1292,13 +1294,35 @@ console.tron.log(url)
         }).fetch("GET", newUrl, {
        Authorization: `Bearer ${this.props.auth.accessToken}`,
     }).then( res => {
+      console.tron.log(res)
          if (res && res.path()) {
            const filePath = res.path()
            let options = {
              type: get(res,'respInfo.headers.Content-Type'),
              url: filePath
            }
-           Share.open(options)
+           if (options.type.includes('image')) {
+             CameraRoll.saveToCameraRoll(res.data, 'photo').then(() => {
+               Alert.alert(
+                 'Save remote Image',
+                 'Image Saved Successfully',
+                 [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                 {cancelable: false},
+               );
+             })
+               .catch(err => {
+                 Alert.alert(
+                   'Save remote Image',
+                   'Failed to save Image: ' + err.message,
+                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                   {cancelable: false},
+                 );
+               })
+           } else {
+
+             Share.open(options)
+           }
+
          }
           console.tron.log(res, 'end downloaded')
         })
