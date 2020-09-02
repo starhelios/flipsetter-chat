@@ -1,50 +1,34 @@
 import React, {Component} from 'react';
 import {
   SectionList,
-  StatusBar,
   StyleSheet,
   Platform,
-  Image,
-  FlatList,
   TouchableOpacity,
-  ActivityIndicator,
   Animated,
   Easing,
   UIManager,
-  LayoutAnimation,
-  Keyboard,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {
   Container,
   Header,
-  Icon,
-  Content,
-  List,
-  ListItem,
   Left,
   Body,
   Right,
-  Thumbnail,
   Text,
   Title,
-  Button,
   View,
 } from 'native-base';
-import * as Animateable from 'react-native-animatable';
+import {connect} from 'react-redux';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {withNavigationFocus} from 'react-navigation';
+
 import ThreadList from '../components/threads/ThreadList';
 import {withSocketContext} from '../components/Socket';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {ScrollView, withNavigationFocus} from 'react-navigation';
-import {App, Auth, User, Threads, Messages, Call} from '../reducers/actions';
-import {connect} from 'react-redux';
-import threadsService from '../services/ThreadsService';
-import Utils from '../components/Utils';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import NavigationService from '../services/NavigationService';
+import {App, Auth, User, Threads, Messages} from '../reducers/actions';
 import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
-import config from '../config';
+import ShareMenu from 'react-native-share-menu';
 
 if (
   Platform.OS === 'android' &&
@@ -84,6 +68,18 @@ class ThreadsScreen extends Component<Props> {
 
   async componentDidMount(): void {
     //Let's grab the latest threads
+
+
+    ShareMenu.getInitialShare((data) => {
+      console.tron.log('asd 1');
+      console.tron.log(data);
+    });
+    ShareMenu.addNewShareListener((data) => {
+      console.tron.log('asd 2');
+      console.tron.log(data);
+    })
+
+
     let update = await this.props.getThreads();
     // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
     // this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);

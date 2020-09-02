@@ -25,6 +25,7 @@ import getTheme from './src/native-base-theme/components';
 import material from "./src/native-base-theme/variables/material";
 import appActions from "./src/reducers/actions/appActions";
 import Analytics from 'appcenter-analytics';
+import ShareMenu from "react-native-share-menu";
 let socket;
 enableScreens();
 
@@ -49,6 +50,17 @@ class Main extends Component {
     }
 
     async componentDidMount() {
+
+
+        ShareMenu.getInitialShare((data) => {
+            console.tron.log('asd 3');
+            console.tron.log(data);
+        });
+        ShareMenu.addNewShareListener((data) => {
+            console.tron.log('asd 4');
+            console.tron.log(data);
+        });
+
         await Analytics.setEnabled(true);
 
         await Analytics.trackEvent("Analytics Started")

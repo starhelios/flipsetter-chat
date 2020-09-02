@@ -43,13 +43,13 @@ export function sendMessage(id, message, type, file) {
       message: message.text,
     };
   } else if (type === 'img') {
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('type', 'store_message');
     formData.append('temp_id', message._id);
     formData.append('image_file', file);
     data = formData;
   } else {
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('type', 'store_message');
     formData.append('temp_id', message._id);
     formData.append('doc_file', file);
@@ -62,7 +62,6 @@ export function sendMessage(id, message, type, file) {
     payload: {
       request: {
         method: 'POST',
-        // url: `${config.prefix}/thread/${id}/message`,
         url: `${config.api.messenger.post.saveThread(id)}`,
         data,
         headers: {

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>HostAppBundleIdentifier</key>
-	<string>com.flipsetter.mobile.ShareExtension</string>
+	<string>flipsetter</string>
 	<key>HostAppURLScheme</key>
 	<string>flipsetter://</string>
 	<key>CFBundleDevelopmentRegion</key>

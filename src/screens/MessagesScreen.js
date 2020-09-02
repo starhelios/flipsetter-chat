@@ -125,11 +125,6 @@ class MessagesScreen extends Component {
       this.handleBackButtonClick,
     );
 
-    ShareMenuReactView.data().then(({ mimeType, data }) => {
-      console.tron.log(data);
-      console.tron.log(mimeType);
-    });
-
     this.props.getUser()
 
     this.props.setActiveThread(this.activeThread);
@@ -539,35 +534,33 @@ ringPhn=()=>{
       this.props.navigation.getParam('thread'),
       message, type, file
     );
-
-    // alert("res "+JSON.stringify(response))
-
-    let updated = {
-      ...incoming,
-      _id: await response.payload.data.message.message_id,
-      user: {
-        ...incoming.user,
-        name: await response.payload.data.message.name,
-      },
-    };
-    this.props.updateMessage(this.activeThread, updated);
+    //
+    // let updated = {
+    //   ...incoming,
+    //   _id: await response.payload.data.message.message_id,
+    //   user: {
+    //     ...incoming.user,
+    //     name: await response.payload.data.message.name,
+    //   },
+    // };
+    // this.props.updateMessage(this.activeThread, updated);
 
     //update threads screen store in the background
-    let threads = { ...this.props.threads.threads };
-    let current = { ...threads[this.activeThread] };
-    current.recent_message = {
-      body: message.text ? message.text : '',
-      message_type: 0,
-      name: response.payload.data.message.name,
-    };
-    delete threads[this.activeThread];
-    let store = { [this.activeThread]: current, ...threads };
-    this.props.storeThreads(store);
-
-    //Update messages with proper id's and such
-    this.setState({
-      messages: [...this.props.messages.messages[this.activeThread]],
-    });
+    // let threads = { ...this.props.threads.threads };
+    // let current = { ...threads[this.activeThread] };
+    // current.recent_message = {
+    //   body: message.text ? message.text : '',
+    //   message_type: 0,
+    //   name: response.payload.data.message.name,
+    // };
+    // delete threads[this.activeThread];
+    // let store = { [this.activeThread]: current, ...threads };
+    // this.props.storeThreads(store);
+    //
+    // //Update messages with proper id's and such
+    // this.setState({
+    //   messages: [...this.props.messages.messages[this.activeThread]],
+    // });
     // });
   }
 
@@ -720,13 +713,6 @@ ringPhn=()=>{
   openGallery = () => {
     this.setState({ openPicker: false, isDoc: false });
     ImagePicker.openPicker({
-      // width: 300,
-      // height: 300,
-      // compressImageQuality: 0.8,
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
-      mime: 'jpg',
-      cropping: true,
       includeBase64: true,
       multiple: true,
     })
@@ -734,10 +720,11 @@ ringPhn=()=>{
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
+          console.tron.log(res)
           const file = {
             name: "img" + nm + ".jpg",
             type: res.mime,
-            uri: Platform.OS === "android" ? res.path : res.path.replace("file://", ""),
+            uri: Platform.OS === 'ios' ? `file:///${res.path}` : res.path,
           }
 
           imgs.push(file)
@@ -928,8 +915,8 @@ ringPhn=()=>{
   imageSelected = () => {
     this.setState({ showModal: false, doc: false }, () => {
       let s = this.state.selectedImages.length > 1 ? 's' : '';
-      this.state.fileToUploadArray.map((res) => {
-        // alert(JSON.stringify(res))
+      map(this.state.fileToUploadArray, (res) => {
+
         let dt = Date.now();
         var dateTime = new Date(dt);
         let msg = {
@@ -1305,11 +1292,6 @@ let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.Pict
       />
     );
   };
-
-
-
-
-
 
   renderMessage = props => {
     let thumbNail = false;
