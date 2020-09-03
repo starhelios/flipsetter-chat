@@ -1151,7 +1151,6 @@ ringPhn=()=>{
             // messageIdGenerator={(messages)=>this.messageIdGenerator(messages)}
             extraData={this.state.participants}
             alwaysShowSend
-            showAvatarForEveryMessage
             onSend={messages => this.onSend(messages[0], 'message', this.state.fileToUpload)}
             focusTextInput={() => this.setState({ showEmoji: false })}
             user={{
@@ -1401,6 +1400,7 @@ ringPhn=()=>{
       <View style={{
         borderRadius: 10, borderWidth: 0, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
         alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
+        marginLeft: 50,
       }}>
         <Thumbnail
           onPress={() => this.setState({ showWebView: true, videoUri: youtube_id })}
@@ -1420,6 +1420,7 @@ ringPhn=()=>{
             borderColor: 'grey', alignItems: 'center', width:wp('60%'),
             borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
             alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
+            marginLeft: 50,
           }}>
             <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.file)}>
               <FontAwesome5 name="download" size={10} color="green" />
