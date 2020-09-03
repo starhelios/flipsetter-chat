@@ -165,8 +165,8 @@ export default class Thumbnail extends PureComponent {
           style={[
             styles.imageContainer,
             {
-              width: wp('48%'), height: hp('15%'),
-              alignSelf: 'center', borderRadius: 10, backgroundColor: 'green', opacity: 0.8
+              flex: 1, height: hp('13%'),
+             borderRadius: 10, backgroundColor: 'green', opacity: 0.8
             },
           ]}
           testId='thumbnail-image-background'
@@ -185,6 +185,13 @@ export default class Thumbnail extends PureComponent {
           {children}
         </ImageBackground>
 
+          <View style={{
+            flex:1,
+            paddingTop: -1,
+            paddingVertical: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
         <Text style={{
           fontSize: 11, fontWeight: 'bold', margin: 3, backgroundColor: 'black',
           color: 'white', textAlign: 'center'
@@ -195,7 +202,7 @@ export default class Thumbnail extends PureComponent {
           borderBottomLeftRadius: 10, fontSize: 10, paddingLeft: 5,
           color: 'white', textAlign: 'center'
         }}>{this.state.provider}</Text>
-
+          </View>
         </View>
       </TouchableOpacity>
     );

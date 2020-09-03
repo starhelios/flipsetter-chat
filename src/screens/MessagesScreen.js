@@ -724,7 +724,6 @@ ringPhn=()=>{
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
-          console.tron.log(res)
           const file = {
             name: "img" + nm + ".jpg",
             type: res.mime,
@@ -961,7 +960,7 @@ ringPhn=()=>{
         },
 
       }).fetch("GET", imgUrl).then(res => {
-        console.tron.log(res, 'end downloaded')
+        // console.tron.log(res, 'end downloaded')
       })
       .catch((error) => {
               alert(error)
@@ -1027,7 +1026,6 @@ ringPhn=()=>{
   };
 
   render() {
-    console.tron.log(this.state.messages)
     // if(!this.state.isLoading) {
     return (
       <Container>
@@ -1153,6 +1151,7 @@ ringPhn=()=>{
             // messageIdGenerator={(messages)=>this.messageIdGenerator(messages)}
             extraData={this.state.participants}
             alwaysShowSend
+            showAvatarForEveryMessage
             onSend={messages => this.onSend(messages[0], 'message', this.state.fileToUpload)}
             focusTextInput={() => this.setState({ showEmoji: false })}
             user={{
@@ -1279,12 +1278,14 @@ ringPhn=()=>{
       let imageName = "/IMG" + new Date().getTime() + ".jpg";
 
       let dirs = RNFetchBlob.fs.dirs.DocumentDir;
-      let path = `${dirs}/${url}`+imageName ;
-console.tron.log(url)
-      const newUrl = url.includes('tippinweb.com/') ? url : `https://tippinweb.com/download/messenger/${url}`
+      let path = `${dirs}`+imageName ;
+
+      const newUrl = url.includes(`${config.api.uri}/`) ? url : `https://${config.api.uri}/download/messenger/${url}`
 
      RNFetchBlob.config({
           indicator: true,
+          fileCache: true,
+       appendExt : 'jpeg',
           path: path,
           addAndroidDownloads: {
             useDownloadManager: true,
@@ -1294,7 +1295,6 @@ console.tron.log(url)
         }).fetch("GET", newUrl, {
        Authorization: `Bearer ${this.props.auth.accessToken}`,
     }).then( res => {
-      console.tron.log(res)
          if (res && res.path()) {
            const filePath = res.path()
            let options = {
@@ -1302,7 +1302,7 @@ console.tron.log(url)
              url: filePath
            }
            if (options.type.includes('image')) {
-             CameraRoll.saveToCameraRoll(res.data, 'photo').then(() => {
+             CameraRoll.save(res.data, {type:'photo'}).then(() => {
                Alert.alert(
                  'Save remote Image',
                  'Image Saved Successfully',
@@ -1623,32 +1623,23 @@ console.tron.log(url)
   renderImage = props => {
     return (
       <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
-        {props.position === 'right' ?
+        {props.position === 'right' &&
         <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.image)}>
                 <FontAwesome5 name="download" size={15} color="green" />
                 {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
-                </TouchableOpacity>
-        : null }
-
-
-        {/* <TouchableOpacity style={{position:'absolute',zIndex:1,left:0}}>
-        <FontAwesome5 name="download" size={20} color="green" />
-        </TouchableOpacity> */}
+                </TouchableOpacity>}
 
         <Lightbox
-          activeProps={{ style:styles.imageActive
-          }}
+          activeProps={{ style:styles.imageActive }}
           >
           <FastImage
             style={[styles.image,]}
             resizeMode={FastImage.resizeMode.cover}
             source={{
-              // uri: `https://${props.currentMessage.image}`,
               uri: props.currentMessage.image,
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },
-              // priority: FastImage.priority.high,
             }}
           />
         </Lightbox>
