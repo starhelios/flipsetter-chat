@@ -24,10 +24,6 @@ class SearchBar extends Component{
         keyboard: false,
     }
 
-    constructor(props) {
-        super(props);
-
-    }
 
     componentDidMount(){
         // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth:1,
         borderColor:"#d9d9d9",
-       
+
     },
     icon:{
         alignItems:'center',
@@ -156,7 +152,7 @@ const styles = StyleSheet.create({
         fontSize:22,
         alignSelf:'center',
         padding:5,
-      
+
         paddingRight: 48,
         color: '#000',
         // backgroundColor:'red'

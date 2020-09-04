@@ -19,7 +19,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-//import com.oney.WebRTCModule.WebRTCModulePackage;
+// import com.oney.WebRTCModule.WebRTCModulePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

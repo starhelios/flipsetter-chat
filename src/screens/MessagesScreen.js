@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Platform,
+  PermissionsAndroid,
   Image,
   TouchableOpacity,
   ActivityIndicator,
@@ -1272,25 +1273,35 @@ ringPhn=()=>{
     // }
   }
 
-  downloadFileFromServ = (url) => {
+  hasAndroidPermission = async () => {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
+
+  downloadFileFromServ = async (url) => {
 
       let imageName = "/IMG" + new Date().getTime() + ".jpg";
 
-      let dirs = RNFetchBlob.fs.dirs.DocumentDir;
-      let path = `${dirs}`+imageName ;
+      let dirs = Platform.OS==='ios' ? RNFetchBlob.fs.dirs.DocumentDir : RNFetchBlob.fs.dirs.DownloadDir;
+      let path = url.includes(`${config.api.uri}/`) ? `${dirs}${imageName}` : `${dirs}/${url}`;
 
       const newUrl = url.includes(`${config.api.uri}/`) ? url : `https://${config.api.uri}/download/messenger/${url}`
+
+      if (Platform.OS === "android" && !(await this.hasAndroidPermission())) {
+        return;
+      }
 
      RNFetchBlob.config({
           indicator: true,
           fileCache: true,
-       appendExt : 'jpeg',
           path: path,
-          addAndroidDownloads: {
-            useDownloadManager: true,
-            notification: true,
-            path: path,
-          },
         }).fetch("GET", newUrl, {
        Authorization: `Bearer ${this.props.auth.accessToken}`,
     }).then( res => {
@@ -1319,16 +1330,14 @@ ringPhn=()=>{
                })
            } else {
 
-             Share.open(options)
+             Platform.OS === 'ios' ? Share.open(options) : Alert.alert('Success', 'File Saved Successfully')
            }
 
          }
           console.tron.log(res, 'end downloaded')
-        })
-          .catch((error) => {
-            alert(error)
+        }).catch((error) => {
+            Alert.alert('Error', error)
           })
-
 
 
 

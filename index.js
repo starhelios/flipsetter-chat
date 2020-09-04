@@ -17,10 +17,10 @@ YellowBox.ignoreWarnings([
 
 AppRegistry.registerComponent(appName, () => App);
 
-if (Platform.OS === 'android') {
-  // Used to launch call from android phone app
-  AppRegistry.registerHeadlessTask('RNCallKeepBackgroundMessage', () => () => Promise.resolve());
-
-  // Used to receive Firebase messages while app is closed
-  AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => Promise.resolve);
-}
+// if (Platform.OS === 'android') {
+//   // Used to launch call from android phone app
+//   AppRegistry.registerHeadlessTask('RNCallKeepBackgroundMessage', () => () => Promise.resolve());
+//
+//   // Used to receive Firebase messages while app is closed
+//   AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => Promise.resolve);
+// }

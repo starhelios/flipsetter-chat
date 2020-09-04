@@ -11,7 +11,6 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import android.content.Intent; // <--- import
 import android.content.res.Configuration; // <--- import
 
- 
 public class MainActivity extends ReactActivity {
 
   /**
