@@ -348,7 +348,6 @@ class MessagesScreen extends Component {
     return true;
   }
 
-
   playSound = () => {
     const whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
@@ -373,7 +372,7 @@ class MessagesScreen extends Component {
     });
   };
 
-ringPhn=()=>{
+  ringPhn=()=>{
   this.playSound();
 }
 
@@ -392,6 +391,7 @@ ringPhn=()=>{
   play = () => {
     this.player.playVideo();
   };
+
   pause = () => {
     this.player.pauseVideo();
   };
@@ -682,22 +682,17 @@ ringPhn=()=>{
     //   this.props.navigation.navigate('Whiteboard');
     // }
   };
+
   openCamera = () => {
     this.setState({ openPicker: false, isDoc: false });
     ImagePicker.openCamera({
       // width: 300,
       // height: 400,
       // compressImageQuality: 0.8,
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
-      mime: 'jpg',
-      cropping: true,
       includeBase64: true,
       multiple: true,
     })
       .then(imag => {
-
-
         let nm = this.generateName();
         const file = {
           name: "img" + nm + ".jpg",
@@ -738,9 +733,7 @@ ringPhn=()=>{
       .catch(e => { });
   };
 
-
-
-   pickDocument = async () => {
+  pickDocument = async () => {
     this.setState({ openPicker: false, isDoc: false });
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -966,37 +959,6 @@ ringPhn=()=>{
       .catch((error) => {
               alert(error)
             })
-
-
-
-
-
-  //   new Promise((resolve, reject) => {
-  //     let fileName = "IMG" + new Date().getTime() + ".png";
-  //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;
-  //     // const destPathAndroid = `${DocumentDirectoryPath}` +'/' + fileName;
-  //     const destPathIOS = `${DocumentDirectoryPath}` + "/MyCollaborateFiles/" + fileName;
-  //  console.log(destPathAndroid)
-  //  console.log(MainBundlePath +"ff")
-
-  //     const destPath = Platform.OS === 'ios' ? destPathIOS : destPathAndroid;
-  //     downloadFile({
-  //       fromUrl: fileUrl,
-  //       toFile: destPath
-  //     }).promise.then(result => {
-  //       if (result.statusCode == 200) {
-  //         alert("done")
-  //         resolve(destPath);
-  //       }
-  //       else {
-  //         reject("Unable to download");
-  //       }
-
-  //     }).catch((error) => {
-  //       // alert(error)
-  //       reject("Unable to download");
-  //     })
-  //   });
   }
 
   cancelImage = index => {
@@ -1285,30 +1247,39 @@ ringPhn=()=>{
     return status === 'granted';
   }
 
-  downloadFileFromServ = async (url) => {
+  downloadFileFromServ = async (url, filename) => {
+
+    const uri = config.env === 'dev' ? `${config.dev.uri}` : `${config.prod.uri}`;
 
       let imageName = "/IMG" + new Date().getTime() + ".jpg";
 
       let dirs = Platform.OS==='ios' ? RNFetchBlob.fs.dirs.DocumentDir : RNFetchBlob.fs.dirs.DownloadDir;
-      let path = url.includes(`${config.api.uri}/`) ? `${dirs}${imageName}` : `${dirs}/${url}`;
+      let path = url.includes(`${config.api.uri}/`) ? `${dirs}${imageName}` : `${dirs}/${filename}`;
 
-      const newUrl = url.includes(`${config.api.uri}/`) ? url : `https://${config.api.uri}/download/messenger/${url}`
+      const newUrl = url.includes(`${uri}/`) ? url : `https://${uri}/download/messenger/${url}`
+
+    console.tron.log(newUrl)
 
       if (Platform.OS === "android" && !(await this.hasAndroidPermission())) {
         return;
       }
 
-     RNFetchBlob.config({
-          indicator: true,
-          fileCache: true,
-          path: path,
+      RNFetchBlob.config({
+        indicator: true,
+        fileCache: true,
+        path,
         }).fetch("GET", newUrl, {
        Authorization: `Bearer ${this.props.auth.accessToken}`,
     }).then( res => {
+        console.tron.log(res)
+      if(res.info().status === 404){
+        Alert.alert('Error', 'File not founded on server')
+        return
+      }
          if (res && res.path()) {
            const filePath = res.path()
            let options = {
-             type: get(res,'respInfo.headers.Content-Type'),
+             type: get(res,'respInfo.headers.Content-Type', get(res,'respInfo.headers.content-type', 'another')),
              url: filePath
            }
            if (options.type.includes('image')) {
@@ -1336,39 +1307,8 @@ ringPhn=()=>{
          }
           console.tron.log(res, 'end downloaded')
         }).catch((error) => {
-            Alert.alert('Error', error)
-          })
-
-
-
-
-
-      //   new Promise((resolve, reject) => {
-      //     let fileName = "IMG" + new Date().getTime() + ".png";
-      //     const destPathAndroid = `${ExternalStorageDirectoryPath}` + "/Download/" + fileName;
-      //     // const destPathAndroid = `${DocumentDirectoryPath}` +'/' + fileName;
-      //     const destPathIOS = `${DocumentDirectoryPath}` + "/MyCollaborateFiles/" + fileName;
-      //  console.log(destPathAndroid)
-      //  console.log(MainBundlePath +"ff")
-
-      //     const destPath = Platform.OS === 'ios' ? destPathIOS : destPathAndroid;
-      //     downloadFile({
-      //       fromUrl: fileUrl,
-      //       toFile: destPath
-      //     }).promise.then(result => {
-      //       if (result.statusCode == 200) {
-      //         alert("done")
-      //         resolve(destPath);
-      //       }
-      //       else {
-      //         reject("Unable to download");
-      //       }
-
-      //     }).catch((error) => {
-      //       // alert(error)
-      //       reject("Unable to download");
-      //     })
-      //   });
+            Alert.alert('Error', error.message)
+        })
   }
 
   renderAvatar = props => {
@@ -1423,7 +1363,6 @@ ringPhn=()=>{
       </View>
 
     ) : (
-
         props.currentMessage.file ?
           <View style={{
             borderColor: 'grey', alignItems: 'center', width:wp('60%'),
@@ -1431,7 +1370,7 @@ ringPhn=()=>{
             alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
             marginLeft: 50,
           }}>
-            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.file)}>
+            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>this.downloadFileFromServ(props.currentMessage._id, props.currentMessage.file)}>
               <FontAwesome5 name="download" size={10} color="green" />
               <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
             </TouchableOpacity>
@@ -1634,7 +1573,7 @@ ringPhn=()=>{
     return (
       <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
         {props.position === 'right' &&
-        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.image)}>
+        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.imageBig)}>
                 <FontAwesome5 name="download" size={15} color="green" />
                 {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
                 </TouchableOpacity>}

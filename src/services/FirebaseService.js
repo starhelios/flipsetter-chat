@@ -24,7 +24,7 @@ class FirebaseService extends Component<Props> {
     // this.props.storeThreads({});
   }
 
-  async componentDidMount(): void {
+  async componentDidMount() {
     this._checkPermission();
     const device_token = await messaging().getToken();
     this.props.setDeviceToken(device_token);
@@ -57,29 +57,25 @@ class FirebaseService extends Component<Props> {
       });
   }
 
-  componentWillUnmount(): void {
+  componentWillUnmount() {
     if (this.fcmTokenListener) {
       this.fcmTokenListener();
     }
     if (this.fcmTokenListener) {
       this.messageListener();
     }
-    if (this.fcmTokenListener) {
+    if (this.fcmTokenListener && this.removeNotificationDisplayedListener) {
       this.removeNotificationDisplayedListener();
     }
     if (this.fcmTokenListener) {
       this.removeNotificationListener();
     }
-    if (this.fcmTokenListener) {
+    if (this.fcmTokenListener && this.notificationOpenedListener) {
       this.notificationOpenedListener();
     }
   }
 
-  async componentDidUpdate(
-    prevProps: Readonly<P>,
-    prevState: Readonly<S>,
-    snapshot: SS,
-  ): void {
+  async componentDidUpdate() {
     // if(prevProps.app.fcm_token !== this.props.app.fcm_token || prevProps.app.voip_token !== this.props.app.voip_token || prevProps.app.device_id !== this.props.app.device_id){
     //     await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)
     // }
@@ -136,8 +132,8 @@ class FirebaseService extends Component<Props> {
     });
     console.log('Message listener');
     this.messageListener = messaging().onMessage(message => {
-      console.log('Message', message);
-      let data = JSON.parse(message._data.extraPayload);
+      console.tron.log('Message', message);
+      let data = JSON.parse(message.data.extraPayload);
       switch (data.notification_type) {
         case 0:
           this.messageReceived(message);
@@ -155,10 +151,10 @@ class FirebaseService extends Component<Props> {
     //notification received
     console.log('notification listener');
 
-    this.removeNotificationListener = messaging().onNotification(
+    this.removeNotificationListener = messaging().onNotificationOpenedApp(
       async (notification: Notification) => {
         console.log('Notification', notification);
-        let data = JSON.parse(notification._data.extraPayload);
+        let data = JSON.parse(notification.data.extraPayload);
         console.log('Notification Case', data.notification_type);
         switch (data.notification_type) {
           case 0:
@@ -183,12 +179,12 @@ class FirebaseService extends Component<Props> {
 
     //Notification was displayed
     this.removeNotificationDisplayedListener = messaging().onNotificationDisplayed(
-      async (notification: Notification) => {
+      async (notification) => {
         // console.log("N1", notification);
         // console.log(this.props.threads.activeThread);
 
         //notification displayed but not opened
-        if (notification._data.thread_id !== this.props.threads.activeThread) {
+        if (notification.data.thread_id !== this.props.threads.activeThread) {
           const badgeCount = await messaging().getBadge();
           messaging().setBadge(badgeCount + 1);
         }
@@ -200,7 +196,7 @@ class FirebaseService extends Component<Props> {
 
     //User Opened/interacted with the notification
     console.log('Notification opened');
-    this.notificationOpenedListener = messaging().onNotificationOpened(
+    this.notificationOpenedListener = messaging().onNotificationOpenedApp(
       async (notificationOpen: NotificationOpen) => {
         // Get the action triggered by the notification being opened
         //notification displayed but not opened
@@ -214,7 +210,7 @@ class FirebaseService extends Component<Props> {
         // const data = notification._data
         // console.log("opened", data);
         let notification = notificationOpen.notification;
-        let data = notification._data;
+        let data = notification.data;
 
         console.log('Im inside notification opened');
         console.log(data);
@@ -233,7 +229,7 @@ class FirebaseService extends Component<Props> {
       });
       VoipPushNotification.addEventListener('notification', notification => {
         console.log('VOIP', notification);
-        let data = notification._data.extraPayload;
+        let data = notification.data.extraPayload;
         this.newCall(notification, data);
       });
     }

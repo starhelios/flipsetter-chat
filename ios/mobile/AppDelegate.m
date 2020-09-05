@@ -21,7 +21,8 @@
 #import "RNVoipPushNotificationManager.h"
 //Firebase
 #import <Firebase.h>
-
+// add this import statement at the top of your `AppDelegate.m` file
+#import "RNFBMessagingModule.h"
 //SplashScreen
 #import "RNSplashScreen.h"
 //AppCenter Analytics
@@ -56,9 +57,9 @@
 //    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
   }
 }
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-//  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
-}
+//- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+////  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
+//}
 
 /* Add PushKit delegate method */
 
@@ -101,10 +102,16 @@ completion();
   [FIRApp configure];
 //  [RNFirebaseNotifications configure];
   
+  // in "(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions" method
+  // Use `addCustomPropsToUserProps` to pass in props for initialization of your app
+  // Or pass in `nil` if you have none as per below example
+  // For `withLaunchOptions` please pass in `launchOptions` object
+  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
+
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"mobile"
-                                            initialProperties:nil];
+                                            initialProperties:appProperties];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
