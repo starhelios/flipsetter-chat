@@ -143,11 +143,14 @@ export default class Thumbnail extends PureComponent {
       >
         <View style={[containerStyle, {width: '100%',
           borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,}]}>
+          borderTopRightRadius: 10}]}>
           <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
             backgroundColor: 'green',
             borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,}} >
+            borderTopRightRadius: 10,
+            height: 40}} >
           <Text style={{
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
