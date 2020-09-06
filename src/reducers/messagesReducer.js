@@ -78,7 +78,7 @@ export default function(state =initialState, action){
                         newMessage =
                             {
                                 _id: message.message_id,
-                                image: `https://${config.api.uri}/${config.api.images.messengerPhoto(message.message_id, message.body)}`,
+                                image: `https://${config.api.uri}/${config.api.images.messengerPhoto(message.message_id)}`,
                                 imageBig: `https://${config.api.uri}/${config.api.images.messengerPhoto(message.message_id, message.body)}`,
                                 createdAt: message.created_at,
                                 user: {

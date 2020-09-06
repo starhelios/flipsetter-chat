@@ -1585,7 +1585,7 @@ class MessagesScreen extends Component {
             style={[styles.image,]}
             resizeMode={FastImage.resizeMode.cover}
             source={{
-              uri: props.currentMessage.image,
+              uri: props.currentMessage.imageBig,
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },
@@ -1594,7 +1594,7 @@ class MessagesScreen extends Component {
         </Lightbox>
 
         {Boolean(props.position === 'left') &&
-        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.image)}>
+        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.imageBig)}>
         <FontAwesome5 name="download" size={15} color="green" />
         {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
         </TouchableOpacity>}
