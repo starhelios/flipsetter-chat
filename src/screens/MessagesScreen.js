@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Keyboard,
   Alert,
-  BackHandler,
+  BackHandler, Linking,
 } from 'react-native';
 import Share from 'react-native-share'
 import noop from 'lodash/noop'
@@ -1259,6 +1259,7 @@ class MessagesScreen extends Component {
       const newUrl = url.includes(`${uri}/`) ? url : `https://${uri}/download/messenger/${url}`
 
     console.tron.log(newUrl)
+    console.tron.log(this.props.auth.accessToken)
 
       if (Platform.OS === "android" && !(await this.hasAndroidPermission())) {
         return;
@@ -1266,11 +1267,12 @@ class MessagesScreen extends Component {
 
       RNFetchBlob.config({
         indicator: true,
-        fileCache: true,
         path,
-        }).fetch("GET", newUrl, {
-       Authorization: `Bearer ${this.props.auth.accessToken}`,
-    }).then( res => {
+        }).fetch("get", newUrl, {
+          'Authorization': `Bearer ${this.props.auth.accessToken}`,
+        },
+        'base64string',
+      ).then( res => {
         console.tron.log(res)
       if(res.info().status === 404){
         Alert.alert('Error', 'File not founded on server')
@@ -1344,7 +1346,7 @@ class MessagesScreen extends Component {
       }
       thumbNail = true
     }
-
+console.tron.log(props.currentMessage)
     return thumbNail ? (
       <View style={{
         borderRadius: 10, borderWidth: 0, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
@@ -1375,8 +1377,8 @@ class MessagesScreen extends Component {
               <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
             </TouchableOpacity>
             <View style={{flexDirection:'row',alignItems:'center', width: '100%'}}>
-              <Image source={props.currentMessage.file.split('.')[1].trim() === 'ppt' ? Images.ppt : props.currentMessage.file.split('.')[1].trim() === 'zip' ? Images.zip :
-                props.currentMessage.file.split('.')[1].trim() === 'docx' ? Images.doc : props.currentMessage.file.split('.')[1].trim() === 'pdf' ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
+              <Image source={props.currentMessage.file.includes('.ppt') ? Images.ppt : props.currentMessage.file.includes('.zip') ? Images.zip :
+                props.currentMessage.file.includes('.docx') ? Images.doc : props.currentMessage.file.includes('.pdf') ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
               <Text style={{ color: 'black', textAlign: props.position === 'left' ? 'left' : 'right', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold', flex: 1, }} numberOfLines={1} ellipsizeMode='head'>{props.currentMessage.file}</Text>
             </View>
           </View>
@@ -1582,8 +1584,8 @@ class MessagesScreen extends Component {
           activeProps={{ style:styles.imageActive }}
           >
           <FastImage
-            style={[styles.image,]}
-            resizeMode={FastImage.resizeMode.cover}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
             source={{
               uri: props.currentMessage.imageBig,
               headers: {
@@ -1747,8 +1749,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 13,
-    marginTop: 3, marginBottom: 3,
-    resizeMode: 'cover',
+    marginTop: 3,
+    marginBottom: 3,
   },
   imageActive: {
     flex: 1,
