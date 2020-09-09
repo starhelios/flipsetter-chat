@@ -875,7 +875,7 @@ class MessagesScreen extends Component {
             alignSelf: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => this.setState({ openPicker: true, showEmoji: false },this.ringPhn)}>
+          onPress={() => this.setState({ openPicker: true, showEmoji: false })}>
           <Image
             resizeMode="contain"
             source={Images.attachmentIcon}
@@ -1587,7 +1587,7 @@ class MessagesScreen extends Component {
             style={styles.image}
             resizeMode={FastImage.resizeMode.contain}
             source={{
-              uri: props.currentMessage.imageBig,
+              uri: props.currentMessage.image,
               headers: {
                 Authorization: `Bearer ${this.props.auth.accessToken}`,
               },
