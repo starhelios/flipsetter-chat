@@ -1346,7 +1346,7 @@ class MessagesScreen extends Component {
       }
       thumbNail = true
     }
-console.tron.log(props.currentMessage)
+
     return thumbNail ? (
       <View style={{
         borderRadius: 10, borderWidth: 0, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
