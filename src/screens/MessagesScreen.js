@@ -1284,7 +1284,7 @@ class MessagesScreen extends Component {
              type: get(res,'respInfo.headers.Content-Type', get(res,'respInfo.headers.content-type', 'another')),
              url: filePath
            }
-           if (options.type.includes('image')) {
+           if (options.type.includes('image') && Platform.OS === 'ios') {
              CameraRoll.save(res.data, {type:'photo'}).then(() => {
                Alert.alert(
                  'Save remote Image',
