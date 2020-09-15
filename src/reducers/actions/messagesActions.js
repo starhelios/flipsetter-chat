@@ -6,6 +6,8 @@ import config from '../../config';
 const actionTypes = {
   GET_MESSAGES: 'GET_MESSAGES',
   GET_MESSAGES_SUCCESS: 'GET_MESSAGES_SUCCESS',
+  GET_EARLIER_MESSAGES: 'GET_EARLIER_MESSAGES',
+  GET_EARLIER_MESSAGES_SUCCESS: 'GET_EARLIER_MESSAGES_SUCCESS',
   SEND_MESSAGE: 'SEND_MESSAGE',
   SEND_MESSAGE_SUCCESS: 'SEND_MESSAGE_SUCCESS',
   ADD_MESSAGE: 'ADD_MESSAGE',
@@ -34,6 +36,25 @@ export function getMessages(id) {
     },
   };
 }
+export function getEarlierMessages(threadId, messageId) {
+  return {
+    type: actionTypes.GET_EARLIER_MESSAGES,
+    payload: {
+      request: {
+        method: 'GET',
+        url: `${config.api.messenger.get.getEarlierMessages(
+          threadId,
+          messageId,
+        )}`,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+      threadId,
+    },
+  };
+}
 export function sendMessage(id, message, type, file) {
   let data = {};
   if (type === 'message') {
@@ -43,20 +64,18 @@ export function sendMessage(id, message, type, file) {
       message: message.text,
     };
   } else if (type === 'img') {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('type', 'store_message');
     formData.append('temp_id', message._id);
     formData.append('image_file', file);
     data = formData;
   } else {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('type', 'store_message');
     formData.append('temp_id', message._id);
     formData.append('doc_file', file);
     data = formData;
   }
-
-  // alert(JSON.stringify(data))
   return {
     type: actionTypes.SEND_MESSAGE,
     payload: {
@@ -67,7 +86,8 @@ export function sendMessage(id, message, type, file) {
         headers: {
           Authorization: null,
           Accept: 'application/json',
-          'Content-Type': type === 'message' ? 'application/json' : 'multipart/form-data',
+          'Content-Type':
+            type === 'message' ? 'application/json' : 'multipart/form-data',
         },
       },
     },
@@ -86,21 +106,29 @@ export function markRead(id) {
 }
 
 export function addMessage(thread, message) {
-  return { type: actionTypes.ADD_MESSAGE, payload: { thread, message } };
+  return {type: actionTypes.ADD_MESSAGE, payload: {thread, message}};
 }
 
 export function updateMessage(thread, message) {
-  return { type: actionTypes.UPDATE_MESSAGE, payload: { thread, message } };
+  return {type: actionTypes.UPDATE_MESSAGE, payload: {thread, message}};
 }
 
 export function addMessages(thread, messages) {
-  return { type: actionTypes.ADD_MESSAGES, payload: { thread, messages } };
+  return {type: actionTypes.ADD_MESSAGES, payload: {thread, messages}};
 }
 
 function clearMessages() {
-  return { type: actionTypes.CLEAR_MESSAGES };
+  return {type: actionTypes.CLEAR_MESSAGES};
 }
 
 export default {
-  actionTypes, getMessages, sendMessage, markRead, addMessage, updateMessage, addMessages, clearMessages,
+  actionTypes,
+  getMessages,
+  getEarlierMessages,
+  sendMessage,
+  markRead,
+  addMessage,
+  updateMessage,
+  addMessages,
+  clearMessages,
 };

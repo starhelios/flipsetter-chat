@@ -8,20 +8,21 @@ import {
   ActivityIndicator,
   Keyboard,
   Alert,
-  BackHandler, Linking,
+  BackHandler,
+  Linking,
 } from 'react-native';
-import Share from 'react-native-share'
-import noop from 'lodash/noop'
-import map from 'lodash/map'
-import get from 'lodash/get'
+import Share from 'react-native-share';
+import noop from 'lodash/noop';
+import map from 'lodash/map';
+import get from 'lodash/get';
 import CameraRoll from '@react-native-community/cameraroll';
-import ShareMenu, { ShareMenuReactView } from "react-native-share-menu";
+import ShareMenu, {ShareMenuReactView} from 'react-native-share-menu';
 
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
 import Sound from 'react-native-sound';
 import YouTube from 'react-native-youtube';
-import RNFetchBlob from "rn-fetch-blob";
+import RNFetchBlob from 'rn-fetch-blob';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import {
@@ -32,23 +33,23 @@ import {
   Body,
   Right,
   Text,
-  Button
+  Button,
 } from 'native-base';
 
-import { withNavigationFocus } from 'react-navigation';
+import {withNavigationFocus} from 'react-navigation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {GiftedChat, Send} from 'react-native-gifted-chat';
 import Lightbox from 'react-native-lightbox';
-import { emojify } from 'react-emojione';
-import { withSocketContext } from '../components/Socket';
-import { App, Auth, User, Threads, Messages, Call } from '../reducers/actions';
-import { connect } from 'react-redux';
+import {emojify} from 'react-emojione';
+import {withSocketContext} from '../components/Socket';
+import {App, Auth, User, Threads, Messages, Call} from '../reducers/actions';
+import {connect} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import Bubble from 'react-native-gifted-chat/lib/Bubble';
 import Message from 'react-native-gifted-chat/lib/Message';
-import { AllHtmlEntities as entities } from 'html-entities';
-import { DotsLoader } from 'react-native-indicator';
-import { isSameUser, isSameDay } from 'react-native-gifted-chat/lib/utils';
+import {AllHtmlEntities as entities} from 'html-entities';
+import {DotsLoader} from 'react-native-indicator';
+import {isSameUser, isSameDay} from 'react-native-gifted-chat/lib/utils';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -57,11 +58,13 @@ import config from '../config';
 import CustomPickerView from '../components/PickerView';
 import DocumentPicker from 'react-native-document-picker';
 import CustomModal from '../components/CustomModal';
-import EmojiSelector, { Categories } from '../components/react-native-emoji-selector';
+import EmojiSelector, {
+  Categories,
+} from '../components/react-native-emoji-selector';
 
 import Images from '../config/Images';
 
-import { Thumbnail } from '../components/react-native-thumbnail-video';
+import {Thumbnail} from '../components/react-native-thumbnail-video';
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
@@ -70,67 +73,80 @@ import { Thumbnail } from '../components/react-native-thumbnail-video';
 // GiphyUi.configure('g1zE0iMVRsYdw03HXZfRd3ivUjxEywFB');
 
 class MessagesScreen extends Component {
-  messages = [];
-  activeThread = this.props.navigation.getParam('thread');
-
-  state = {
-    isLoading: true,
-    threadAvatar: null,
-    messages: this.props.messages.messages.hasOwnProperty(
-      this.props.navigation.getParam('thread'),
-    )
-      ? [
-        ...this.props.messages.messages[
-        this.props.navigation.getParam('thread')
-        ],
-      ]
-      : null,
-    renderMessages: false,
-    participants: {},
-    bobbles: {},
-    typers: {},
-    selectedImages: [],
-    startedTyping: null,
-    activeCall: null,
-    typedMsg: '',
-    openPicker: false,
-    openGif: false,
-    showEmoji: false,
-    showModal: false,
-    doc: false,
-    showWebView: false,
-    selectedLink: '',
-    fullScreen: false,
-    videoUri: '',
-    videoData: {},
-    Img: '',
-    fileToUpload: {},
-    fileToUploadArray: [],
-    isDoc: false
-  };
-
   constructor(props) {
     super(props);
+    this.messages = [];
+    this.activeThread = this.props.navigation.getParam('thread');
+
+    this.state = {
+      isLoading: true,
+      threadAvatar: null,
+      messages: this.props.messages.messages.hasOwnProperty(
+        this.props.navigation.getParam('thread'),
+      )
+        ? [
+            ...this.props.messages.messages[
+              this.props.navigation.getParam('thread')
+            ],
+          ]
+        : null,
+      renderMessages: false,
+      participants: {},
+      bobbles: {},
+      typers: {},
+      selectedImages: [],
+      startedTyping: null,
+      activeCall: null,
+      typedMsg: '',
+      openPicker: false,
+      openGif: false,
+      showEmoji: false,
+      showModal: false,
+      doc: false,
+      showWebView: false,
+      selectedLink: '',
+      fullScreen: false,
+      videoUri: '',
+      videoData: {},
+      Img: '',
+      fileToUpload: {},
+      fileToUploadArray: [],
+      isDoc: false,
+      hasOldMessages: true,
+      isLoadingEarlierMessages: false,
+      lastMessageId: null,
+    };
     this.echo = props.socket;
     this.typeInterval = 0;
   }
 
   generateId() {
-    return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 14);
+    return (
+      Math.random().toString(36).substring(2, 10) +
+      '-' +
+      Math.random().toString(36).substring(2, 6) +
+      '-' +
+      Math.random().toString(36).substring(2, 6) +
+      '-' +
+      Math.random().toString(36).substring(2, 14)
+    );
   }
 
   generateName() {
-    return Math.random().toString(36).substring(2, 10) + '-' + Math.random().toString(36).substring(2, 6);
+    return (
+      Math.random().toString(36).substring(2, 10) +
+      '-' +
+      Math.random().toString(36).substring(2, 6)
+    );
   }
 
   async componentDidMount() {
-
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
 
-    this.props.getUser()
+    this.props.getUser();
 
     this.props.setActiveThread(this.activeThread);
     //Let's update the thread
@@ -141,7 +157,7 @@ class MessagesScreen extends Component {
       // this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
       if (
         typeof this.echo.socket.connector.channels[
-        `presence-thread_${this.props.navigation.getParam('thread')}`
+          `presence-thread_${this.props.navigation.getParam('thread')}`
         ] !== 'undefined'
       ) {
         this.echo.socket.connector.channels[
@@ -164,7 +180,7 @@ class MessagesScreen extends Component {
     }
 
     this.typeInterval = setInterval(this._updateTypers, 2000);
-    const { app } = this.props;
+    const {app} = this.props;
     //Is there an active call for this thread?
     let activeCall = null;
     if (
@@ -174,7 +190,7 @@ class MessagesScreen extends Component {
       app.heartbeat.data.states.active_calls != null
     )
       activeCall = this.props.app.heartbeat.data.states.active_calls.filter(
-        call => call.thread_id === this.activeThread,
+        (call) => call.thread_id === this.activeThread,
       )[0];
     if (activeCall) {
       this.setState({
@@ -190,11 +206,7 @@ class MessagesScreen extends Component {
     // AppState.addEventListener('change', this._handleAppStateChange);
   }
 
-  async componentDidUpdate(
-    prevProps,
-    prevState,
-    snapshot,
-  ) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     //check if messages updated and if most recent message matches the sender's recent message
     // console.log("MESSAGES", this.state.messages)
     //Check if we need to refresh for a new thread (e.g. navigating to messages while already on it)
@@ -222,11 +234,14 @@ class MessagesScreen extends Component {
         ) {
           this.bobbleHeads(update.payload.data.bobble_heads);
           // alert(JSON.stringify(this.props.messages.messages[this.activeThread]))
-          this.setState({
-            messages: this.props.messages.messages[this.activeThread],
-            isLoading: false,
-            renderMessages: true,
-          }, this.ringPhn);
+          this.setState(
+            {
+              messages: this.props.messages.messages[this.activeThread],
+              isLoading: false,
+              renderMessages: true,
+            },
+            this.ringPhn,
+          );
         }
       }
     }
@@ -244,13 +259,16 @@ class MessagesScreen extends Component {
       ) &&
       !this.state.messages
     ) {
-      this.setState({
-        messages: [
-          ...this.props.messages.messages[
-          this.props.navigation.getParam('thread')
+      this.setState(
+        {
+          messages: [
+            ...this.props.messages.messages[
+              this.props.navigation.getParam('thread')
+            ],
           ],
-        ],
-      },this.ringPhn);
+        },
+        this.ringPhn,
+      );
     }
     // alert("kk "+JSON.stringify(this.props.socket))
     //Make Sure socket is connected and if disconnects re-subscribe to restore connecction
@@ -260,7 +278,7 @@ class MessagesScreen extends Component {
     ) {
       if (
         typeof this.echo.socket.connector.channels[
-        `presence-thread_${this.props.navigation.getParam('thread')}`
+          `presence-thread_${this.props.navigation.getParam('thread')}`
         ] !== 'undefined'
       ) {
         this.echo.socket.connector.channels[
@@ -277,7 +295,7 @@ class MessagesScreen extends Component {
     }
 
     //Check for active calls from heartbeat
-    const { app } = this.props;
+    const {app} = this.props;
     if (
       typeof app.heartbeat !== undefined &&
       app.heartbeat !== null &&
@@ -291,11 +309,11 @@ class MessagesScreen extends Component {
       ) {
         console.log('went into if');
         let activeCall = this.props.app.heartbeat.data.states.active_calls.filter(
-          call => call.thread_id === this.activeThread,
+          (call) => call.thread_id === this.activeThread,
         )[0];
         // console.log("Current_call", activeCall);
         if (activeCall) {
-          this.setState({ activeCall: activeCall, renderMessage: true });
+          this.setState({activeCall: activeCall, renderMessage: true});
         } else {
           this.setState({
             activeCall: false,
@@ -310,18 +328,21 @@ class MessagesScreen extends Component {
         this.props.messages.messages[this.activeThread].length !==
         prevProps.messages.messages[this.activeThread].length
       ) {
-        this.setState({
-          messages: this.props.messages.messages.hasOwnProperty(
-            this.props.navigation.getParam('thread'),
-          )
-            ? [
-              ...this.props.messages.messages[
-              this.props.navigation.getParam('thread')
-              ],
-            ]
-            : null,
-          renderMessages: true,
-        }, this.ringPhn);
+        this.setState(
+          {
+            messages: this.props.messages.messages.hasOwnProperty(
+              this.props.navigation.getParam('thread'),
+            )
+              ? [
+                  ...this.props.messages.messages[
+                    this.props.navigation.getParam('thread')
+                  ],
+                ]
+              : null,
+            renderMessages: true,
+          },
+          this.ringPhn,
+        );
       }
     }
     if (
@@ -339,17 +360,17 @@ class MessagesScreen extends Component {
 
   handleBackButtonClick = () => {
     if (this.state.showWebView) {
-      this.setState({ showWebView: false });
+      this.setState({showWebView: false});
     } else {
-      this.setState({ showEmoji: false }, () => {
+      this.setState({showEmoji: false}, () => {
         this.props.navigation.goBack();
       });
     }
     return true;
-  }
+  };
 
   playSound = () => {
-    const whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+    const whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('failed to load the sound', error);
         return;
@@ -357,12 +378,12 @@ class MessagesScreen extends Component {
       // loaded successfully
       console.log(
         'duration in seconds: ' +
-        whoosh.getDuration() +
-        'number of channels: ' +
-        whoosh.getNumberOfChannels(),
+          whoosh.getDuration() +
+          'number of channels: ' +
+          whoosh.getNumberOfChannels(),
       );
       // Play the sound with an onEnd callback
-      whoosh.play(success => {
+      whoosh.play((success) => {
         if (success) {
           console.log('successfully finished playing');
         } else {
@@ -372,9 +393,9 @@ class MessagesScreen extends Component {
     });
   };
 
-  ringPhn=()=>{
-  this.playSound();
-}
+  ringPhn = () => {
+    this.playSound();
+  };
 
   componentWillUnmount() {
     BackHandler.removeEventListener(
@@ -396,26 +417,26 @@ class MessagesScreen extends Component {
     this.player.pauseVideo();
   };
 
-  seekTo = s => {
+  seekTo = (s) => {
     this.player.seekTo(s);
   };
 
   _listeners = () => {
     // this.private = this.echo.private(`user_notify_${this.user.user_id}`);
     this.thread
-      .here(users => {
+      .here((users) => {
         console.log('here', users);
       })
-      .joining(user => {
+      .joining((user) => {
         console.log('joining', user);
       })
-      .leaving(user => {
+      .leaving((user) => {
         console.log('leaving', user);
       })
-      .listenForWhisper('typing', data => {
+      .listenForWhisper('typing', (data) => {
         console.log('typing');
         if (data.typing && data.owner_id !== this.props.user.id) {
-          this.setState(state => ({
+          this.setState((state) => ({
             participants: {
               ...state.participants,
               [data.owner_id]: {
@@ -430,7 +451,7 @@ class MessagesScreen extends Component {
           }));
         } else {
           if (!data.typing) {
-            this.setState(state => ({
+            this.setState((state) => ({
               participants: {
                 ...this.state.participants,
                 [data.owner_id]: {
@@ -442,9 +463,9 @@ class MessagesScreen extends Component {
           }
         }
       })
-      .listenForWhisper('online', data => {
+      .listenForWhisper('online', (data) => {
         // alert(JSON.stringify(data))
-        this.setState(previousState => ({
+        this.setState((previousState) => ({
           participants: {
             ...previousState.participants,
             [data.owner_id]: {
@@ -455,11 +476,11 @@ class MessagesScreen extends Component {
           renderMessages: true,
         }));
       })
-      .listenForWhisper('read', data => {
+      .listenForWhisper('read', (data) => {
         console.log('read_whisper', data);
         //get current message user is in
         // let currentMessage = this.state.bobbles[this.state.bobbles.participants[data.owner_id].message_id]
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           // bobbles: {
           //     ...(prevState.bobbles.hasOwnProperty(prevState.participants[data.owner_id].message_id)) ?? delete prevState.bobbles[prevState.participants[data.owner_id].message_id][data.owner_id],
           //     // ...delete prevState.bobbles[this.state.participants[data.owner_id].message_id][data.owner_id],
@@ -482,7 +503,7 @@ class MessagesScreen extends Component {
 
   async onSend(message = [], type, file) {
     // alert(JSON.stringify(message))
-    this.setState({ openPicker: false, showEmoji: false });
+    this.setState({openPicker: false, showEmoji: false});
 
     // this.setState(prevState => ({
     //     messages: GiftedChat.append(prevState.messages, incoming),
@@ -504,12 +525,26 @@ class MessagesScreen extends Component {
         },
         temp_id: await message._id,
       };
-    }
-    else if (type === 'message') {
+    } else if (type === 'message') {
       incoming = {
         _id: await message._id,
         createdAt: message.createdAt,
-        text: message.text ? emojify(entities.decode(message.text), { output: 'unicode' }) : '',
+        text: message.text
+          ? emojify(entities.decode(message.text), {output: 'unicode'})
+          : '',
+        user: {
+          ...message.user,
+          // name: response.payload.data.message.name,
+        },
+        temp_id: await message._id,
+      };
+    } else {
+      let dt = Date.now();
+      let type = file.type.replace('application/', '.');
+      incoming = {
+        _id: await message._id,
+        createdAt: message.createdAt,
+        file: file.name + '_' + dt + type,
         user: {
           ...message.user,
           // name: response.payload.data.message.name,
@@ -517,27 +552,14 @@ class MessagesScreen extends Component {
         temp_id: await message._id,
       };
     }
-    else {
-      let dt = Date.now()
-      let type = file.type.replace("application/", ".");
-      incoming = {
-        _id: await message._id,
-        createdAt: message.createdAt,
-        file: file.name + "_" + dt + type,
-        user: {
-          ...message.user,
-          // name: response.payload.data.message.name,
-        },
-        temp_id: await message._id,
-      };
-    }
-
 
     //add messages to store
     await this.props.addMessage(this.activeThread, incoming);
     let response = await this.props.sendMessage(
       this.props.navigation.getParam('thread'),
-      message, type, file
+      message,
+      type,
+      file,
     );
     //
     // let updated = {
@@ -582,7 +604,7 @@ class MessagesScreen extends Component {
           refresh = true;
         }
       });
-      this.setState(state => ({
+      this.setState((state) => ({
         typers: {
           ...typers,
         },
@@ -595,7 +617,7 @@ class MessagesScreen extends Component {
     }
   };
 
-  bobbleHeads = data => {
+  bobbleHeads = (data) => {
     let list = {};
     let bobbles = {};
     // alert(JSON.stringify(data))
@@ -616,19 +638,19 @@ class MessagesScreen extends Component {
     );
   };
 
-  addEmoji = text => {
+  addEmoji = (text) => {
     // alert(text)
     let newMsg = this.state.typedMsg + text;
     this.setState(
-      { typedMsg: newMsg },
+      {typedMsg: newMsg},
       // , () => {
       //     this.inputTextChanged(newMsg)
       // }
     );
   };
 
-  inputTextChanged = text => {
-    this.setState({ typedMsg: text });
+  inputTextChanged = (text) => {
+    this.setState({typedMsg: text});
     let now = Date.now();
     if (
       this.state.startedTyping === null ||
@@ -646,7 +668,7 @@ class MessagesScreen extends Component {
     }
   };
 
-  joinCall = call => {
+  joinCall = (call) => {
     // console.log("Call", call);
     this.props.setCallId(call.call_id);
     this.props.setCallType(call.call_type);
@@ -657,7 +679,7 @@ class MessagesScreen extends Component {
     this.props.setCallStatus('joining');
   };
 
-  startCall = async type => {
+  startCall = async (type) => {
     this.ringPhn();
     let response;
     type === 1
@@ -684,7 +706,7 @@ class MessagesScreen extends Component {
   };
 
   openCamera = () => {
-    this.setState({ openPicker: false, isDoc: false });
+    this.setState({openPicker: false, isDoc: false});
     ImagePicker.openCamera({
       // width: 300,
       // height: 400,
@@ -692,54 +714,64 @@ class MessagesScreen extends Component {
       includeBase64: true,
       multiple: true,
     })
-      .then(imag => {
+      .then((imag) => {
         let nm = this.generateName();
         const file = {
-          name: "img" + nm + ".jpg",
+          name: 'img' + nm + '.jpg',
           type: imag.mime,
-          uri: Platform.OS === "android" ? imag.path : imag.path.replace("file://", ""),
-        }
+          uri:
+            Platform.OS === 'android'
+              ? imag.path
+              : imag.path.replace('file://', ''),
+        };
 
-        const imgs = [file]
+        const imgs = [file];
 
-        this.setState({ showModal: true, selectedImages: [imag], fileToUploadArray: imgs });
-
+        this.setState({
+          showModal: true,
+          selectedImages: [imag],
+          fileToUploadArray: imgs,
+        });
       })
-      .catch(e => {
-        alert(e)
+      .catch((e) => {
+        alert(e);
       });
   };
 
   openGallery = () => {
-    this.setState({ openPicker: false, isDoc: false });
+    this.setState({openPicker: false, isDoc: false});
     ImagePicker.openPicker({
       includeBase64: true,
       multiple: true,
     })
-      .then(images => {
+      .then((images) => {
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
           const file = {
-            name: "img" + nm + ".jpg",
+            name: 'img' + nm + '.jpg',
             type: res.mime,
             uri: Platform.OS === 'ios' ? `file:///${res.path}` : res.path,
-          }
+          };
 
-          imgs.push(file)
-        })
-        this.setState({ showModal: true, selectedImages: images, fileToUploadArray: imgs });
+          imgs.push(file);
+        });
+        this.setState({
+          showModal: true,
+          selectedImages: images,
+          fileToUploadArray: imgs,
+        });
       })
-      .catch(e => { });
+      .catch((e) => {});
   };
 
   pickDocument = async () => {
-    this.setState({ openPicker: false, isDoc: false });
+    this.setState({openPicker: false, isDoc: false});
     try {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
-      console.log(JSON.stringify(results))
+      console.log(JSON.stringify(results));
       let docs = [];
       results.map((res) => {
         // alert(JSON.stringify(res))
@@ -748,10 +780,16 @@ class MessagesScreen extends Component {
           name: res.name,
           type: res.type,
           uri: res.uri,
-        }
-        docs.push(file)
-      })
-      this.setState({ doc: true, isDoc: true, showModal: true, selectedImages: results, fileToUploadArray: docs });
+        };
+        docs.push(file);
+      });
+      this.setState({
+        doc: true,
+        isDoc: true,
+        showModal: true,
+        selectedImages: results,
+        fileToUploadArray: docs,
+      });
       // let s = results.length > 1 ? 's' : '';
       // alert("You have selected " +results.length + " Document"+s)
     } catch (err) {
@@ -760,10 +798,10 @@ class MessagesScreen extends Component {
         throw err;
       }
     }
-  }
+  };
 
   handleAddPicture = () => {
-    const { user } = this.props.user; // wherever you user data is stored;
+    const {user} = this.props.user; // wherever you user data is stored;
     const options = {
       title: 'Select Profile Pic',
       mediaType: 'photo',
@@ -773,14 +811,14 @@ class MessagesScreen extends Component {
       allowsEditing: true,
       noData: true,
     };
-    ImagePicker.openPicker(options, response => {
+    ImagePicker.openPicker(options, (response) => {
       console.log('Response = ', response);
       if (response.didCancel) {
         // do nothing
       } else if (response.error) {
         // alert error
       } else {
-        const { uri } = response;
+        const {uri} = response;
         const extensionIndex = uri.lastIndexOf('.');
         const extension = uri.slice(extensionIndex + 1);
         const allowedExtensions = ['jpg', 'jpeg', 'png'];
@@ -798,10 +836,10 @@ class MessagesScreen extends Component {
           type: correspondingMime[allowedExtensions.indexOf(extension)],
         };
         RNS3.put(file, options)
-          .progress(event => {
+          .progress((event) => {
             console.log(`percent: ${event.percent}`);
           })
-          .then(response => {
+          .then((response) => {
             console.log(response, 'response from rns3');
             if (response.status !== 201) {
               alert(
@@ -832,17 +870,22 @@ class MessagesScreen extends Component {
   };
 
   openEmoji = () => {
-
     Keyboard.dismiss();
 
-    this.ringPhn()
+    this.ringPhn();
     // this.ringPhn();
-    this.setState({ showEmoji: true, openPicker: false });
+    this.setState({showEmoji: true, openPicker: false});
   };
 
-  customSystemMessage = props => {
+  customSystemMessage = (props) => {
     return (
-      <View style={{ height: Platform.OS === 'ios' ? hp('6%') : hp('7.2%'), flexDirection: 'row', backgroundColor: 'transparent', alignSelf: 'center' }}>
+      <View
+        style={{
+          height: Platform.OS === 'ios' ? hp('6%') : hp('7.2%'),
+          flexDirection: 'row',
+          backgroundColor: 'transparent',
+          alignSelf: 'center',
+        }}>
         {/*<TouchableOpacity*/}
         {/*  style={{*/}
         {/*    margin: 3,*/}
@@ -866,7 +909,7 @@ class MessagesScreen extends Component {
           onPress={() => this.openEmoji()}>
           <Image
             source={Images.emojiIcon}
-            style={{ width: 28, height: 28, alignSelf: 'center' }}
+            style={{width: 28, height: 28, alignSelf: 'center'}}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -875,11 +918,11 @@ class MessagesScreen extends Component {
             alignSelf: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => this.setState({ openPicker: true, showEmoji: false })}>
+          onPress={() => this.setState({openPicker: true, showEmoji: false})}>
           <Image
             resizeMode="contain"
             source={Images.attachmentIcon}
-            style={{ width: 28, height: 28, alignSelf: 'center' }}
+            style={{width: 28, height: 28, alignSelf: 'center'}}
           />
         </TouchableOpacity>
         <Send
@@ -893,27 +936,26 @@ class MessagesScreen extends Component {
           <Image
             resizeMode="contain"
             source={Images.sendIcon}
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
           />
         </Send>
       </View>
     );
   };
 
-  checkIfLink = link => {
+  checkIfLink = (link) => {
     const reg = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     return reg.test(link) === true;
   };
 
   onPressHashtag = (link, index) => {
-    this.setState({ showWebView: true, selectedLink: link });
+    this.setState({showWebView: true, selectedLink: link});
   };
 
   imageSelected = () => {
-    this.setState({ showModal: false, doc: false }, () => {
+    this.setState({showModal: false, doc: false}, () => {
       let s = this.state.selectedImages.length > 1 ? 's' : '';
       map(this.state.fileToUploadArray, (res) => {
-
         let dt = Date.now();
         var dateTime = new Date(dt);
         let msg = {
@@ -923,77 +965,130 @@ class MessagesScreen extends Component {
             _id: this.props.user.id,
             avatar: `https://${config.api.uri}` + this.props.user.avatar,
           },
+        };
+        {
+          this.state.isDoc
+            ? this.onSend(msg, 'doc', res)
+            : this.onSend(msg, 'img', res);
         }
-        { this.state.isDoc ? this.onSend(msg, 'doc', res) : this.onSend(msg, 'img', res) }
-      })
+      });
       //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
       // );
     });
   };
 
-  downloadPkPassFile = (imgUrl = "") => {
-
-    let imageName = "/IMG" + new Date().getTime() + ".png";
+  downloadPkPassFile = (imgUrl = '') => {
+    let imageName = '/IMG' + new Date().getTime() + '.png';
 
     let dirs = RNFetchBlob.fs.dirs;
-    let path = Platform.OS === 'ios' ? dirs['MainBundleDir'] + imageName : dirs.PictureDir + imageName;
+    let path =
+      Platform.OS === 'ios'
+        ? dirs['MainBundleDir'] + imageName
+        : dirs.PictureDir + imageName;
 
-
-
-      RNFetchBlob.config({
-        fileCache: true,
-        appendExt: 'png',
-        indicator: true,
-        IOSBackgroundTask: true,
+    RNFetchBlob.config({
+      fileCache: true,
+      appendExt: 'png',
+      indicator: true,
+      IOSBackgroundTask: true,
+      path: path,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
         path: path,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          path: path,
-          description: 'Image'
-        },
-
-      }).fetch("GET", imgUrl).then(res => {
+        description: 'Image',
+      },
+    })
+      .fetch('GET', imgUrl)
+      .then((res) => {
         // console.tron.log(res, 'end downloaded')
       })
       .catch((error) => {
-              alert(error)
-            })
-  }
+        alert(error);
+      });
+  };
 
-  cancelImage = index => {
+  cancelImage = (index) => {
     this.ringPhn();
     var array = this.state.selectedImages;
     array.splice(index, 1);
     if (array.length <= 0) {
-      this.setState({ showModal: false, doc: false, selectedImages: array });
+      this.setState({showModal: false, doc: false, selectedImages: array});
     } else {
-      this.setState({ selectedImages: array });
+      this.setState({selectedImages: array});
     }
   };
 
-  onFullScreen = fullScreen => {
+  onFullScreen = (fullScreen) => {
     console.log('fullscreen ', fullScreen);
-    this.setState({ fullScreen });
+    this.setState({fullScreen});
   };
 
   goBack = () => {
     this.ringPhn();
     if (this.state.showWebView) {
-      this.setState({ showWebView: false });
+      this.setState({showWebView: false});
     } else {
-      this.setState({ showEmoji: false }, () => {
+      this.setState({showEmoji: false}, () => {
         this.props.navigation.goBack();
       });
     }
   };
 
+  handleLoadEarlierMessages = async () => {
+    const {
+      isLoadingEarlierMessages,
+      hasOldMessages,
+      messages: existingMessages,
+      lastMessageId,
+    } = this.state;
+    if (hasOldMessages && !isLoadingEarlierMessages) {
+      this.setState(
+        {
+          isLoadingEarlierMessages: true,
+        },
+        async () => {
+          let lastMessageUnqiueId = '';
+          if (!lastMessageId) {
+            lastMessageUnqiueId =
+              (existingMessages &&
+                existingMessages[existingMessages.length - 1] &&
+                existingMessages[existingMessages.length - 1]._id) ||
+              '';
+          } else {
+            lastMessageUnqiueId = lastMessageId;
+          }
+          const updateGetMessages = await this.props.getEarlierMessages(
+            this.activeThread,
+            lastMessageUnqiueId,
+          );
+          const {payload: {data: {messages = []} = {}} = {}} =
+            updateGetMessages || {};
+          this.setState(
+            {
+              lastMessageId: (messages[0] && messages[0].message_id) || null,
+              isLoadingEarlierMessages: false,
+            },
+            () => {
+              console.log(this.props.totalState, 'check total state');
+              if (messages.length < 25) {
+                this.setState({
+                  hasOldMessages: false,
+                });
+              }
+            },
+          );
+        },
+      );
+    }
+  };
+
   render() {
-    // if(!this.state.isLoading) {
+    const {isLoadingEarlierMessages, hasOldMessages} = this.state;
     return (
       <Container>
         <Header>
-          <Left style={{ marginRight: 40 }}>
+          <Left style={{marginRight: 40}}>
             <Button title="" transparent onPress={() => this.goBack()}>
               <FontAwesome5 name={'chevron-left'} size={24} color={'#FFF'} />
             </Button>
@@ -1008,13 +1103,13 @@ class MessagesScreen extends Component {
               source={{
                 uri: `https://${config.api.uri}${
                   this.props.threads.threads[this.activeThread].avatar
-                  }`,
+                }`,
                 headers: {
                   Authorization: `Bearer ${this.props.auth.accessToken}`,
                 },
                 priority: FastImage.priority.high,
               }}
-              style={{ width: 30, height: 30, borderRadius: 15 }}
+              style={{width: 30, height: 30, borderRadius: 15}}
             />
             <Text
               style={{
@@ -1036,31 +1131,31 @@ class MessagesScreen extends Component {
                 this.props.threads.threads[this.activeThread].options
                   .admin_call) ||
               this.props.threads.threads[this.activeThread].thread_type ===
-              1) && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View style={{ marginLeft: 15 }}>
-                    <FontAwesome5
-                      name={'video'}
-                      size={24}
-                      color={'#FFF'}
-                      onPress={() => this.startCall(1)}
-                    />
-                  </View>
-                  <View style={{ marginLeft: 30, marginRight: 15 }}>
-                    <FontAwesome5
-                      name={'chalkboard-teacher'}
-                      size={24}
-                      color={'#FFF'}
-                      onPress={() => this.startCall(2)}
-                    />
-                  </View>
+                1) && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{marginLeft: 15}}>
+                  <FontAwesome5
+                    name={'video'}
+                    size={24}
+                    color={'#FFF'}
+                    onPress={() => this.startCall(1)}
+                  />
                 </View>
-              )}
+                <View style={{marginLeft: 30, marginRight: 15}}>
+                  <FontAwesome5
+                    name={'chalkboard-teacher'}
+                    size={24}
+                    color={'#FFF'}
+                    onPress={() => this.startCall(2)}
+                  />
+                </View>
+              </View>
+            )}
           </Right>
         </Header>
 
@@ -1073,16 +1168,16 @@ class MessagesScreen extends Component {
               // onProgress={(a)=>alert(a)}
               showinfo={false}
               videoId={this.state.videoUri}
-              onReady={e => this.setState({ isReady: true })}
-              onChangeState={e => console.log(JSON.stringify(e))}
-              onError={e => console.log(e.error)}
-              style={{ alignSelf: 'stretch', height: hp('30%'), margin: 5 }}
+              onReady={(e) => this.setState({isReady: true})}
+              onChangeState={(e) => console.log(JSON.stringify(e))}
+              onError={(e) => console.log(e.error)}
+              style={{alignSelf: 'stretch', height: hp('30%'), margin: 5}}
             />
             {/* <Text onPress={()=>this.setState({showWebView:false})} style={{margin:5,padding:5,paddingTop:0,color:'white',fontSize:hp('5%'),}}>x</Text> */}
           </View>
         ) : null}
 
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           {this.state.activeCall && (
             <View
               style={{
@@ -1093,16 +1188,16 @@ class MessagesScreen extends Component {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <Text size={15} style={{ marginLeft: 5, color: '#FFFFFF' }}>
+              <Text size={15} style={{marginLeft: 5, color: '#FFFFFF'}}>
                 There is an active{' '}
                 {this.state.activeCall.call_type === 1
                   ? 'video call'
                   : 'whiteboard session'}
               </Text>
               <TouchableOpacity
-                style={{ marginRight: 25 }}
+                style={{marginRight: 25}}
                 onPress={() => this.joinCall(this.state.activeCall)}>
-                <Text style={{ color: '#FFFFFF' }}>JOIN</Text>
+                <Text style={{color: '#FFFFFF'}}>JOIN</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -1114,8 +1209,10 @@ class MessagesScreen extends Component {
             // messageIdGenerator={(messages)=>this.messageIdGenerator(messages)}
             extraData={this.state.participants}
             alwaysShowSend
-            onSend={messages => this.onSend(messages[0], 'message', this.state.fileToUpload)}
-            focusTextInput={() => this.setState({ showEmoji: false })}
+            onSend={(messages) =>
+              this.onSend(messages[0], 'message', this.state.fileToUpload)
+            }
+            focusTextInput={() => this.setState({showEmoji: false})}
             user={{
               _id: this.props.user.id,
               avatar: `https://${config.api.uri}` + this.props.user.avatar,
@@ -1126,6 +1223,10 @@ class MessagesScreen extends Component {
             minInputToolbarHeight={60}
             onInputTextChanged={this.inputTextChanged}
             renderTime={noop}
+            loadEarlier={hasOldMessages}
+            infiniteScroll={hasOldMessages}
+            onLoadEarlier={this.handleLoadEarlierMessages}
+            isLoadingEarlier={isLoadingEarlierMessages}
             shouldUpdateMessage={(props, nextProps) => {
               if (this.state.renderMessages) {
                 this.setState({
@@ -1134,7 +1235,6 @@ class MessagesScreen extends Component {
                 return true;
               }
             }}
-
             renderMessage={this.renderMessage}
             renderAvatar={this.renderAvatar}
             renderBubble={this.renderBubble}
@@ -1148,10 +1248,9 @@ class MessagesScreen extends Component {
             openGallery={this.openGallery}
             openCamera={this.openCamera}
             pickDocument={this.pickDocument}
-            cancel={() => this.setState({ openPicker: false })}
+            cancel={() => this.setState({openPicker: false})}
           />
         )}
-
 
         {/*{*/}
         {/*  this.state.openGif ?*/}
@@ -1190,7 +1289,7 @@ class MessagesScreen extends Component {
         {this.state.showEmoji && (
           <EmojiSelector
             columns={9}
-            onCancel={() => this.setState({ showEmoji: false },this.ringPhn)}
+            onCancel={() => this.setState({showEmoji: false}, this.ringPhn)}
             onEmojiSelected={this.addEmoji}
             // onEmojiSelected={emoji => this.setState({typedMsg:emoji})}
             showSearchBar
@@ -1245,82 +1344,100 @@ class MessagesScreen extends Component {
 
     const status = await PermissionsAndroid.request(permission);
     return status === 'granted';
-  }
+  };
 
   downloadFileFromServ = async (url, filename) => {
+    const uri =
+      config.env === 'dev' ? `${config.dev.uri}` : `${config.prod.uri}`;
 
-    const uri = config.env === 'dev' ? `${config.dev.uri}` : `${config.prod.uri}`;
+    let imageName = '/IMG' + new Date().getTime() + '.jpg';
 
-      let imageName = "/IMG" + new Date().getTime() + ".jpg";
+    let dirs =
+      Platform.OS === 'ios'
+        ? RNFetchBlob.fs.dirs.DocumentDir
+        : RNFetchBlob.fs.dirs.DownloadDir;
+    let path = url.includes(`${config.api.uri}/`)
+      ? `${dirs}${imageName}`
+      : `${dirs}/${filename}`;
 
-      let dirs = Platform.OS==='ios' ? RNFetchBlob.fs.dirs.DocumentDir : RNFetchBlob.fs.dirs.DownloadDir;
-      let path = url.includes(`${config.api.uri}/`) ? `${dirs}${imageName}` : `${dirs}/${filename}`;
+    const newUrl = url.includes(`${uri}/`)
+      ? url
+      : `https://${uri}/download/messenger/${url}`;
 
-      const newUrl = url.includes(`${uri}/`) ? url : `https://${uri}/download/messenger/${url}`
+    console.tron.log(newUrl);
+    console.tron.log(this.props.auth.accessToken);
 
-    console.tron.log(newUrl)
-    console.tron.log(this.props.auth.accessToken)
+    if (Platform.OS === 'android' && !(await this.hasAndroidPermission())) {
+      return;
+    }
 
-      if (Platform.OS === "android" && !(await this.hasAndroidPermission())) {
-        return;
-      }
-
-      RNFetchBlob.config({
-        indicator: true,
-        path,
-        }).fetch("get", newUrl, {
-          'Authorization': `Bearer ${this.props.auth.accessToken}`,
+    RNFetchBlob.config({
+      indicator: true,
+      path,
+    })
+      .fetch(
+        'get',
+        newUrl,
+        {
+          Authorization: `Bearer ${this.props.auth.accessToken}`,
         },
         'base64string',
-      ).then( res => {
-        console.tron.log(res)
-      if(res.info().status === 404){
-        Alert.alert('Error', 'File not founded on server')
-        return
-      }
-         if (res && res.path()) {
-           const filePath = res.path()
-           let options = {
-             type: get(res,'respInfo.headers.Content-Type', get(res,'respInfo.headers.content-type', 'another')),
-             url: filePath
-           }
-           if (options.type.includes('image') && Platform.OS === 'ios') {
-             CameraRoll.save(res.data, {type:'photo'}).then(() => {
-               Alert.alert(
-                 'Save remote Image',
-                 'Image Saved Successfully',
-                 [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-                 {cancelable: false},
-               );
-             })
-               .catch(err => {
-                 Alert.alert(
-                   'Save remote Image',
-                   'Failed to save Image: ' + err.message,
-                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-                   {cancelable: false},
-                 );
-               })
-           } else {
+      )
+      .then((res) => {
+        console.tron.log(res);
+        if (res.info().status === 404) {
+          Alert.alert('Error', 'File not founded on server');
+          return;
+        }
+        if (res && res.path()) {
+          const filePath = res.path();
+          let options = {
+            type: get(
+              res,
+              'respInfo.headers.Content-Type',
+              get(res, 'respInfo.headers.content-type', 'another'),
+            ),
+            url: filePath,
+          };
+          if (options.type.includes('image') && Platform.OS === 'ios') {
+            CameraRoll.save(res.data, {type: 'photo'})
+              .then(() => {
+                Alert.alert(
+                  'Save remote Image',
+                  'Image Saved Successfully',
+                  [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                  {cancelable: false},
+                );
+              })
+              .catch((err) => {
+                Alert.alert(
+                  'Save remote Image',
+                  'Failed to save Image: ' + err.message,
+                  [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                  {cancelable: false},
+                );
+              });
+          } else {
+            Platform.OS === 'ios'
+              ? Share.open(options)
+              : Alert.alert('Success', 'File Saved Successfully');
+          }
+        }
+        console.tron.log(res, 'end downloaded');
+      })
+      .catch((error) => {
+        Alert.alert('Error', error.message);
+      });
+  };
 
-             Platform.OS === 'ios' ? Share.open(options) : Alert.alert('Success', 'File Saved Successfully')
-           }
-
-         }
-          console.tron.log(res, 'end downloaded')
-        }).catch((error) => {
-            Alert.alert('Error', error.message)
-        })
-  }
-
-  renderAvatar = props => {
+  renderAvatar = (props) => {
     return (
       <FastImage
         key={`avatar_${props.currentMessage._id}`}
         source={{
           uri: `${props.currentMessage.user.avatar}`,
           // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
-          headers: { Authorization: `Bearer ${this.props.auth.accessToken}` },
+          headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
           priority: FastImage.priority.high,
         }}
         style={{
@@ -1335,7 +1452,7 @@ class MessagesScreen extends Component {
     );
   };
 
-  renderMessage = props => {
+  renderMessage = (props) => {
     let thumbNail = false;
     let youtube_id = '';
     if (this.checkIfLink(props.currentMessage.text)) {
@@ -1344,59 +1461,128 @@ class MessagesScreen extends Component {
           .split(/v\/|v=|youtu\.be\//)[1]
           .split(/[?&]/)[0];
       }
-      thumbNail = true
+      thumbNail = true;
     }
 
     return thumbNail ? (
-      <View style={{
-        borderRadius: 10, borderWidth: 0, justifyContent: 'center', width: wp('50%'), margin: 5, backgroundColor: 'black',
-        alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
-        marginLeft: 50,
-      }}>
+      <View
+        style={{
+          borderRadius: 10,
+          borderWidth: 0,
+          justifyContent: 'center',
+          width: wp('50%'),
+          margin: 5,
+          backgroundColor: 'black',
+          alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
+          marginLeft: 50,
+        }}>
         <Thumbnail
-          onPress={() => this.setState({ showWebView: true, videoUri: youtube_id })}
+          onPress={() =>
+            this.setState({showWebView: true, videoUri: youtube_id})
+          }
           containerStyle={{
             alignSelf: 'center',
             borderRadius: 10,
           }}
           url={props.currentMessage.text}
         />
-
       </View>
-
-    ) : (
-        props.currentMessage.file ?
-          <View style={{
-            borderColor: 'grey', alignItems: 'center', width:wp('60%'),
-            borderRadius: 10, borderWidth: 0.8,  margin: 10, backgroundColor: 'white',
-            alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
-            marginLeft: 50,
-          }}>
-            <TouchableOpacity style={{borderTopLeftRadius:10,borderTopRightRadius:10,flexDirection:'row',justifyContent:'center', margin:5,marginTop:0,alignItems:'center',width:'100%',backgroundColor:'black', alignSelf:'center'}} onPress={()=>this.downloadFileFromServ(props.currentMessage._id, props.currentMessage.file)}>
-              <FontAwesome5 name="download" size={10} color="green" />
-              <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>
-            </TouchableOpacity>
-            <View style={{flexDirection:'row',alignItems:'center', width: '100%'}}>
-              <Image source={props.currentMessage.file.includes('.ppt') ? Images.ppt : props.currentMessage.file.includes('.zip') ? Images.zip :
-                props.currentMessage.file.includes('.docx') ? Images.doc : props.currentMessage.file.includes('.pdf') ? Images.pdf : Images.file} style={{ alignSelf: 'center',marginRight:5, marginLeft: 5, borderColor: 'black', borderRadius: 10, height: hp('5%'), width: hp('5%') }} />
-              <Text style={{ color: 'black', textAlign: props.position === 'left' ? 'left' : 'right', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold', flex: 1, }} numberOfLines={1} ellipsizeMode='head'>{props.currentMessage.file}</Text>
-            </View>
-          </View>
-          :
-
-          <Message
-            {...props}
-            containerStyle={{
-              left: {
-                marginBottom: 0,
-              },
+    ) : props.currentMessage.file ? (
+      <View
+        style={{
+          borderColor: 'grey',
+          alignItems: 'center',
+          width: wp('60%'),
+          borderRadius: 10,
+          borderWidth: 0.8,
+          margin: 10,
+          backgroundColor: 'white',
+          alignSelf: props.position === 'left' ? 'flex-start' : 'flex-end',
+          marginLeft: 50,
+        }}>
+        <TouchableOpacity
+          style={{
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            margin: 5,
+            marginTop: 0,
+            alignItems: 'center',
+            width: '100%',
+            backgroundColor: 'black',
+            alignSelf: 'center',
+          }}
+          onPress={() =>
+            this.downloadFileFromServ(
+              props.currentMessage._id,
+              props.currentMessage.file,
+            )
+          }>
+          <FontAwesome5 name="download" size={10} color="green" />
+          <Text
+            style={{
+              color: 'white',
+              textAlign: 'left',
+              fontSize: hp('1.8%'),
+              padding: 5,
+              fontWeight: 'bold',
+            }}>
+            Download
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+          <Image
+            source={
+              props.currentMessage.file.includes('.ppt')
+                ? Images.ppt
+                : props.currentMessage.file.includes('.zip')
+                ? Images.zip
+                : props.currentMessage.file.includes('.docx')
+                ? Images.doc
+                : props.currentMessage.file.includes('.pdf')
+                ? Images.pdf
+                : Images.file
+            }
+            style={{
+              alignSelf: 'center',
+              marginRight: 5,
+              marginLeft: 5,
+              borderColor: 'black',
+              borderRadius: 10,
+              height: hp('5%'),
+              width: hp('5%'),
             }}
           />
-      );
-
+          <Text
+            style={{
+              color: 'black',
+              textAlign: props.position === 'left' ? 'left' : 'right',
+              fontSize: hp('1.8%'),
+              padding: 5,
+              fontWeight: 'bold',
+              flex: 1,
+            }}
+            numberOfLines={1}
+            ellipsizeMode="head">
+            {props.currentMessage.file}
+          </Text>
+        </View>
+      </View>
+    ) : (
+      <Message
+        {...props}
+        containerStyle={{
+          left: {
+            marginBottom: 0,
+          },
+        }}
+      />
+    );
   };
 
-  renderBubble = props => {
+  renderBubble = (props) => {
     // alert(JSON.stringify(props.position))
     if (
       isSameUser(props.currentMessage, props.previousMessage) &&
@@ -1432,18 +1618,12 @@ class MessagesScreen extends Component {
                   ) {
                     return (
                       <FastImage
-                        key={`${participant[0]}_bobble_${
-                          props.currentMessage._id
-                          }`}
+                        key={`${participant[0]}_bobble_${props.currentMessage._id}`}
                         source={{
-                          uri: `https://${config.api.uri}${
-                            participant[1].avatar
-                            }`,
+                          uri: `https://${config.api.uri}${participant[1].avatar}`,
                           // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                           headers: {
-                            Authorization: `Bearer ${
-                              this.props.auth.accessToken
-                              }`,
+                            Authorization: `Bearer ${this.props.auth.accessToken}`,
                           },
                           // priority: FastImage.priority.high
                         }}
@@ -1481,10 +1661,9 @@ class MessagesScreen extends Component {
           </View>
         </View>
       );
-
     }
     return (
-      <View style={{ marginTop: 10 }}>
+      <View style={{marginTop: 10}}>
         {props.currentMessage.user._id !== this.props.user.id && (
           <Text style={styles.name}>{props.currentMessage.user.name}</Text>
         )}
@@ -1524,13 +1703,9 @@ class MessagesScreen extends Component {
                     <FastImage
                       key={`${participant[0]}_bobble`}
                       source={{
-                        uri: `https://${config.api.uri}${
-                          participant[1].avatar
-                          }`,
+                        uri: `https://${config.api.uri}${participant[1].avatar}`,
                         headers: {
-                          Authorization: `Bearer ${
-                            this.props.auth.accessToken
-                            }`,
+                          Authorization: `Bearer ${this.props.auth.accessToken}`,
                         },
                         // priority: FastImage.priority.high
                       }}
@@ -1567,22 +1742,24 @@ class MessagesScreen extends Component {
             )}
         </View>
       </View>
-    )
-
+    );
   };
 
-  renderImage = props => {
+  renderImage = (props) => {
     return (
-      <View style={{ backgroundColor: 'white' ,flexDirection:'row'}}>
-        {props.position === 'right' &&
-        <TouchableOpacity style={{top:0,left:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.imageBig)}>
-                <FontAwesome5 name="download" size={15} color="green" />
-                {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
-                </TouchableOpacity>}
+      <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
+        {props.position === 'right' && (
+          <TouchableOpacity
+            style={{top: 0, left: 0, margin: 3, alignSelf: 'flex-end'}}
+            onPress={() =>
+              this.downloadFileFromServ(props.currentMessage.imageBig)
+            }>
+            <FontAwesome5 name="download" size={15} color="green" />
+            {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
+          </TouchableOpacity>
+        )}
 
-        <Lightbox
-          activeProps={{ style:styles.imageActive }}
-          >
+        <Lightbox activeProps={{style: styles.imageActive}}>
           <FastImage
             style={styles.image}
             resizeMode={FastImage.resizeMode.contain}
@@ -1595,16 +1772,21 @@ class MessagesScreen extends Component {
           />
         </Lightbox>
 
-        {Boolean(props.position === 'left') &&
-        <TouchableOpacity style={{top:0,right:0, margin:3, alignSelf:'flex-end'}} onPress={()=>this.downloadFileFromServ(props.currentMessage.imageBig)}>
-        <FontAwesome5 name="download" size={15} color="green" />
-        {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
-        </TouchableOpacity>}
+        {Boolean(props.position === 'left') && (
+          <TouchableOpacity
+            style={{top: 0, right: 0, margin: 3, alignSelf: 'flex-end'}}
+            onPress={() =>
+              this.downloadFileFromServ(props.currentMessage.imageBig)
+            }>
+            <FontAwesome5 name="download" size={15} color="green" />
+            {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
 
-  renderVideo = props => {
+  renderVideo = (props) => {
     return (
       <View style={[styles.container]}>
         <Lightbox
@@ -1628,7 +1810,7 @@ class MessagesScreen extends Component {
     );
   };
 
-  renderFooter = props => {
+  renderFooter = (props) => {
     let typers = Object.values(this.state.participants).filter(
       (participant, index, arr) => {
         if (participant.typing) {
@@ -1643,13 +1825,13 @@ class MessagesScreen extends Component {
           alignItems: 'center',
           height: 25,
         }}>
-        <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
+        <View style={{flex: 1, flexDirection: 'row-reverse'}}>
           {this.state.messages &&
             this.state.messages.length > 0 &&
             Object.entries(this.state.participants).map(
               (participant, index, arr) => {
                 let self = false;
-                Object.entries(this.state.messages).map(message => {
+                Object.entries(this.state.messages).map((message) => {
                   if (message[1]._id === participant[1].message_id) self = true;
                 });
                 if (
@@ -1662,14 +1844,10 @@ class MessagesScreen extends Component {
                     <FastImage
                       key={`${participant[0]}_bobble`}
                       source={{
-                        uri: `https://${config.api.uri}${
-                          participant[1].avatar
-                          }`,
+                        uri: `https://${config.api.uri}${participant[1].avatar}`,
                         // uri: (this.props.threads.threads[this.props.navigation.getParam('thread')].thread_type === 1) ? `https://tippinweb.com/${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}` : `https://tippinweb.com/api/v1${this.props.threads.threads[this.props.navigation.getParam('thread')].avatar}`,
                         headers: {
-                          Authorization: `Bearer ${
-                            this.props.auth.accessToken
-                            }`,
+                          Authorization: `Bearer ${this.props.auth.accessToken}`,
                         },
                         // priority: FastImage.priority.high
                       }}
@@ -1709,13 +1887,13 @@ class MessagesScreen extends Component {
               },
             )}
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
           {Object.values(this.state.typers).length > 0 &&
             typers.map((typer, index, arr) => {
               if (index <= 5) {
                 return (
                   <FastImage
-                    style={{ height: 14, width: 14, borderRadius: 7 }}
+                    style={{height: 14, width: 14, borderRadius: 7}}
                     key={`${typer.id}_typer_${index}`}
                     source={{
                       uri: `https://${config.api.uri}${typer.avatar}`,
@@ -1729,7 +1907,7 @@ class MessagesScreen extends Component {
               }
             })}
           {Object.values(this.state.typers).length > 0 && (
-            <View style={{ marginLeft: 5 }}>
+            <View style={{marginLeft: 5}}>
               <DotsLoader size={5} color={'#000'} betweenSpace={2.5} />
             </View>
           )}
@@ -1758,8 +1936,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
+    totalState: state,
     auth: state.auth,
     app: state.app,
     threads: state.threads,
@@ -1776,6 +1955,7 @@ const mapDispatchToProps = {
   setIsLoggedIn: Auth.setIsLoggedIn,
   getUser: User.getUser,
   getMessages: Messages.getMessages,
+  getEarlierMessages: Messages.getEarlierMessages,
   sendMessage: Messages.sendMessage,
   markRead: Messages.markRead,
   addMessage: Messages.addMessage,
