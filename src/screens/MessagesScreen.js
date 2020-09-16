@@ -65,6 +65,7 @@ import EmojiSelector, {
 import Images from '../config/Images';
 
 import {Thumbnail} from '../components/react-native-thumbnail-video';
+import {checkIfTypeImage} from '../helper';
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
@@ -1070,7 +1071,6 @@ class MessagesScreen extends Component {
               isLoadingEarlierMessages: false,
             },
             () => {
-              console.log(this.props.totalState, 'check total state');
               if (messages.length < 25) {
                 this.setState({
                   hasOldMessages: false,
@@ -1084,7 +1084,7 @@ class MessagesScreen extends Component {
   };
 
   render() {
-    const {isLoadingEarlierMessages, hasOldMessages} = this.state;
+    const {isLoadingEarlierMessages, hasOldMessages, isLoading} = this.state;
     return (
       <Container>
         <Header>
@@ -1223,7 +1223,7 @@ class MessagesScreen extends Component {
             minInputToolbarHeight={60}
             onInputTextChanged={this.inputTextChanged}
             renderTime={noop}
-            loadEarlier={hasOldMessages}
+            loadEarlier={hasOldMessages && !isLoading}
             infiniteScroll={hasOldMessages}
             onLoadEarlier={this.handleLoadEarlierMessages}
             isLoadingEarlier={isLoadingEarlierMessages}
@@ -1399,12 +1399,13 @@ class MessagesScreen extends Component {
             ),
             url: filePath,
           };
+          console.log('check options here', options);
           if (options.type.includes('image') && Platform.OS === 'ios') {
             CameraRoll.save(res.data, {type: 'photo'})
               .then(() => {
                 Alert.alert(
                   'Save remote Image',
-                  'Image Saved Successfully',
+                  'Image Saved Successfully. Please go to your Photos to access',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
                 );
@@ -1418,9 +1419,19 @@ class MessagesScreen extends Component {
                 );
               });
           } else {
+            const isImageType = checkIfTypeImage(
+              (options && options.type) || '',
+            );
+            let successMessage =
+              options && options.type
+                ? isImageType
+                  ? 'Image Saved Successfully. Please go to your Photos to access'
+                  : 'Documents Saved Successfully. Please go to your Files to access'
+                : 'File Saved Successfully';
+
             Platform.OS === 'ios'
               ? Share.open(options)
-              : Alert.alert('Success', 'File Saved Successfully');
+              : Alert.alert('Success', successMessage);
           }
         }
         console.tron.log(res, 'end downloaded');

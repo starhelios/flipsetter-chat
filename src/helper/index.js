@@ -77,3 +77,8 @@ export const constructProperMessage = (message) => {
   }
   return newMessage;
 };
+
+export const checkIfTypeImage = (type) => {
+  const imageCheckRegex = /[/.](gif|jpg|jpeg|tiff|png)$/g;
+  return imageCheckRegex.test(type);
+};
