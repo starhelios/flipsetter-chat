@@ -3,6 +3,7 @@ import {emojify} from 'react-emojione';
 import {AllHtmlEntities as entities} from 'html-entities';
 import config from '../config';
 import {constructProperMessage} from '../helper';
+import {update} from 'lodash';
 
 const initialState = {
   messages: {},
@@ -38,28 +39,39 @@ export default function (state = initialState, action) {
       }
       return {...state};
     case Messages.actionTypes.UPDATE_MESSAGE:
-      if (state.messages.hasOwnProperty(action.payload.thread)) {
-        let check = Object.entries(
-          state.messages[action.payload.thread],
-        ).filter((message, key) => {
-          if (
-            message[1]._id === action.payload.message.temp_id ||
-            message[1]._id === action.payload.message._id
-          ) {
-            return {message};
-          }
-        });
-        let update = state.messages[action.payload.thread];
-        update[check[0]] = action.payload.message;
-        if (check.length === 1) {
-          return {
-            ...state,
-            messages: {
-              ...state.messages,
-              [action.payload.thread]: [...update],
-            },
-          };
-        }
+      const {thread, message} = action.payload;
+      if (state.messages.hasOwnProperty(thread)) {
+        const currentThreadMessages = state.messages[thread];
+        const existingMessageIndex = currentThreadMessages.findIndex(
+          (item) =>
+            item.temp_id === message.temp_id || item._id === message.temp_id,
+        );
+        const newList = JSON.parse(JSON.stringify(currentThreadMessages));
+        newList[existingMessageIndex] = message;
+
+        // let check = Object.entries(
+        //   state.messages[action.payload.thread],
+        // ).filter((message, key) => {
+        //   if (
+        //     message[1]._id === action.payload.message.temp_id ||
+        //     message[1]._id === action.payload.message._id
+        //   ) {
+        //     return {message};
+        //   }
+        // });
+        // let update = state.messages[action.payload.thread];
+        // console.log(update, 'Just before updating message', check);
+        // update[check[0]] = action.payload.message;
+        // if (check.length === 1) {
+        //   console.log('check state after update', state);
+        return {
+          ...state,
+          messages: {
+            ...state.messages,
+            [action.payload.thread]: [...newList],
+          },
+        };
+        // }
       }
       return {...state};
     case Messages.actionTypes.ADD_MESSAGES:

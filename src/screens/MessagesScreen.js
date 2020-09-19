@@ -208,6 +208,47 @@ class MessagesScreen extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
+    const {messages: {messages: oldMessages} = {}} = prevProps;
+    const {messages: {messages: newMessages} = {}} = this.props;
+    if (oldMessages[this.activeThread] && newMessages[this.activeThread]) {
+      const [oldFirstMessage] = oldMessages[this.activeThread];
+      const [newFirstMessage] = newMessages[this.activeThread];
+      if (
+        oldFirstMessage &&
+        !oldFirstMessage.extra &&
+        newFirstMessage &&
+        newFirstMessage.extra
+      ) {
+        console.log(prevProps, this.props, 'check the did update part');
+        const {temp_id: old_temp_id, _id: old_id} = oldFirstMessage;
+        const {temp_id: new_temp_id, _id: new_id} = newFirstMessage;
+        console.log(
+          old_temp_id,
+          old_id,
+          new_temp_id,
+          new_id,
+          typeof old_temp_id == 'string',
+          old_temp_id === old_id,
+          'check the did update part',
+          new_temp_id === old_temp_id,
+          new_temp_id !== new_id,
+        );
+        if (
+          typeof old_temp_id == 'string' &&
+          old_temp_id === old_id &&
+          new_temp_id === old_temp_id &&
+          new_temp_id !== new_id
+        ) {
+          this.setState({
+            messages: [
+              ...this.props.messages.messages[
+                this.props.navigation.getParam('thread')
+              ],
+            ],
+          });
+        }
+      }
+    }
     //check if messages updated and if most recent message matches the sender's recent message
     // console.log("MESSAGES", this.state.messages)
     //Check if we need to refresh for a new thread (e.g. navigating to messages while already on it)
@@ -503,19 +544,9 @@ class MessagesScreen extends Component {
   };
 
   async onSend(message = [], type, file) {
-    console.log(message, type, file, 'check the new file message');
-    // return;
-    // alert(JSON.stringify(message))
     this.setState({openPicker: false, showEmoji: false});
 
-    // this.setState(prevState => ({
-    //     messages: GiftedChat.append(prevState.messages, incoming),
-    //     renderMessages: true,
-    //     startedTyping: null,
-    // }));
-    // console.log(this.state.messages);
     //Set the message fast, we can update later
-    console.log(message, 'check the message', type, file);
     let incoming;
     if (type === 'img' || type === 'image/jpeg') {
       incoming = {
@@ -557,7 +588,6 @@ class MessagesScreen extends Component {
     }
 
     //add messages to store
-    console.log(incoming, 'check the incoming message');
     // return;
     await this.props.addMessage(this.activeThread, incoming);
     let response = await this.props.sendMessage(
@@ -566,16 +596,22 @@ class MessagesScreen extends Component {
       type,
       file,
     );
-    //
-    // let updated = {
-    //   ...incoming,
-    //   _id: await response.payload.data.message.message_id,
-    //   user: {
-    //     ...incoming.user,
-    //     name: await response.payload.data.message.name,
-    //   },
-    // };
-    // this.props.updateMessage(this.activeThread, updated);
+
+    let updated = {
+      ...incoming,
+      _id: await response.payload.data.message.message_id,
+      extra: response.payload.data.message.extra || {},
+      user: {
+        ...incoming.user,
+        name: await response.payload.data.message.name,
+      },
+    };
+    this.props.updateMessage(this.activeThread, updated);
+    setTimeout(() => {
+      this.setState({
+        renderMessages: true,
+      });
+    }, 1000);
 
     //update threads screen store in the background
     // let threads = { ...this.props.threads.threads };
@@ -971,11 +1007,9 @@ class MessagesScreen extends Component {
             avatar: `https://${config.api.uri}` + this.props.user.avatar,
           },
         };
-        console.log(msg, 'check the new file message', res);
         if (this.state.isDoc) {
           this.onSend(msg, 'doc', res);
         } else {
-          console.log(msg, 'check the new file message', res);
           this.onSend(msg, 'img', res);
         }
       });
@@ -1091,7 +1125,6 @@ class MessagesScreen extends Component {
 
   render() {
     const {isLoadingEarlierMessages, hasOldMessages, isLoading} = this.state;
-    // console.log(this.state.messages, 'Check the state messages here');
     return (
       <Container>
         <Header>
@@ -1362,7 +1395,6 @@ class MessagesScreen extends Component {
         : RNFetchBlob.fs.dirs.DownloadDir;
     let path = type === 'image' ? `${dirs}${imageName}` : `${dirs}/${filename}`;
     const downloadUri = type === 'image' ? api.full || '' : api || '';
-    console.log(extra, 'check extra data', filename, downloadUri);
     console.tron.log(this.props.auth.accessToken);
 
     if (Platform.OS === 'android' && !(await this.hasAndroidPermission())) {
@@ -1404,7 +1436,7 @@ class MessagesScreen extends Component {
               .then(() => {
                 Alert.alert(
                   'Save remote Image',
-                  'Image Saved Successfully. Please go to your Photos to access',
+                  'Image saved successfully. Please go to your Photos to access your image',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
                 );
@@ -1424,8 +1456,8 @@ class MessagesScreen extends Component {
             let successMessage =
               options && options.type
                 ? isImageType
-                  ? 'Image Saved Successfully. Please go to your Photos to access'
-                  : 'Documents Saved Successfully. Please go to your Files to access'
+                  ? 'Image saved successfully. Please go to Internal Storage -> Downloads to access your image'
+                  : 'Document saved successfully. Please go to Internal Storage -> Downloads to access your file'
                 : 'File Saved Successfully';
 
             Platform.OS === 'ios'

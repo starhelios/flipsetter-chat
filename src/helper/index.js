@@ -1,5 +1,6 @@
 import {emojify} from 'react-emojione';
 import {AllHtmlEntities as entities} from 'html-entities';
+import {AsyncStorage} from 'react-native';
 import config from '../config';
 
 export const constructProperMessage = (message) => {
@@ -87,4 +88,15 @@ export const constructProperMessage = (message) => {
 export const checkIfTypeImage = (type) => {
   const imageCheckRegex = /[/.](gif|jpg|jpeg|tiff|png)$/g;
   return imageCheckRegex.test(type);
+};
+
+export const getDataFromAsyncStorage = async (key) => {
+  const value = await AsyncStorage.getItem(key);
+  return value;
+};
+
+export const addDataToAsyncStorage = async (key, data) => {
+  await AsyncStorage.setItem(key, data, () => {
+    console.log('data is set');
+  });
 };
