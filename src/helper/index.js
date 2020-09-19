@@ -10,6 +10,7 @@ export const constructProperMessage = (message) => {
         _id: message.message_id,
         text: emojify(entities.decode(message.body), {output: 'unicode'}),
         createdAt: message.created_at,
+        extra: message.extra || {},
         user: {
           _id: message.owner_id,
           name: message.name,
@@ -33,6 +34,7 @@ export const constructProperMessage = (message) => {
           name: message.owner_name,
           avatar: `https://${config.api.uri}${message.avatar}`,
         },
+        extra: message.extra || {},
       };
       break;
 
@@ -46,6 +48,7 @@ export const constructProperMessage = (message) => {
           name: message.owner_name,
           avatar: `https://${config.api.uri}${message.avatar}`,
         },
+        extra: message.extra || {},
       };
       break;
     case 89:
@@ -54,6 +57,7 @@ export const constructProperMessage = (message) => {
         text: `${message.name} ${message.body}`,
         createdAt: message.created_at,
         system: true,
+        extra: message.extra || {},
       };
       break;
     case 90:
@@ -62,6 +66,7 @@ export const constructProperMessage = (message) => {
         text: `${message.name} ${message.body}`,
         createdAt: message.created_at,
         system: true,
+        extra: message.extra || {},
       };
       break;
     case 99:
@@ -70,10 +75,11 @@ export const constructProperMessage = (message) => {
         text: `${message.name} ${message.body}`,
         createdAt: message.created_at,
         system: true,
+        extra: message.extra || {},
       };
       break;
     default:
-      newMessage = message;
+      newMessage = null;
   }
   return newMessage;
 };

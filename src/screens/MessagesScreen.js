@@ -153,7 +153,7 @@ class MessagesScreen extends Component {
     //Let's update the thread
     this.update = await this.props.getMessages(this.activeThread);
     //Move this into redux!!
-
+    console.log(this.update, 'check get messages success');
     if (this.update.type === 'GET_MESSAGES_SUCCESS') {
       // this.thread = this.echo.socket.join(`thread_${this.props.navigation.getParam('thread')}`)
       if (
@@ -503,6 +503,8 @@ class MessagesScreen extends Component {
   };
 
   async onSend(message = [], type, file) {
+    console.log(message, type, file, 'check the new file message');
+    // return;
     // alert(JSON.stringify(message))
     this.setState({openPicker: false, showEmoji: false});
 
@@ -513,9 +515,9 @@ class MessagesScreen extends Component {
     // }));
     // console.log(this.state.messages);
     //Set the message fast, we can update later
-
+    console.log(message, 'check the message', type, file);
     let incoming;
-    if (type === 'img') {
+    if (type === 'img' || type === 'image/jpeg') {
       incoming = {
         _id: await message._id,
         createdAt: message.createdAt,
@@ -555,6 +557,8 @@ class MessagesScreen extends Component {
     }
 
     //add messages to store
+    console.log(incoming, 'check the incoming message');
+    // return;
     await this.props.addMessage(this.activeThread, incoming);
     let response = await this.props.sendMessage(
       this.props.navigation.getParam('thread'),
@@ -967,10 +971,12 @@ class MessagesScreen extends Component {
             avatar: `https://${config.api.uri}` + this.props.user.avatar,
           },
         };
-        {
-          this.state.isDoc
-            ? this.onSend(msg, 'doc', res)
-            : this.onSend(msg, 'img', res);
+        console.log(msg, 'check the new file message', res);
+        if (this.state.isDoc) {
+          this.onSend(msg, 'doc', res);
+        } else {
+          console.log(msg, 'check the new file message', res);
+          this.onSend(msg, 'img', res);
         }
       });
       //   'You have selected ' + this.state.selectedImages.length + ' Image' + s,
@@ -1085,6 +1091,7 @@ class MessagesScreen extends Component {
 
   render() {
     const {isLoadingEarlierMessages, hasOldMessages, isLoading} = this.state;
+    // console.log(this.state.messages, 'Check the state messages here');
     return (
       <Container>
         <Header>
@@ -1346,25 +1353,16 @@ class MessagesScreen extends Component {
     return status === 'granted';
   };
 
-  downloadFileFromServ = async (url, filename) => {
-    const uri =
-      config.env === 'dev' ? `${config.dev.uri}` : `${config.prod.uri}`;
-
-    let imageName = '/IMG' + new Date().getTime() + '.jpg';
-
-    let dirs =
+  downloadFileFromServ = async (type, extra, filename) => {
+    const {routes: {api} = {}} = extra;
+    const imageName = '/IMG' + new Date().getTime() + '.jpg';
+    const dirs =
       Platform.OS === 'ios'
         ? RNFetchBlob.fs.dirs.DocumentDir
         : RNFetchBlob.fs.dirs.DownloadDir;
-    let path = url.includes(`${config.api.uri}/`)
-      ? `${dirs}${imageName}`
-      : `${dirs}/${filename}`;
-
-    const newUrl = url.includes(`${uri}/`)
-      ? url
-      : `https://${uri}/download/messenger/${url}`;
-
-    console.tron.log(newUrl);
+    let path = type === 'image' ? `${dirs}${imageName}` : `${dirs}/${filename}`;
+    const downloadUri = type === 'image' ? api.full || '' : api || '';
+    console.log(extra, 'check extra data', filename, downloadUri);
     console.tron.log(this.props.auth.accessToken);
 
     if (Platform.OS === 'android' && !(await this.hasAndroidPermission())) {
@@ -1377,13 +1375,14 @@ class MessagesScreen extends Component {
     })
       .fetch(
         'get',
-        newUrl,
+        downloadUri,
         {
           Authorization: `Bearer ${this.props.auth.accessToken}`,
         },
         'base64string',
       )
       .then((res) => {
+        console.log('check the respone here file', res);
         console.tron.log(res);
         if (res.info().status === 404) {
           Alert.alert('Error', 'File not founded on server');
@@ -1526,7 +1525,8 @@ class MessagesScreen extends Component {
           }}
           onPress={() =>
             this.downloadFileFromServ(
-              props.currentMessage._id,
+              'file',
+              props.currentMessage.extra,
               props.currentMessage.file,
             )
           }>
@@ -1763,7 +1763,7 @@ class MessagesScreen extends Component {
           <TouchableOpacity
             style={{top: 0, left: 0, margin: 3, alignSelf: 'flex-end'}}
             onPress={() =>
-              this.downloadFileFromServ(props.currentMessage.imageBig)
+              this.downloadFileFromServ('image', props.currentMessage.extra)
             }>
             <FontAwesome5 name="download" size={15} color="green" />
             {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}
@@ -1787,7 +1787,7 @@ class MessagesScreen extends Component {
           <TouchableOpacity
             style={{top: 0, right: 0, margin: 3, alignSelf: 'flex-end'}}
             onPress={() =>
-              this.downloadFileFromServ(props.currentMessage.imageBig)
+              this.downloadFileFromServ('image', props.currentMessage.extra)
             }>
             <FontAwesome5 name="download" size={15} color="green" />
             {/* <Text style={{ color: 'white', textAlign: 'left', fontSize: hp('1.8%'), padding: 5, fontWeight: 'bold' }}>Download</Text>        */}

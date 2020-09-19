@@ -36,7 +36,7 @@ class FirebaseService extends Component<Props> {
     //User Opened Notification while app was closed
     messaging()
       .getInitialNotification()
-      .then(notificationOpen => {
+      .then((notificationOpen) => {
         if (notificationOpen) {
           // Get the action triggered by the notification being opened
           // const action = notificationOpen.action;
@@ -112,14 +112,14 @@ class FirebaseService extends Component<Props> {
       }
       this._listeners();
     } else {
-        messaging()
+      messaging()
         .requestPermission()
         .then(() => {
           //User has Authorised
           this._listeners();
           VoipPushNotification.registerVoipToken();
         })
-        .catch(error => {
+        .catch((error) => {
           //user has rejected permissions
         });
     }
@@ -127,11 +127,11 @@ class FirebaseService extends Component<Props> {
 
   async _listeners() {
     console.log('Listeners');
-    this.fcmTokenListener = messaging().onTokenRefresh(fcmToken => {
+    this.fcmTokenListener = messaging().onTokenRefresh((fcmToken) => {
       this.props.setDeviceToken(fcmToken);
     });
     console.log('Message listener');
-    this.messageListener = messaging().onMessage(message => {
+    this.messageListener = messaging().onMessage((message) => {
       console.tron.log('Message', message);
       let data = JSON.parse(message.data.extraPayload);
       switch (data.notification_type) {
@@ -222,12 +222,12 @@ class FirebaseService extends Component<Props> {
     );
 
     if (Platform.OS === 'ios') {
-      VoipPushNotification.addEventListener('register', token => {
+      VoipPushNotification.addEventListener('register', (token) => {
         if (this.props.app.voip_token !== token) {
           this.props.setVOIPToken(token);
         }
       });
-      VoipPushNotification.addEventListener('notification', notification => {
+      VoipPushNotification.addEventListener('notification', (notification) => {
         console.log('VOIP', notification);
         let data = notification.data.extraPayload;
         this.newCall(notification, data);
@@ -298,15 +298,15 @@ class FirebaseService extends Component<Props> {
     // }
   };
 
-  messageReceived = async notification => {
+  messageReceived = async (notification) => {
     let body;
 
     // console.log(channel.channelId);
     let data = JSON.parse(notification._data.extraPayload);
-
+    console.log(notification, 'check the new message', data);
     let check = Object.values(
       this.props.messages.messages[data.thread_id],
-    ).filter(message => {
+    ).filter((message) => {
       if (
         message._id === data.temp_id ||
         message._id === data.message_id ||
@@ -325,8 +325,8 @@ class FirebaseService extends Component<Props> {
           body = `${data.name} sent a photo`;
           break;
         case 2:
-            body = `${data.name} sent a document`;
-         break;
+          body = `${data.name} sent a document`;
+          break;
         case 89:
           body = `${data.name} ${data.body}`;
           break;
@@ -410,7 +410,7 @@ class FirebaseService extends Component<Props> {
           try {
             messaging()
               .displayNotification(groupDisplay)
-              .catch(err => {
+              .catch((err) => {
                 console.log('send notif err', err);
                 return Promise.resolve();
               });
@@ -421,7 +421,7 @@ class FirebaseService extends Component<Props> {
         try {
           messaging()
             .displayNotification(display)
-            .catch(err => {
+            .catch((err) => {
               console.log('send notif err', err);
               return Promise.resolve();
             });
@@ -457,17 +457,16 @@ class FirebaseService extends Component<Props> {
           };
           break;
         case 2:
-            newMessage =
-                {
-                    _id: data.message_id,
-                    file: data.body,
-                    createdAt: data.created_at,
-                    user: {
-                        _id: data.owner_id,
-                        name: data.owner_name,
-                        avatar: `https://${config.api.uri}${data.avatar}`,
-                    }
-                };
+          newMessage = {
+            _id: data.message_id,
+            file: data.body,
+            createdAt: data.created_at,
+            user: {
+              _id: data.owner_id,
+              name: data.owner_name,
+              avatar: `https://${config.api.uri}${data.avatar}`,
+            },
+          };
           break;
         case 89:
           newMessage = {
@@ -540,7 +539,7 @@ class FirebaseService extends Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     app: state.app,
@@ -572,7 +571,4 @@ const mapDispatchToProps = {
   setCallStatus: Call.setCallStatus,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(FirebaseService);
+export default connect(mapStateToProps, mapDispatchToProps)(FirebaseService);
