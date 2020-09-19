@@ -11,7 +11,8 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    View, Vibration
+    View, Vibration,
+    Alert
 } from 'react-native';
 import { withNavigationFocus } from 'react-navigation';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -115,6 +116,16 @@ class LoginScreen extends React.Component {
             switch (login.type) {
                 case "LOGIN_SUCCESS":
                     this.setState({ loading: false })
+                  
+                    Alert.alert(
+                        'Collaborate is send you notifications.',
+                        'Notifications may include alerts, sounds and icon badges. These can be configured in Settings.',
+                        [
+                          { text: 'OK', onPress: () => console.log('OK Pressed') }
+                        ],
+                        { cancelable: false }
+                      );
+                     
                     // let data = login.payload.data;
                     // await this.props.setAccessToken(data.access_token);
                     // await this.props.setRefreshToken(data.refresh_token);
