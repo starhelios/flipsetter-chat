@@ -13,6 +13,7 @@ const actionTypes = {
   ADD_MESSAGE: 'ADD_MESSAGE',
   UPDATE_MESSAGE: 'UPDATE_MESSAGE',
   ADD_MESSAGES: 'ADD_MESSAGES',
+  REMOVE_MESSAGE: 'REMOVE_MESSAGE',
   MARK_READ: 'MARK_READ',
   MARK_READ_SUCCESS: 'MARK_READ_SUCCESS',
   CLEAR_MESSAGES: 'CLEAR_MESSAGES',
@@ -117,6 +118,10 @@ export function addMessages(thread, messages) {
   return {type: actionTypes.ADD_MESSAGES, payload: {thread, messages}};
 }
 
+export function removeMessage(thread, message) {
+  return {type: actionTypes.REMOVE_MESSAGE, payload: {thread, message}};
+}
+
 function clearMessages() {
   return {type: actionTypes.CLEAR_MESSAGES};
 }
@@ -130,5 +135,6 @@ export default {
   addMessage,
   updateMessage,
   addMessages,
+  removeMessage,
   clearMessages,
 };

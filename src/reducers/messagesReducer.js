@@ -82,6 +82,19 @@ export default function (state = initialState, action) {
           [action.payload.thread]: action.payload.messages,
         },
       };
+    case Messages.actionTypes.REMOVE_MESSAGE:
+      const {thread: activeThread, message: unsentMessage} = action.payload;
+      const currentThreadMessages = state.messages[activeThread];
+      const updatedList = currentThreadMessages.filter(
+        (item) => item.temp_id === unsentMessage.team_id,
+      );
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [activeThread]: [...updatedList],
+        },
+      };
     case Messages.actionTypes.GET_EARLIER_MESSAGES_SUCCESS:
       const {
         meta: {previousAction: {payload: {threadId} = {}} = {}} = {},

@@ -216,7 +216,7 @@ class SocketProvider extends React.Component {
                 _id: e.message_id,
                 image: `https://${
                   config.api.uri
-                }${config.api.images.messengerPhoto(e.message_id, true)}`,
+                }/${config.api.images.messengerPhoto(e.message_id, true)}`,
                 createdAt: e.created_at,
                 extra: e.extra || {},
                 user: {

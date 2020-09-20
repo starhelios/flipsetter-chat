@@ -597,21 +597,26 @@ class MessagesScreen extends Component {
       file,
     );
 
-    let updated = {
-      ...incoming,
-      _id: await response.payload.data.message.message_id,
-      extra: response.payload.data.message.extra || {},
-      user: {
-        ...incoming.user,
-        name: await response.payload.data.message.name,
-      },
-    };
-    this.props.updateMessage(this.activeThread, updated);
-    setTimeout(() => {
-      this.setState({
-        renderMessages: true,
-      });
-    }, 1000);
+    console.log(response, 'check the response of the message');
+    if (response && response.error) {
+      this.props.removeMessage(this.activeThread, incoming);
+    } else {
+      let updated = {
+        ...incoming,
+        _id: await response.payload.data.message.message_id,
+        extra: response.payload.data.message.extra || {},
+        user: {
+          ...incoming.user,
+          name: await response.payload.data.message.name,
+        },
+      };
+      this.props.updateMessage(this.activeThread, updated);
+      setTimeout(() => {
+        this.setState({
+          renderMessages: true,
+        });
+      }, 1000);
+    }
 
     //update threads screen store in the background
     // let threads = { ...this.props.threads.threads };
@@ -2004,6 +2009,7 @@ const mapDispatchToProps = {
   addMessage: Messages.addMessage,
   updateMessage: Messages.updateMessage,
   addMessages: Messages.addMessages,
+  removeMessage: Messages.removeMessage,
   setActiveThread: Threads.setActiveThread,
   storeThreads: Threads.storeThreads,
   startVideoCall: Call.startVideoCall,
