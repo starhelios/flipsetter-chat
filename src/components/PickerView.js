@@ -8,7 +8,7 @@ import { useOrientation } from '../helper/useOrientation';
 
 const CustomPickerView = (props) => {
   const orientation = useOrientation();
-  const marginBottom = orientation === 'LANDSCAPE' ? (Platform.OS === 'ios' ? 75 : 45) : (Platform.OS === 'ios' ? 85 : 45);
+  const marginBottom = orientation === 'LANDSCAPE' ? (Platform.OS === 'ios' ? 45 : 0) : (Platform.OS === 'ios' ? 45 : 0);
   return (
     <View style={{
       bottom: 0, alignSelf: 'center', justifyContent: 'center', position: 'absolute', backgroundColor: 'transparent', height: Platform.OS === 'ios' ? hp('11%') : hp('12.5%'), alignItems: 'center', width: '100%', marginBottom,

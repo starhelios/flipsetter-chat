@@ -52,14 +52,14 @@ class Main extends Component {
     async componentDidMount() {
 
 
-        ShareMenu.getInitialShare((data) => {
-            console.tron.log('asd 3');
-            console.tron.log(data);
-        });
-        ShareMenu.addNewShareListener((data) => {
-            console.tron.log('asd 4');
-            console.tron.log(data);
-        });
+        // await ShareMenu.getInitialShare((data) => {
+        //     console.log('asd 3');
+        //     console.log(data);
+        // });
+        // await ShareMenu.addNewShareListener((data) => {
+        //     console.log('asd 4');
+        //     console.log(data);
+        // });
 
         await Analytics.setEnabled(true);
 

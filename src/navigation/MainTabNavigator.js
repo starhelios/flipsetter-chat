@@ -8,7 +8,7 @@ import TabBarIcon from '../components/tabbar/TabBarIcon';
 // Main Tab Screens
 import ThreadsScreen from '../screens/ThreadsScreen';
 import ContactsScreen from '../screens/ContactsScreen';
-import EventsScreen from '../screens/EventsScreen';
+// import EventsScreen from '../screens/EventsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 // Threads Stack

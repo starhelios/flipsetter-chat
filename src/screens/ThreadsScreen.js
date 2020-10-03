@@ -70,13 +70,13 @@ class ThreadsScreen extends Component<Props> {
     //Let's grab the latest threads
 
 
-    ShareMenu.getInitialShare((data) => {
-      console.tron.log('asd 1');
-      console.tron.log(data);
+    await ShareMenu.getInitialShare((data) => {
+      console.log('asd 1');
+      console.log(data);
     });
-    ShareMenu.addNewShareListener((data) => {
-      console.tron.log('asd 2');
-      console.tron.log(data);
+    await ShareMenu.addNewShareListener((data) => {
+      console.log('asd 2');
+      console.log(data);
     })
 
 

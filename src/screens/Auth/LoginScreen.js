@@ -28,7 +28,6 @@ import NavigationService from '../../services/NavigationService';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-simple-toast';
 import Constants from '../../components/Constants';
-import {addDataToAsyncStorage, getDataFromAsyncStorage} from '../../helper';
 var Sound = require('react-native-sound');
 
 // import FCM from "../../components/FCM";
@@ -61,36 +60,6 @@ class LoginScreen extends React.Component {
       return false;
     } else {
       return true;
-    }
-  }
-
-  async componentDidMount() {
-    const showNotificationAlert = await getDataFromAsyncStorage(
-      'notificationAlert',
-    );
-    const newValue =
-      showNotificationAlert === undefined ||
-      showNotificationAlert === null ||
-      showNotificationAlert === 'true'
-        ? 'false'
-        : 'true';
-    if (
-      showNotificationAlert === undefined ||
-      showNotificationAlert === null ||
-      showNotificationAlert === true
-    ) {
-      Alert.alert(
-        '"Collaborate" would like to send you notifications.',
-        'Notifications may include alerts, sounds and icon badges. These can be configured in Settings.',
-        [
-          {
-            text: 'OK',
-            onPress: async () =>
-              await addDataToAsyncStorage('notificationAlert', newValue),
-          },
-        ],
-        {cancelable: false},
-      );
     }
   }
 

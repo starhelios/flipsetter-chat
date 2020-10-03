@@ -7,11 +7,6 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:com.flipsetter.mobile</string>
-		<string>applinks:mobile.flipsetter.com</string>
-	</array>
-	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.flipsetter</string>
 	</array>
 </dict>
 </plist>

@@ -726,6 +726,14 @@ class MessagesScreen extends Component {
   };
 
   startCall = async (type) => {
+    if (type === 1) {
+      Alert.alert(
+        'Information',
+        'Welcome to Collaborate video chat for person to person video chat. Group video chat coming soon.',
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        {cancelable: false},
+      );
+    }
     this.ringPhn();
     let response;
     type === 1
@@ -1191,14 +1199,14 @@ class MessagesScreen extends Component {
                     onPress={() => this.startCall(1)}
                   />
                 </View>
-                <View style={{marginLeft: 30, marginRight: 15}}>
+                {/* <View style={{marginLeft: 30, marginRight: 15}}>
                   <FontAwesome5
                     name={'chalkboard-teacher'}
                     size={24}
                     color={'#FFF'}
                     onPress={() => this.startCall(2)}
                   />
-                </View>
+                </View> */}
               </View>
             )}
           </Right>

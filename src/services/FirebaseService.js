@@ -132,7 +132,6 @@ class FirebaseService extends Component<Props> {
     });
     console.log('Message listener');
     this.messageListener = messaging().onMessage((message) => {
-      console.tron.log('Message', message);
       let data = JSON.parse(message.data.extraPayload);
       switch (data.notification_type) {
         case 0:
