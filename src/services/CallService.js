@@ -21,13 +21,13 @@ class CallService extends Component<Props> {
                appName: 'FlipSetter',
                supportsVideo: true,
            },
-           android: {
-               alertTitle: 'Permissions required',
-               alertDescription: 'This application needs to access your contacts',
-               cancelButton: 'Cancel',
-               okButton: 'ok',
-               additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
-           }
+        //    android: {
+        //        alertTitle: 'Permissions required',
+        //        alertDescription: 'This application needs to access your contacts',
+        //        cancelButton: 'Cancel',
+        //        okButton: 'ok',
+        //        additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+        //    }
         }).then( accepted => {
             console.log("RNCALLKEEPSETUP", accepted)
         });
