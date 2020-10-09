@@ -1136,8 +1136,16 @@ class MessagesScreen extends Component {
     }
   };
 
+  showUpcomingVideoAlert = () => {
+    Alert.alert(
+      'Coming Soon!!',
+      `Group video chat coming soon! You can still video chat person to person on here. To learn more about how to add people to your networks, please contact us at flipsetter.contact@gmail.com`
+      );
+  }
+
   render() {
     const {isLoadingEarlierMessages, hasOldMessages, isLoading} = this.state;
+    console.log(this.props.threads.threads, 'check the thread types');
     return (
       <Container>
         <Header>
@@ -1184,7 +1192,8 @@ class MessagesScreen extends Component {
                 this.props.threads.threads[this.activeThread].options
                   .admin_call) ||
               this.props.threads.threads[this.activeThread].thread_type ===
-                1) && (
+                1 
+              || this.props.threads.threads[this.activeThread].thread_type === 2) && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -1196,7 +1205,15 @@ class MessagesScreen extends Component {
                     name={'video'}
                     size={24}
                     color={'#FFF'}
-                    onPress={() => this.startCall(1)}
+                    onPress={() => {
+                      if(this.props.threads.threads[this.activeThread].thread_type === 1) {
+                        this.startCall(1)
+                      } else if(this.props.threads.threads[this.activeThread].thread_type === 2) {
+                        this.showUpcomingVideoAlert()
+                      } else {
+                        return;
+                      }
+                    }}
                   />
                 </View>
                 {/* <View style={{marginLeft: 30, marginRight: 15}}>
@@ -1272,7 +1289,7 @@ class MessagesScreen extends Component {
             }}
             // showUserAvatar
             renderLoading={() => <ActivityIndicator color="#0000ff" />}
-            maxInputLength={350}
+            maxInputLength={2500}
             minInputToolbarHeight={60}
             onInputTextChanged={this.inputTextChanged}
             renderTime={noop}
