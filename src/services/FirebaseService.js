@@ -144,6 +144,7 @@ class FirebaseService extends Component<Props> {
           this.joinedCall(message, data);
           break;
         default:
+          InCallManager.stopRingtone();
           console.log('caught', message);
       }
     });
@@ -236,6 +237,7 @@ class FirebaseService extends Component<Props> {
 
   newCall = (notification, data) => {
     console.log('newCall', data);
+    InCallManager.startRingtone('_BUNDLE_');
     this.props.setAppState('callDisplayed');
     this.props.setCallType(data.call_type);
     this.props.setCallRoom(data.room_id);
@@ -244,7 +246,7 @@ class FirebaseService extends Component<Props> {
     this.props.setCallThreadId(data.thread_id);
     this.props.appHeartbeat();
     if (Platform.OS === 'android') {
-      console.log('android call', notification, this.props.call);
+      console.log('android call', notification);
       RNCallKeep.displayIncomingCall(
         data.call_id,
         data.thread_name,
@@ -290,6 +292,7 @@ class FirebaseService extends Component<Props> {
     }
   };
   joinedCall = (notification, data) => {
+    InCallManager.stopRingtone();
     // console.log("joinedCall", data);
     // if(this.props.call.status !== 'active'){
     //     console.log("end Call answered on another device");

@@ -99,6 +99,7 @@ class CallService extends Component<Props> {
         console.log("ReceiveStartCallAction", data);
         // Get this event after the system decides you can start a call
         // You can now start a call from within your app
+        InCallManager.stopRingtone();
         InCallManager.start({media: "video"});
     };
 
@@ -106,6 +107,7 @@ class CallService extends Component<Props> {
         let { callUUID } = data;
         console.log("Answered", data);
         this.props.setCallId(callUUID);
+        InCallManager.stopRingtone();
         this.props.setCallStatus("active");
         NavigationService.navigate('Call');
         // console.log(this.props.call);

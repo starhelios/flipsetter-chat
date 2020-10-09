@@ -30,6 +30,7 @@ class CallScreen extends Component<Props> {
         super(props);
     }
     componentDidMount(): void {
+        InCallManager.stopRingtone();
         InCallManager.start({media: 'video'}); //Add in checks for media type later
         this.setState({
             init: true,
@@ -42,6 +43,7 @@ class CallScreen extends Component<Props> {
     }
 
     componentWillUnmount(): void {
+        InCallManager.stopRingtone();
         InCallManager.stop();
         if(this.props.call.id){
             RNCallKeep.endCall(this.props.call.id);
