@@ -10,6 +10,7 @@ import {
   Alert,
   BackHandler,
   Linking,
+  Modal,
 } from 'react-native';
 import Share from 'react-native-share';
 import noop from 'lodash/noop';
@@ -66,6 +67,7 @@ import Images from '../config/Images';
 
 import {Thumbnail} from '../components/react-native-thumbnail-video';
 import {checkIfTypeImage} from '../helper';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 // Enable playback in silence mode
 //Sound.setCategory('Playback');
 
@@ -116,6 +118,7 @@ class MessagesScreen extends Component {
       hasOldMessages: true,
       isLoadingEarlierMessages: false,
       lastMessageId: null,
+      showAlertModal: false,
     };
     this.echo = props.socket;
     this.typeInterval = 0;
@@ -1137,17 +1140,44 @@ class MessagesScreen extends Component {
   };
 
   showUpcomingVideoAlert = () => {
-    Alert.alert(
-      'Coming Soon!!',
-      `Group video chat coming soon! You can still video chat person to person on here. To learn more about how to add people to your networks, please contact us at flipsetter.contact@gmail.com`
-      );
+    this.setState({
+      showAlertModal: true
+    })
+  }
+
+  handleCloseIconPress = () => {
+    this.setState({
+      showAlertModal: false
+    })
+  }
+
+  handleEmailClick = () => {
+    Linking.openURL('mailto:flipsetter.contact@gmail.com')
   }
 
   render() {
-    const {isLoadingEarlierMessages, hasOldMessages, isLoading} = this.state;
+    const {isLoadingEarlierMessages, hasOldMessages, isLoading, showAlertModal} = this.state;
     console.log(this.props.threads.threads, 'check the thread types');
     return (
       <Container>
+        {/* Alert modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showAlertModal}
+          onRequestClose={this.handleCloseIconPress}
+        >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <FontAwesome5 onPress={this.handleCloseIconPress} style={styles.closeIcon} name={'times'} size={24} color={'#000000'} />
+            <Text style={styles.modalText}>
+              Group video chat coming soon! You can still video chat person to person on here. 
+              To learn more about how to add people to your networks, please contact us at 
+              <Text style={styles.textStyle} onPress={this.handleEmailClick}> flipsetter.contact@gmail.com</Text>
+            </Text>
+          </View>
+        </View>
+      </Modal>
         <Header>
           <Left style={{marginRight: 40}}>
             <Button title="" transparent onPress={() => this.goBack()}>
@@ -1991,6 +2021,42 @@ class MessagesScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: config.layout.window.width - 100
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
+  textStyle: {
+    color: "#2196F3",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
   container: {},
   name: {
     fontSize: 12,
