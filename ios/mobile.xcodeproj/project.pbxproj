@@ -48,6 +48,7 @@
 		87E7375123BF2EB600B550AF /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375023BF2EB600B550AF /* CallKit.framework */; };
 		87E7375323BF2EBC00B550AF /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375223BF2EBC00B550AF /* Intents.framework */; };
 		87E7376023BF31B700B550AF /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375E23BF31B700B550AF /* PushKit.framework */; };
+		999B3A012531BC950067D78E /* incallmanager_ringtoneincallmanager_ringtone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 999B3A002531BC950067D78E /* incallmanager_ringtoneincallmanager_ringtone.mp3 */; };
 		AB05FF821C7540B5A84DC967 /* Nunito-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C80DAFB8A81431F94634FDE /* Nunito-ExtraLight.ttf */; };
 		AF30C56AC0A049DF939BDA6D /* Nunito-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B89184E553EC4F1F8601B4F1 /* Nunito-Black.ttf */; };
 		B1D19681AF574AA39B226F2D /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AC23D3419C541C28A2FB788 /* Fontisto.ttf */; };
@@ -146,6 +147,7 @@
 		87E7375B23BF2FE400B550AF /* libRNCallKeep.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCallKeep.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E7375E23BF31B700B550AF /* PushKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PushKit.framework; path = System/Library/Frameworks/PushKit.framework; sourceTree = SDKROOT; };
 		910F495ED7E449DD8BC8A177 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		999B3A002531BC950067D78E /* incallmanager_ringtoneincallmanager_ringtone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = incallmanager_ringtoneincallmanager_ringtone.mp3; sourceTree = "<group>"; };
 		9EAB20146B754F128E4D55A6 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		A4C54A16A7D14FA094622526 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		A73B5EF76581BE0F64C00B3B /* libPods-mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -279,6 +281,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				999B3A002531BC950067D78E /* incallmanager_ringtoneincallmanager_ringtone.mp3 */,
 				18B29C4024DE131900DC3E22 /* messagealert.mp3 */,
 				18B29C3E24DE12E200DC3E22 /* click.mp3 */,
 				185BC99A24D9E886001C5A82 /* mobile-Bridging-Header.h */,
@@ -542,6 +545,7 @@
 				432F7B5165744B31B909606C /* Octicons.ttf in Resources */,
 				D49DA8AE1029475C9F253313 /* SimpleLineIcons.ttf in Resources */,
 				81F481F5EDAD40C282120CB9 /* Zocial.ttf in Resources */,
+				999B3A012531BC950067D78E /* incallmanager_ringtoneincallmanager_ringtone.mp3 in Resources */,
 				AF30C56AC0A049DF939BDA6D /* Nunito-Black.ttf in Resources */,
 				82A789390005477CBD650BA1 /* Nunito-BlackItalic.ttf in Resources */,
 				B614B840B63142A0A19CC0E6 /* Nunito-Bold.ttf in Resources */,
