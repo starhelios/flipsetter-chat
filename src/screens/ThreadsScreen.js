@@ -80,6 +80,21 @@ class ThreadsScreen extends Component<Props> {
     })
 
 
+    const { navigation } = this.props;
+    
+    this.focusListener = navigation.addListener("didFocus", async () => {
+      let update = await this.props.getThreads();
+      console.log('Update Threads', update);
+      if (update.type === 'GET_THREADS_SUCCESS') {
+        this.setState(
+          {
+            threads: {...this.props.threads.threads},
+          },
+        );
+      }
+    });
+
+
     let update = await this.props.getThreads();
     // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
     // this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
@@ -108,6 +123,7 @@ class ThreadsScreen extends Component<Props> {
     // this.keyboardDidHideListener.remove();
     // this.keyboardDidShowListener.remove();
     // clearInterval(this.activeCalls);
+    this.focusListener.remove();
   }
 
   async componentDidUpdate(
