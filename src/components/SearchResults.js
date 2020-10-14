@@ -7,6 +7,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {App, Auth, Messages, Search, Threads, User} from "../reducers/actions";
 import FastImage from "react-native-fast-image";
 import {emojify} from "react-emojione";
+import config from "../config";
 const window = Dimensions.get('window');
 
 class SearchResults extends React.PureComponent{
@@ -33,7 +34,7 @@ class SearchResults extends React.PureComponent{
                 <Left>
                    <FastImage
                        source={{
-                           uri: `https://tippinweb.com/api/v0${this.props.item.avatar}`,
+                           uri: `https://${config.api.uri}${this.props.item.avatar}`,
                            headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                            priority: FastImage.priority.normal,
                        }}

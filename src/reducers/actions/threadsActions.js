@@ -3,6 +3,7 @@ import config from "../../config";
 /*
  * action types
  */
+
 const actionTypes = {
     GET_THREADS:"GET_THREADS",
     GET_THREADS_SUCCESS:"GET_THREADS_SUCCESS",
@@ -32,13 +33,14 @@ function setActiveThread(id){
 }
 
 function getThreads(){
+
     return {
         type: actionTypes.GET_THREADS,
         payload: {
             request: {
                 method: 'GET',
                 // url: `${config.prefix}/threads`,
-                url: `${config.api.prefix}/${config.api.messenger.get.type('threads')}`,
+                url: `${config.api.messenger.get.type('threads')}`,
                 headers:{
                     Authorization: null,
                     Accept: 'application/json',

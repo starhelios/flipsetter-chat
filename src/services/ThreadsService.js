@@ -18,10 +18,11 @@ class ThreadsService extends React.Component {
         //     });
         // }
         // if(this.props.app.routeName !== 'Messages'){console.log("clearActiveThread"); this.props.setActiveThread(null)}
-        if(this.props.app.route !== 'Messages' && this.props.threads.activeThread){
+        if(!this.props.app.route.match(/Messages|Call/) && this.props.threads.activeThread){
             // console.log("clear active", this.props.app.route);
             this.props.setActiveThread(null);
         }
+        // console.log("Messages", this.props.messages.messages[this.props.threads.activeThread])
         // console.log(this.props.threads.activeThread, this.props.app.route);
     }
 

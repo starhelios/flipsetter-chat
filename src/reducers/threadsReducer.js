@@ -9,6 +9,7 @@ const initialState = {
 
 
 export default function(state=initialState, action){
+    // alert(JSON.stringify(action))
     let threads = {};
     switch(action.type){
         case Threads.actionTypes.SET_ACTIVE_THREAD:
@@ -29,7 +30,6 @@ export default function(state=initialState, action){
             threads = state.threads.filter( thread => thread.thread_id !== action.payload.thread.thread_id);
             return {...state, threads: {threads, [action.payload.thread.thread_id]: action.payload.thread}};
         case Threads.actionTypes.GET_THREADS_SUCCESS:
-            // console.log(action.payload.data.threads);
             (action.payload.data.threads).map(thread => {
                 if(thread.recent_message.message_type === 90 || thread.recent_message.message_type === 89){
                     thread.recent_message.body = `${thread.recent_message.name} ${thread.recent_message.body}`;
@@ -38,7 +38,7 @@ export default function(state=initialState, action){
                     thread.recent_message.body = `${thread.recent_message.name} sent a photo`;
                 }
                 if(thread.recent_message.message_type === 2){
-                    thread.recent_message.body = `${thread.recent_message.name} sent a video`;
+                    thread.recent_message.body = `${thread.recent_message.name} sent a document`;
                 }
                 thread.recent_message.body = emojify(entities.decode(thread.recent_message.body), {output: 'unicode'})
                 threads[thread.thread_id] = thread

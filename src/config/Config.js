@@ -1,21 +1,27 @@
+const config = {
+  env: (__DEV__) ? 'dev' : 'prod',
+  // env:"dev",
+  prefix: '/api/v1',
+  prod: {
+    uri: 'flipsetter.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '10',
+    client_secret: 'pFpBM7VznnzJTthOMPXQEnhCPkfgcM12XqCeol2n',
+  },
+  dev: {
+    uri: 'tippinweb.com',
+    janus: '/janus',
+    janusws: '/janus-ws',
+    echo: '/socket',
+    client_id: '5',
+    client_secret: '5UgakrxzfZGYlu5hlWWi6Pu6ScWl3ahZblmkhpFq',
 
-let config = {
-    env: (__DEV__) ? "dev" : "prod",
-    prefix: `/api/v1`,
-    prod: {
-        http: "https://flipsetter.com",
-        wss: "wss://flipsetter.com/janus"
-    },
-    dev: {
-        http: "https://tippinweb.com",
-        wss: "wss://tippinweb.com/janus-ws",
-        client_id: '5',
-        client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
-    },
-}
+  },
+};
 
 export default config;
-
 
 //
 // let config = {
@@ -39,7 +45,6 @@ export default config;
 //
 // export default config;
 
-
 // export default config =  {
 //     env: (__DEV__) ? "dev" : "prod",
 //     apiVersion: 1,
@@ -56,4 +61,4 @@ export default config;
 //             client_secret: '6tjWgp5B21sNtTV0SkR4uI77sMZwAtbx6OZcvgbT',
 //         }
 //     }
-//}
+// }

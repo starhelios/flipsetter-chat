@@ -1,26 +1,22 @@
 import React from 'react';
-import {StatusBar, Alert, ScrollView, StyleSheet, View, TouchableOpacity, TouchableHighlight, Button, Text, PanResponder, Dimensions, SafeAreaView } from 'react-native';
-import {Container, Header, Left, Right, Body} from "native-base";
-import {withSocketContext} from "../components/Socket";
-import Icon from "react-native-vector-icons/FontAwesome5";
+import { View, TouchableOpacity, Text, PanResponder, Dimensions, SafeAreaView } from 'react-native';
+import {connect} from "react-redux";
+import {withNavigationFocus} from "react-navigation";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import Svg from 'react-native-svg';
+import simplify from 'simplify-js';
+import uuid from "react-native-uuid";
+
 import ShapeMenu from "../components/Menus/ShapeMenu";
 import ColorMenu from "../components/Menus/ColorMenu";
 import Shape from "../components/SvgShape";
-import Svg, {Path} from 'react-native-svg';
-import simplify from 'simplify-js';
-import uuid from "react-native-uuid";
-// import Api from "../service/Api";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
-import {Friends} from "../reducers/actions";
-import {connect} from "react-redux";
-import {withNavigationFocus} from "react-navigation";
+import {withSocketContext} from "./Socket";
+import {Friends, Call} from "../reducers/actions";
 
 const screenWidth = (Math.round(Dimensions.get('window').width)) ? Math.round(Dimensions.get('window').width) : 0;
 const screenHeight = (Math.round(Dimensions.get('window').height)) ? Math.round(Dimensions.get('window').height) : 0;
 
 class Whiteboard extends React.Component{
-    isMoving = false;
     path = null;
     paths = [];
 
@@ -38,85 +34,49 @@ class Whiteboard extends React.Component{
         users: [],
     }
 
+    _panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderGrant: (evt, gestureState) => {
+            if(!this.checkMove(gestureState)){
+                if(!this.state.isMoving){
+                    this._touchStart(gestureState);
+                }
+            }
+        },
+        onPanResponderMove: (evt, gestureState) => {
+            if(!this.state.isMoving){
+                if(!this.state.shape) {
+                    this._touchMove(gestureState);
+                }
+            }
+            else{
+                this._moveShape(gestureState);
+            }
+        },
+        onPanResponderTerminationRequest: () => true,
+        onPanResponderRelease: (evt, gestureState) => {
+            this._touchEnd(gestureState);
+        },
+        onShouldBlockNativeResponder: () => true,
+    });
+
     constructor(props){
         super(props);
-        console.log("socket", this.props.socket);
-        this.echo = this.props.socket.socket;
-        // this.call = this.echo.join('call_'+this.props.thread_id+'_'+this.props.call_id);
-        this.call = this.echo.join('whiteboard_demo');
-        console.log("Call", this.call);
-        this._panResponder = PanResponder.create({
-            // Ask to be the responder:
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            // onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-            // onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            // onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
 
-            onPanResponderGrant: (evt, gestureState) => {
-                // The gesture has started. Show visual feedback so the user knows
-                // what is happening!
-                // gestureState.d{x,y} will be set to zero now
-                if(!this.checkMove(gestureState)){
-                    if(!this.state.isMoving){
-                        this._touchStart(gestureState);
-
-                    }
-                }
-                else{
-                    // console.log('move');
-                }
-
-
-            },
-            onPanResponderMove: (evt, gestureState) => {
-                // The most recent move distance is gestureState.move{X,Y}
-                // The accumulated gesture distance since becoming responder is
-                // gestureState.d{x,y}
-
-
-                if(!this.state.isMoving){
-                    //Drawing a simple Path
-                    if(!this.state.shape) {
-                        this._touchMove(gestureState);
-                        // console.log("draw path");
-                    }
-
-                }
-                else{
-                    //we're moving a shape
-
-                    this._moveShape(gestureState);
-                    // console.log("move shape");
-                }
-
-
-
-            },
-            onPanResponderTerminationRequest: (evt, gestureState) => true,
-            onPanResponderRelease: (evt, gestureState) => {
-                // The user has released all touches while this view is the
-                // responder. This typically means a gesture has succeeded
-                // this.tempDraw();
-                this._touchEnd(gestureState);
-                // console.log("touch end");
-            },
-            onPanResponderTerminate: (evt, gestureState) => {
-                // Another component has become the responder, so this gesture
-                // should be cancelled
-            },
-            onShouldBlockNativeResponder: (evt, gestureState) => {
-                // Returns whether this component should block native components from becoming the JS
-                // responder. Returns true by default. Is currently only supported on android.
-                return true;
-            },
-        });
-
-        this.listeners();
+        this.echo = props.socket;
     }
 
-    componentDidUpdate(){
-        // console.log(this.state.users);
-        // console.log('update');
+    componentDidMount() {
+        if(typeof this.echo.socket.connector.channels[`presence-call_${this.props.thread_id}_${this.props.call_id}`] !== "undefined"){
+            this.echo.socket.connector.channels[`presence-call_${this.props.thread_id}_${this.props.call_id}`].subscribe();
+            this.call = this.echo.socket.connector.channels[`presence-thread_${this.props.thread_id}`];
+        }
+        else{
+            this.call = this.echo.socket.join(`call_${this.props.thread_id}_${this.props.call_id}`)
+        }
+        if(this.call){
+            this.listeners();
+        }
 
     }
 
@@ -141,9 +101,13 @@ class Whiteboard extends React.Component{
                     <SafeAreaView style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center", borderWidth:1, width: screenWidth}}>
                         <TouchableOpacity
                             style={{width: 40}}
-                            onPress={() => this.props.navigation.goBack()}
+                            onPress={() => this.props.navigation.navigate('Messages', {
+                                thread: this.props.thread_id,
+                                callEnded: true,
+                            })}
+
                         >
-                            <Icon type={"FontAwesome5"} name={"chevron-left"} size={30} style={{color: '#000', }}/>
+                            <FontAwesome5 name={"chevron-left"} size={30} style={{color: '#000', }}/>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={this.clearCanvas}
@@ -153,12 +117,10 @@ class Whiteboard extends React.Component{
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{width: 40}}
-                            onPress={() => {
-                                this.props.muteMic()
-                            }}
+                            onPress={this.props.muteMic}
                         >
                             <View style={{justifyContent:"center", alignItems: "center",}} >
-                                <Icon type='FontAwesome5' name={(this.props.microphone) ? "microphone" : "microphone-slash"} size={30} style={{justifyContent:"center", alignItems: "center", textAlign: "center", }} />
+                                <FontAwesome5 name={(this.props.microphone) ? "microphone" : "microphone-slash"} size={30} style={{justifyContent:"center", alignItems: "center", textAlign: "center", }} />
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -167,7 +129,7 @@ class Whiteboard extends React.Component{
                                 this.showColorMenu()
                             }}
                         >
-                            <Icon
+                            <FontAwesome5
                                 name="circle"
                                 size={30}
                                 style={{
@@ -185,15 +147,9 @@ class Whiteboard extends React.Component{
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{width: 32, marginLeft: 20,}}
-                            onPress={() => {
-                                this.showShapeMenu()
-                            }}
+                            onPress={this.showShapeMenu}
                         >
-                            <Icon
-                                name={"shapes"}
-                                size={30}
-                                style={{}}
-                            />
+                            <FontAwesome5 name="shapes" size={30} />
                         </TouchableOpacity>
                     </SafeAreaView>
                     <View style={{flex: 1}}>
@@ -262,19 +218,11 @@ class Whiteboard extends React.Component{
 
     inShape = (path, gestureState)  => {
 
-
-        // switch(path.type){
-        //     case 2:
         let mx = gestureState.x0;
         let my = gestureState.y0 - this.state.scale.yOffset;
-        // console.log(path);
 
-        // console.log((path.data[0].x - (path.data[0].width * path.zoom)/2 <= mx) && (path.data[0].x + (path.data[0].width * path.zoom)/2 >= mx)
-        //     && (path.data[0].y - (path.data[0].width * path.zoom)/2 <= my) && (path.data[0].y + (path.data[0].width * path.zoom)/2 >= my));
         return (path.data[0].x - (path.data[0].width * path.zoom)/2 <= mx) && (path.data[0].x + (path.data[0].width * path.zoom)/2 >= mx)
             && (path.data[0].y - (path.data[0].height * path.zoom)/2 <= my) && (path.data[0].y + (path.data[0].height * path.zoom)/2 >= my);
-        // break;
-        // }
 
     }
 
@@ -282,18 +230,15 @@ class Whiteboard extends React.Component{
 
         let check = false;
         let current = this.state.paths;
-        // console.log(current);
         for(let i = 0; i <= current.length - 1; i++){
             if(current[i].type !== 1){
                 if(this.inShape(current[i], gestureState)){
-                    //always grab the "newest" or shape highest on the stack
                     check = current[i].id;
                 }
             }
         }
 
         if(check){
-            // console.log(this.state.paths.filter(path => path.id === check)[0]);
             this.path = this.state.paths.filter(path => path.id === check)[0];
 
             this.setState({
@@ -310,7 +255,6 @@ class Whiteboard extends React.Component{
     }
 
     _touchStart = (gestureState) => {
-        // console.log(this.state.scale);
         this.path = {
             id: uuid.v1(),
             timestamp: (new Date).getTime(),
@@ -355,7 +299,7 @@ class Whiteboard extends React.Component{
         />
     }
 
-    _touchEnd = (gestureState) => {
+    _touchEnd = () => {
         if(!this.state.shape) {
             this.call.whisper('end_draw', this.path);
             this.path.data = simplify(this.path.data, 1, true);
@@ -365,6 +309,7 @@ class Whiteboard extends React.Component{
             path: null,
             paths: [...this.state.paths, this.path],
         });
+        this.props.savePath(this.props.call.threadId, this.props.call.id, this.path);
         this.path = null;
     }
 
@@ -415,8 +360,7 @@ class Whiteboard extends React.Component{
         this.setState({ shape: shape });
     }
 
-    getDimensions(layout){
-
+    getDimensions(){
         this.setState({
             scale: {
                 width: screenWidth,
@@ -427,14 +371,12 @@ class Whiteboard extends React.Component{
     }
 
     clearCanvas = () => {
-        // this.ctx.canvas.width = screenWidth;
         this.setState({
             paths: [],
         });
         this.call.whisper('clear_draw', true);
     }
 
-    //Whisper Functions
     startDraw = (data) => {
         console.log("start draw", data);
         this.setState({
@@ -446,7 +388,6 @@ class Whiteboard extends React.Component{
     };
 
     draw = (data) => {
-        //Get Active Drawer
         let user = this.state.users.filter(user => user.id === data.user.id)[0];
         let users = this.state.users.filter(user => user.id !== data.user.id);
 
@@ -458,20 +399,16 @@ class Whiteboard extends React.Component{
     }
 
     endDraw = (data) => {
-        //Get Active Drawer so we can add user's drawer to path
         let user = this.state.users.filter(user => user.id === data.user.id)[0];
         let users = this.state.users.filter(user => user.id !== data.user.id);
 
-        // user.drawer.data.push(data.data[0]);
-        console.log(user);
         this.setState({
             paths: [...this.state.paths, user.drawer],
             users: [...users,],
         })
     }
 
-    clear = (data) => {
-        // console.log(data);
+    clear = () => {
         this.setState({
             paths: [],
         });
@@ -485,12 +422,15 @@ const mapStateToProps = (state) => {
         auth: state.auth,
         app: state.app,
         user: state.user,
-        friends: state.friends
+        friends: state.friends,
+        call: state.call,
     }
 }
 
 const mapDispatchToProps = {
     getList: Friends.getList,
+    savePath: Call.savePath,
+    callHeartbeat: Call.callHeartbeat,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(Whiteboard)))

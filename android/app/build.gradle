@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -133,6 +134,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -165,9 +167,9 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-//            if(project.hasProperty('FLIP_UPLOAD_STORE_FILE')){
-//                signingConfig signingConfigs.release
-//            }
+           if(project.hasProperty('FLIP_UPLOAD_STORE_FILE')){
+               signingConfig signingConfigs.release
+           }
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -189,6 +191,30 @@ android {
 }
 
 dependencies {
+//     implementation project(':react-native-ringer-mode')
+    // implementation project(':react-native-fs')
+//     implementation project(':react-native-giphy-ui')
+    implementation project(':react-native-orientation')
+    implementation project(':react-native-device-info')
+    implementation project(':react-native-reanimated')
+    implementation project(':@react-native-community_slider')
+    implementation project(':react-native-webview')
+    compile project(':WebRTCModule')
+    implementation project(':react-native-sound')
+    //image
+    implementation 'com.github.yalantis:ucrop:2.2.5'
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
+    //Firebase
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
+
+    //React Navigation
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation project(':react-native-document-picker')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -201,20 +227,6 @@ dependencies {
     }
 
     //Addons
-//    WebRTC
-//    compile project(':WebRTCModule')
-
-    //Firebase
-    implementation "com.google.firebase:firebase-messaging:18.0.0"
-    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-
-    // Firebase dependencies
-    implementation "com.google.android.gms:play-services-base:16.1.0"
-    implementation "com.google.firebase:firebase-core:16.0.9"
-
-    //React Navigation
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 }
 
 // Run this once to be able to run the application with BUCK
@@ -223,6 +235,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply plugin: 'com.google.gms.google-services'

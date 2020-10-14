@@ -1,0 +1,83 @@
+{
+  "_args": [
+    [
+      "react-native-thumbnail-video@0.1.2",
+      "/Volumes/Data/chawla data/Flipsetter22JulyLatest/FlipsetterCloneTill22July"
+    ]
+  ],
+  "_from": "react-native-thumbnail-video@0.1.2",
+  "_id": "react-native-thumbnail-video@0.1.2",
+  "_inBundle": false,
+  "_integrity": "sha512-+dD8dIUxiZz/QaL+gOtmb3Co/VE0MK5s8el9fYXpuEZbQu882voz7ALJmEn5o7A62sDTT3mpR2UF1V0ioXTFKA==",
+  "_location": "/react-native-thumbnail-video",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-thumbnail-video@0.1.2",
+    "name": "react-native-thumbnail-video",
+    "escapedName": "react-native-thumbnail-video",
+    "rawSpec": "0.1.2",
+    "saveSpec": null,
+    "fetchSpec": "0.1.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-thumbnail-video/-/react-native-thumbnail-video-0.1.2.tgz",
+  "_spec": "0.1.2",
+  "_where": "/Volumes/Data/chawla data/Flipsetter22JulyLatest/FlipsetterCloneTill22July",
+  "author": {
+    "name": "Lucas Bento",
+    "email": "lucas.bsilva@outlook.com",
+    "url": "https://github.com/lucasbento"
+  },
+  "bugs": {
+    "url": "https://github.com/lucasbento/react-native-thumbnail-video/issues"
+  },
+  "description": "Easily show thumbnails for videos",
+  "devDependencies": {
+    "babel-jest": "^21.2.0",
+    "babel-preset-react-native": "^4.0.0",
+    "jest": "^21.2.1",
+    "react": "> 15.0.0",
+    "react-native": "> 0.40.3",
+    "react-test-renderer": "^16.1.1"
+  },
+  "homepage": "https://github.com/lucasbento/react-native-thumbnail-video#readme",
+  "jest": {
+    "automock": false,
+    "globals": {
+      "__DEV__": true
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/*"
+    ],
+    "modulePaths": [
+      "<rootDir>/src/**/*.test.js"
+    ],
+    "preset": "react-native"
+  },
+  "keywords": [
+    "react-native",
+    "youtube",
+    "video",
+    "thumbnail"
+  ],
+  "license": "MIT",
+  "main": "./src/index.js",
+  "name": "react-native-thumbnail-video",
+  "peerDependencies": {
+    "react": "> 15.0.0",
+    "react-native": "> 0.40.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/lucasbento/react-native-thumbnail-video.git"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "version": "0.1.2"
+}

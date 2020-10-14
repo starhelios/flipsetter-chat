@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import {withSocketContext} from "../components/Socket";
 import FastImage from "react-native-fast-image";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import config from "../config";
 
 class ContactsScreen extends Component<Props> {
 
@@ -23,12 +24,13 @@ class ContactsScreen extends Component<Props> {
     }
 
     _renderItem = ({item}) => {
+        console.log("Contact", `${config.api.uri}${item.avatar}`);
         return(
             <ListItem thumbnail>
                 <Left>
                     <FastImage
                         source={{
-                            uri: `https://tippinweb.com/api/v0${item.avatar}`,
+                            uri: `https://${config.api.uri}${item.avatar}`,
                             headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
                             priority: FastImage.priority.normal,
                         }}

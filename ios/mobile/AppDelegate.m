@@ -21,8 +21,8 @@
 #import "RNVoipPushNotificationManager.h"
 //Firebase
 #import <Firebase.h>
-#import "RNFirebaseNotifications.h"
-#import "RNFirebaseMessaging.h"
+// add this import statement at the top of your `AppDelegate.m` file
+#import "RNFBMessagingModule.h"
 //SplashScreen
 #import "RNSplashScreen.h"
 //AppCenter Analytics
@@ -30,43 +30,44 @@
 #import <AppCenterReactNativeAnalytics.h>
 #import <AppCenterReactNativeCrashes.h>
 
+#import <RNShareMenu/ShareMenuManager.h>
 
 @implementation AppDelegate
 
 
 //FireBase
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
-}
+//- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+//  [[RNFirebaseMessaging instance] didReceiveLocalNotification:notification];
+//}
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
   
   NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[[userInfo objectForKey:@"extraPayload"] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
   NSNumber *type = [data valueForKey:@"notification_type"];
   NSNumber *check = @7;
-  NSLog(@"Is Equal: %d", [type isEqualToNumber:@7]);
-  NSLog(@"%@", [data valueForKey:@"call_id"]);
+  
+  
   if([type isEqualToNumber:check]){
-    if(![RNCallKeep checkIfBusy]){
+    if([RNCallKeep isCallActive:[data valueForKey:@"call_id"]]){
       [RNCallKeep endCallWithUUID:[data valueForKey:@"call_id"] reason:4];
     }
-    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+//    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
     
   }
   else{
-    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+//    [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
   }
 }
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
-}
+//- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+////  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
+//}
 
 /* Add PushKit delegate method */
 
 //Called when a notification is delivered to a foreground app.
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
-{
-  completionHandler(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge);
-}
+//-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
+//{
+//  completionHandler(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge);
+//}
 
  // Handle updated push credentials
  - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
@@ -99,12 +100,18 @@ completion();
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
   [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
   [FIRApp configure];
-  [RNFirebaseNotifications configure];
+//  [RNFirebaseNotifications configure];
   
+  // in "(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions" method
+  // Use `addCustomPropsToUserProps` to pass in props for initialization of your app
+  // Or pass in `nil` if you have none as per below example
+  // For `withLaunchOptions` please pass in `launchOptions` object
+  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
+
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"mobile"
-                                            initialProperties:nil];
+                                            initialProperties:appProperties];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
@@ -126,11 +133,18 @@ completion();
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
 }
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
+//{
+//  return [RNCallKeep application:application
+//           continueUserActivity:userActivity
+//             restorationHandler:restorationHandler];
+//}
+
+- (BOOL)application:(UIApplication *)app
+        openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [RNCallKeep application:application
-           continueUserActivity:userActivity
-             restorationHandler:restorationHandler];
+  return [ShareMenuManager application:app openURL:url options:options];
 }
 
 #if RCT_DEV

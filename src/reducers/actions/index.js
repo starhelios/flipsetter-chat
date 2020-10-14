@@ -7,3 +7,4 @@ export { default as Threads } from './threadsActions';
 export { default as Messages } from './messagesActions';
 export { default as Call } from './callActions';
 export { default as Socket } from './socketActions';
+export { default as Whiteboard } from './whiteboardActions';

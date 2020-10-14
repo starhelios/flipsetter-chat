@@ -6,12 +6,6 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 
 export default class ShapeMenu extends React.Component{
 
-
-
-    constructor(props) {
-        super(props);
-    }
-
     render(){
         let onChange = this.props.onChange;
         return(

@@ -8,12 +8,6 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 export default class ColorMenu extends React.Component{
 
 
-
-    constructor(props) {
-        super(props);
-        // console.log(this.props.color);
-    }
-
     render(){
         let onChange = this.props.onChange;
         return(

@@ -12,6 +12,7 @@ const initialState = {
 
 
 export default function(state=initialState, action){
+    // alert(JSON.stringify(action.payload))
     switch(action.type){
         case Auth.actionTypes.SET_USERNAME:
             return {...state, username: action.payload};
@@ -27,6 +28,8 @@ export default function(state=initialState, action){
             return {...state, isLoggedIn: action.payload};
         case Auth.actionTypes.SET_ERROR_MSG:
             return {...state, errorMsg: action.payload};
+
+
         case Auth.actionTypes.LOGIN_SUCCESS:
             let data = action.payload.data;
             return {...state,
@@ -37,8 +40,20 @@ export default function(state=initialState, action){
                 errorMsg: null,
             };
         case Auth.actionTypes.LOGIN_FAIL:
-            return {...state, isLoggedIn: 2, errorMsg: "Please check your username and password"}
-        default:
+            return {...state, isLoggedIn: 2, errorMsg: "Please check your username and password"};
+
+        case Auth.actionTypes.FORGOT_SUCCESS:
+                return {...state, response: 'true'};
+        case Auth.actionTypes.FORGOT_FAIL:
+                return {...state, error: action.error};
+       
+        case Auth.actionTypes.REGISTER_SUCCESS:
+            return {...state, signIn: 'true'};
+
+        case Auth.actionTypes.REGISTER_FAIL:
+            return {...state, error: action.error};
+
+            default:
             return state;
     }
 }

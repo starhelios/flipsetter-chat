@@ -3,7 +3,6 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow
  */
 
 import React, {Component} from 'react';
@@ -26,6 +25,7 @@ import getTheme from './src/native-base-theme/components';
 import material from "./src/native-base-theme/variables/material";
 import appActions from "./src/reducers/actions/appActions";
 import Analytics from 'appcenter-analytics';
+import ShareMenu from "react-native-share-menu";
 let socket;
 enableScreens();
 
@@ -41,49 +41,65 @@ function getActiveRouteName(navigationState) {
     return route.routeName;
 }
 
-class Main extends Component<Props> {
+class Main extends Component {
 
-    Heartbeat;
-    appState;
+    Heartbeat ;
+    appState ;
     state = {
         heartbeat: null,
     }
-    constructor(props) {
-        super(props);
 
-    }
+    async componentDidMount() {
 
-    async componentDidMount(): void{
+
+        // await ShareMenu.getInitialShare((data) => {
+        //     console.log('asd 3');
+        //     console.log(data);
+        // });
+        // await ShareMenu.addNewShareListener((data) => {
+        //     console.log('asd 4');
+        //     console.log(data);
+        // });
+
         await Analytics.setEnabled(true);
 
         await Analytics.trackEvent("Analytics Started")
 
         let appState = await AppState.currentState;
-        if(appState === 'active' && (this.props.app.appState === 'inactive' || this.props.app.appState === 'background')) this._handleAppStateChange('active');
+        if(appState === 'active' && (this.props.app.appState === 'inactive' || this.props.app.appState === 'background' || this.props.app.appState !== "callDisplayed")) this._handleAppStateChange('active');
         AppState.addEventListener("change", this._handleAppStateChange);
-        if(this.props.user.id && this.props.auth.isLoggedIn && this.props.auth.accessToken){
+        if(this.props.user.id && this.props.auth.isLoggedIn){
             this.setState({
                 heartbeat: Date.now(),
-            }, async() => await this.props.appHeartbeat())
+            }, () => this.props.appHeartbeat());
         }
         this.Heartbeat = setInterval(async() => {
             if(this.props.user.id && this.props.auth.isLoggedIn){
                 this.setState({
                     heartbeat: Date.now(),
-                }, async() => await this.props.appHeartbeat())
+                }, () => this.props.appHeartbeat());
             }
         }, 60000);
     }
 
-    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        if(!this.state.heartbeat && this.props.user.id && this.props.auth.isLoggedIn && this.props.auth.accessToken){
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(!this.state.heartbeat && this.props.user.id && this.props.auth.isLoggedIn){
             this.setState({
                 heartbeat: Date.now(),
             }, async(store) => this.props.appHeartbeat())
         }
+        if(!this.Heartbeat){
+            this.Heartbeat = setInterval(async() => {
+                if(this.props.user.id && this.props.auth.isLoggedIn){
+                    this.setState({
+                        heartbeat: Date.now(),
+                    }, () => this.props.appHeartbeat());
+                }
+            }, 60000);
+        }
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         clearInterval(this.Heartbeat);
         AppState.removeEventListener("change", this._handleAppStateChange);
     }
@@ -100,15 +116,15 @@ class Main extends Component<Props> {
                                 NavigationService.setTopLevelNavigator(navigatorRef);
                             }
                         }}
-                        onNavigationStateChange={(prevState, currentState, action) => {
-                            const currentRouteName = getActiveRouteName(currentState);
-                            const previousRouteName = getActiveRouteName(prevState);
-                            if( previousRouteName !== currentRouteName){
-                                // console.log(currentRouteName);
-                                // console.log("__DEV__", __DEV__)
-                                this._updateRoute(currentRouteName);
-                            }
-                        }}
+                                      onNavigationStateChange={(prevState, currentState, action) => {
+                                          const currentRouteName = getActiveRouteName(currentState);
+                                          const previousRouteName = getActiveRouteName(prevState);
+                                          if( previousRouteName !== currentRouteName){
+                                              // console.log(currentRouteName);
+                                              // console.log("__DEV__", __DEV__)
+                                              this._updateRoute(currentRouteName);
+                                          }
+                                      }}
                             // appState={this.appState}
                         />
                         {/*</SafeAreaProvider>*/}
@@ -127,6 +143,8 @@ class Main extends Component<Props> {
         await this.props.setRoute(route);
 
     }
+
+    _heartbeat = async() => { return this.props.appHeartbeat()};
 };
 
 const mapStateToProps = (state) => {

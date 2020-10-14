@@ -6,38 +6,46 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
-    TextInput,
+    TextInput, Vibration,
     TouchableOpacity,
     View
 } from 'react-native';
+var Sound = require('react-native-sound');
+import Toast from 'react-native-simple-toast';
+import { withSocketContext } from "../../components/Socket";
+import { connect } from "react-redux";
+import { withNavigationFocus } from 'react-navigation';
 
-import {Content, Container, Button, Text,Header, Left, Right, Body} from 'native-base';
+import ActivityLoader from '../../components/ActivityLoader';
+import { App, Auth, User } from "../../reducers/actions";
+import { Content, Container, Button, Text, Header, Left, Right, Body } from 'native-base';
 import logo from '../../components/assets/Logo.png';
-// import AuthService from "../../service/AuthService";
+// import AuthService from "../../services/AuthService";
 
 const window = Dimensions.get('window');
-const MARGIN_TOP = window.height/10;
+const MARGIN_TOP = window.height / 10;
 export const IMAGE_HEIGHT = window.width / 2;
-export const IMAGE_HEIGHT_SMALL = window.width /5;
+export const IMAGE_HEIGHT_SMALL = window.width / 5;
 
-export default class ForgotScreen extends React.Component {
+class ForgotScreen extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             email: null,
             msg: '',
+            loading: false
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
     }
 
-    componentDidMount(){
-        if(Platform.OS === 'android'){
+    componentDidMount() {
+        if (Platform.OS === 'android') {
             this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
             this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
         }
-        else{
+        else {
             this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
             this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
         }
@@ -75,42 +83,111 @@ export default class ForgotScreen extends React.Component {
         ]).start();
     };
 
+
+    playSound = () => {
+        var whoosh = new Sound('click.mp3', Sound.MAIN_BUNDLE, error => {
+          if (error) {
+            console.log('failed to load the sound', error);
+            return;
+          }
+          // loaded successfully
+          console.log(
+            'duration in seconds: ' +
+            whoosh.getDuration() +
+            'number of channels: ' +
+            whoosh.getNumberOfChannels(),
+          );
+          // Play the sound with an onEnd callback
+          whoosh.play(success => {
+            if (success) {
+              console.log('successfully finished playing');
+            } else {
+              console.log('playback failed due to audio decoding errors');
+            }
+          });
+        });
+      };
+
+    ringPhn=()=>{
+        this.playSound();
+    }
+
+
     _login = () => {
+        this.ringPhn();
+
         this.props.navigation.goBack()
     }
 
-    // reset = async() => {
-    //     if(this.state.email) {
-    //         let response = await AuthService.reset(this.state.email);
-    //         if(response.status){
-    //             this.setState({msg: 'Please Check Your Email to Continue'});
-    //         }else{
-    //             this.setState({msg: response.errors.forms});
-    //         }
-    //     }
-    //     else{
-    //         this.setState({msg: "Enter Your Email"});
-    //     }
-    // }
+    checkEmailValid(value) {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(value) === true) {
+            return false
+        }
+        else {
+            return true
+        }
+    }
 
 
+
+    reset = async () => {
+        this.setState({ loading: true })
+this.ringPhn();
+        if (!this.state.email) {
+            Toast.show('Enter Your Email', Toast.LONG);
+            this.setState({loading:false, msg: "Enter Your Email" });
+        }
+        else if (this.checkEmailValid(this.state.email)) {
+            Toast.show('Enter Valid Email', Toast.LONG);
+            this.setState({loading:false, msg: "Enter valid Email" });
+        }
+        else {
+            let response = await this.props.forgotPassword(this.state.email)
+            this.setState({ loading: false })
+
+            switch (response.type) {
+                case "FORGOT_SUCCESS":
+
+                    // this.setState({loading:false,msg: "Please check your email address"});
+                    this.setState({loading:false,msg: response.payload.data.message},()=>
+                    Toast.show(response.payload.data.message, Toast.LONG),
+                    this.props.navigation.goBack()
+                    )
+                    break;
+
+                case "FORGOT_FAIL":
+
+                    this.setState({loading:false,msg: 'Please Check Your Email Address'},()=>
+                    Toast.show('Please Check Your Email Address', Toast.LONG)
+                    )
+                    break;
+
+            }
+        }
+    }
+    goBackk=()=>{
+        this.ringPhn();
+        this.props.navigation.goBack();
+    }
 
     render() {
         return (
             <Container style={styles.container}>
+                {this.state.loading ? <ActivityLoader /> : null}
                 <Header style={styles.header} transparent>
-                    <Left><Text>Back</Text></Left>
+                <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.resetText}>Back</Text></TouchableOpacity></Left>
                     <Body></Body>
                     <Right></Right>
                 </Header>
                 <Animated.View style={[styles.contentContainer, { paddingBottom: this.keyboardHeight }]} onStartShouldSetResponder={() => this.resetInput.blur()}>
-                    <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight,}]} />
+                    <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight, }]} />
 
                     <Text style={styles.error}>{this.state.msg}</Text>
                     <TextInput
                         value={this.state.email}
                         onChangeText={(email) => this.setState({ email })}
-                        placeholder={'Username'}
+                        placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         style={styles.input}
                         ref={(input) => this.resetInput = input}
@@ -120,15 +197,15 @@ export default class ForgotScreen extends React.Component {
                         onPress={this.reset}
                         style={styles.loginButton}
                         underlayColor='#04b600'
-                    ><Text>Reset Password</Text></TouchableOpacity>
-
-                    <Text style={styles.signup} onPress={this._login}>Login</Text>
+                    ><Text style={styles.resetText}>Reset Password</Text></TouchableOpacity>
+                    <Text style={[styles.resetText, { padding: 10 }]} onPress={this._login}>Login</Text>
                 </Animated.View>
             </Container>
         );
     }
-
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -152,15 +229,12 @@ const styles = StyleSheet.create({
         height: IMAGE_HEIGHT,
         resizeMode: 'contain',
         marginBottom: 20,
-        padding:10,
-        marginTop:MARGIN_TOP
+        padding: 10,
+        marginTop: MARGIN_TOP
     },
-    signup:{
-        fontSize:15,
-        marginTop:15,
-    },
+
     input: {
-        backgroundColor:'#FFFFFF',
+        backgroundColor: '#FFFFFF',
         width: window.width - 30,
         height: 50,
         borderRadius: 15,
@@ -170,13 +244,36 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     loginButton: {
-        height:30,
-        width:100,
-        borderRadius:15,
-        alignItems:'center',
+        height: 35,
+        width: '50%',
+        borderRadius: 15,
+        alignItems: 'center',
         justifyContent: 'center',
-        color:'#000',
+        color: '#000',
         backgroundColor: "#04b600",
+        // backgroundColor:'red'
     },
+    resetText: {
+        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'white'
+
+    }
 
 });
+
+
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth,
+        app: state.app,
+        user: state.user,
+    }
+}
+
+const mapDispatchToProps = {
+    forgotPassword: Auth.forgotPassword,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(withNavigationFocus(ForgotScreen)))

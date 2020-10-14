@@ -6,8 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:flipsetter.com</string>
-		<string>webcredentials:tippinweb.com</string>
+		<string>applinks:com.flipsetter.mobile</string>
 	</array>
 </dict>
 </plist>
