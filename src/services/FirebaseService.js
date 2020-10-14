@@ -144,7 +144,7 @@ class FirebaseService extends Component<Props> {
           this.joinedCall(message, data);
           break;
         default:
-          InCallManager.stopRingtone();
+          // InCallManager.stopRingtone();
           console.log('caught', message);
       }
     });
@@ -237,7 +237,7 @@ class FirebaseService extends Component<Props> {
 
   newCall = (notification, data) => {
     console.log('newCall', data);
-    InCallManager.startRingtone('_BUNDLE_');
+    // InCallManager.startRingtone('_BUNDLE_');
     this.props.setAppState('callDisplayed');
     this.props.setCallType(data.call_type);
     this.props.setCallRoom(data.room_id);
@@ -292,7 +292,7 @@ class FirebaseService extends Component<Props> {
     }
   };
   joinedCall = (notification, data) => {
-    InCallManager.stopRingtone();
+    // InCallManager.stopRingtone();
     // console.log("joinedCall", data);
     // if(this.props.call.status !== 'active'){
     //     console.log("end Call answered on another device");

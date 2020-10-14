@@ -614,6 +614,7 @@ class MessagesScreen extends Component {
         },
       };
       this.props.updateMessage(this.activeThread, updated);
+      this.props.getThreads();
       setTimeout(() => {
         this.setState({
           renderMessages: true,
@@ -2113,6 +2114,7 @@ const mapDispatchToProps = {
   setCallThreadId: Call.setCallThreadId,
   setCallStatus: Call.setCallStatus,
   appHeartbeat: App.appHeartbeat,
+  getThreads: Threads.getThreads,
 };
 
 export default connect(

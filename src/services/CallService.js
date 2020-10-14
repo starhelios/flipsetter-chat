@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import RNCallKeep, {CONSTANTS} from "react-native-callkeep";
 import InCallManager from 'react-native-incall-manager';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 import {Call, App} from "../reducers/actions/";
 import NavigationService from "./NavigationService";
 
@@ -21,17 +21,18 @@ class CallService extends Component<Props> {
                appName: 'FlipSetter',
                supportsVideo: true,
            },
-        //    android: {
-        //        alertTitle: 'Permissions required',
-        //        alertDescription: 'This application needs to access your contacts',
-        //        cancelButton: 'Cancel',
-        //        okButton: 'ok',
-        //        additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
-        //    }
+           android: {
+               alertTitle: 'Permissions required',
+               alertDescription: 'This application needs to access your contacts',
+               cancelButton: 'Cancel',
+               okButton: 'ok',
+               additionalPermissions: [PermissionsAndroid.PERMISSIONS.READ_CONTACTS]
+           }
         }).then( accepted => {
             console.log("RNCALLKEEPSETUP", accepted)
         });
         RNCallKeep.setAvailable(true);
+        RNCallKeep.registerAndroidEvents();
         // console.log(this.props.navigator.mediaDevices.enumerateDevices())
 
     }
@@ -85,7 +86,12 @@ class CallService extends Component<Props> {
     startCall = ({ handle, localizedCallerName }) => {
         console.log("Start", handle, localizedCallerName);
         // Your normal start call action
-        RNCallKeep.startCall(this.props.call.id, handle, localizedCallerName, 'generic', true);
+        if(Platform.OS === 'ios') {
+            RNCallKeep.startCall(this.props.call.id, handle, localizedCallerName, 'generic', true);
+        } else {
+            RNCallKeep.startCall(this.props.call.id);
+        }
+        
     };
 
     reportEndCallWithUUID = (callUUID, reason) => {
@@ -99,7 +105,7 @@ class CallService extends Component<Props> {
         console.log("ReceiveStartCallAction", data);
         // Get this event after the system decides you can start a call
         // You can now start a call from within your app
-        InCallManager.stopRingtone();
+        // InCallManager.stopRingtone();
         InCallManager.start({media: "video"});
     };
 
@@ -107,7 +113,7 @@ class CallService extends Component<Props> {
         let { callUUID } = data;
         console.log("Answered", data);
         this.props.setCallId(callUUID);
-        InCallManager.stopRingtone();
+        // InCallManager.stopRingtone();
         this.props.setCallStatus("active");
         NavigationService.navigate('Call');
         // console.log(this.props.call);
