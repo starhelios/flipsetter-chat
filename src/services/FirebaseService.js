@@ -104,26 +104,27 @@ class FirebaseService extends Component<Props> {
   }
 
   _checkPermission = async () => {
-    const enabled = await messaging().hasPermission();
-
-    if (enabled) {
-      if (Platform.OS === 'ios') {
-        VoipPushNotification.registerVoipToken();
-      }
-      this._listeners();
-    } else {
-      messaging()
-        .requestPermission()
-        .then(() => {
-          //User has Authorised
-          this._listeners();
+    messaging().hasPermission().then(granted => {
+      if(granted === -1){
+        this._getPermission();
+      } else {
+        if (Platform.OS === 'ios') {
           VoipPushNotification.registerVoipToken();
-        })
-        .catch((error) => {
-          //user has rejected permissions
-        });
-    }
+        }
+        this._listeners();
+      }
+    })
   };
+
+  _getPermission = async () => {
+    messaging().requestPermission().then(() => {
+      this._listeners();
+      VoipPushNotification.registerVoipToken();
+    }).catch((error) => {
+      //user has rejected permissions
+    })
+
+  }
 
   async _listeners() {
     console.log('Listeners');

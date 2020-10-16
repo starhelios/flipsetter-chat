@@ -966,6 +966,7 @@ class MessagesScreen extends Component {
           }}
           onPress={() => this.openEmoji()}>
           <Image
+            resizeMode="contain"
             source={Images.emojiIcon}
             style={{width: 28, height: 28, alignSelf: 'center'}}
           />
@@ -994,7 +995,7 @@ class MessagesScreen extends Component {
           <Image
             resizeMode="contain"
             source={Images.sendIcon}
-            style={{alignSelf: 'center'}}
+            style={{width: 25, height: 25, alignSelf: 'center'}}
           />
         </Send>
       </View>
