@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     localVideo: {
         height: 125,
         width: 125,
-        bottom: 130,
+        bottom: 75,
         right: 25,
         position: "absolute",
         zIndex: 1,
