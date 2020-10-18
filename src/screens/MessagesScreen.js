@@ -588,11 +588,22 @@ class MessagesScreen extends Component {
         },
         temp_id: await message._id,
       };
+      
     }
+
+    let nameChangedIncomingData = null
+    if(incoming.file) {
+      nameChangedIncomingData = {
+        ...incoming,
+        file: file.name
+      }
+    }
+
 
     //add messages to store
     // return;
-    await this.props.addMessage(this.activeThread, incoming);
+    console.log('check name of the message', incoming)
+    await this.props.addMessage(this.activeThread, nameChangedIncomingData || incoming);
     let response = await this.props.sendMessage(
       this.props.navigation.getParam('thread'),
       message,
@@ -604,6 +615,7 @@ class MessagesScreen extends Component {
     if (response && response.error) {
       this.props.removeMessage(this.activeThread, incoming);
     } else {
+      console.log('check the updated name here', response)
       let updated = {
         ...incoming,
         _id: await response.payload.data.message.message_id,
@@ -613,6 +625,13 @@ class MessagesScreen extends Component {
           name: await response.payload.data.message.name,
         },
       };
+      if(response.payload && response.payload.data && response.payload.data.message &&
+        response.payload.data.message.message_type === 2 && response.payload.data.message.body && updated.file) {
+          updated = {
+            ...updated,
+            file: response.payload.data.message.body,
+          }
+        }
       this.props.updateMessage(this.activeThread, updated);
       this.props.getThreads();
       setTimeout(() => {
