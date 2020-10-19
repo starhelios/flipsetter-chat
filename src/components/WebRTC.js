@@ -479,13 +479,10 @@ const styles = StyleSheet.create({
     localVideo: {
         height: 125,
         width: 125,
-        bottom: 75,
-        right: 25,
+        bottom: 15,
+        right: 15,
         position: "absolute",
-        zIndex: 1,
-        borderRadius: 5,
-        borderColor: '#ff8080',
-        borderWidth: 1,
+        zIndex: 1
     },
     remoteVideo: {
         zIndex:0,
