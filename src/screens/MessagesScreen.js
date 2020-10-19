@@ -749,14 +749,6 @@ class MessagesScreen extends Component {
   };
 
   startCall = async (type) => {
-    if (type === 1) {
-      Alert.alert(
-        'Information',
-        'Welcome to Collaborate video chat for person to person video chat. Group video chat coming soon.',
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-        {cancelable: false},
-      );
-    }
     this.ringPhn();
     let response;
     type === 1
