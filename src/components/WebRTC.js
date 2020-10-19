@@ -416,7 +416,7 @@ class WebRTC extends Component<Props> {
                     {/*}*/}
 
                     {   this.state.remoteSpeaker &&
-                    <RTCView style={{...styles.remoteVideo, height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}} streamURL={this.state.remoteList[this.state.remoteSpeaker]} objectFit={"contain"}/>
+                    <RTCView objectFit="cover" style={{...styles.remoteVideo}} streamURL={this.state.remoteList[this.state.remoteSpeaker]}/>
                     }
                     <RTCView style={{...styles.localVideo}} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
                     <View style={{position: "absolute", bottom: 25,height: 100, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}}>
@@ -482,11 +482,16 @@ const styles = StyleSheet.create({
         bottom: 15,
         right: 15,
         position: "absolute",
+        elevation: 1,
         zIndex: 1
     },
     remoteVideo: {
-        zIndex:0,
-        // width: config.layout.window.width,
+        zIndex: 0,
+        elevation: 0,
+        height: config.layout.window.height,
+        width: config.layout.window.width,
+        alignItems: "center",
+        justifyContent: "center"
     },
     remoteVideoWhiteboard:{
     }
