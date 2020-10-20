@@ -10,6 +10,7 @@ import ThreadsScreen from '../screens/ThreadsScreen';
 import ContactsScreen from '../screens/ContactsScreen';
 // import EventsScreen from '../screens/EventsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ShareMenuScreen from '../screens/ShareMenuScreen';
 
 // Threads Stack
 import MessagesScreen from '../screens/MessagesScreen';
@@ -23,6 +24,7 @@ import TabBar from '../components/tabbar/TabBar';
 const ThreadsStack = createStackNavigator({
   Threads: ThreadsScreen,
   Messages: MessagesScreen,
+  ShareMenu: ShareMenuScreen
 }, {
 
 });

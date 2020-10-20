@@ -29,6 +29,7 @@ import {App, Auth, User, Threads, Messages} from '../reducers/actions';
 import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import ShareMenu from 'react-native-share-menu';
+import NavigationService from '../services/NavigationService';
 
 if (
   Platform.OS === 'android' &&
@@ -69,31 +70,29 @@ class ThreadsScreen extends Component<Props> {
   async componentDidMount(): void {
     //Let's grab the latest threads
 
-
     await ShareMenu.getInitialShare((data) => {
-      console.log('asd 1');
-      console.log(data);
+      NavigationService.navigate('ShareMenu', {
+        data
+      });
     });
+
     await ShareMenu.addNewShareListener((data) => {
-      console.log('asd 2');
-      console.log(data);
-    })
+      NavigationService.navigate('ShareMenu', {
+        data
+      });
+    });
 
+    const {navigation} = this.props;
 
-    const { navigation } = this.props;
-    
-    this.focusListener = navigation.addListener("didFocus", async () => {
+    this.focusListener = navigation.addListener('didFocus', async () => {
       let update = await this.props.getThreads();
       console.log('Update Threads', update);
       if (update.type === 'GET_THREADS_SUCCESS') {
-        this.setState(
-          {
-            threads: {...this.props.threads.threads},
-          },
-        );
+        this.setState({
+          threads: {...this.props.threads.threads},
+        });
       }
     });
-
 
     let update = await this.props.getThreads();
     // this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
@@ -195,11 +194,11 @@ class ThreadsScreen extends Component<Props> {
   //     }
   // }
 
-  showSearch = event => {
+  showSearch = (event) => {
     if (event === 'toggle') {
       //Button
       this.setState(
-        state => ({
+        (state) => ({
           searchHidden: !state.searchHidden,
         }),
         Animated.timing(this.searchHeight, {
@@ -237,7 +236,7 @@ class ThreadsScreen extends Component<Props> {
     }
   };
 
-  _renderItem = data => {
+  _renderItem = (data) => {
     // console.log("render",data);
     let item = data.item;
     switch (data.section.title) {
@@ -269,7 +268,7 @@ class ThreadsScreen extends Component<Props> {
 
     //if query is set loop through threads and see what matches
     if (query) {
-      threads = Object.values(this.props.threads.threads).filter(thread => {
+      threads = Object.values(this.props.threads.threads).filter((thread) => {
         if (query.test(thread.name)) {
           return true;
         }
@@ -309,7 +308,7 @@ class ThreadsScreen extends Component<Props> {
     ];
   };
 
-  _onPressItem = item => {
+  _onPressItem = (item) => {
     //Store active thread for app state, also marks thread as read
 
     // this.props.setActiveThread(item);
@@ -319,7 +318,7 @@ class ThreadsScreen extends Component<Props> {
     });
   };
 
-  _searchFocused = focused => {
+  _searchFocused = (focused) => {
     console.log('focused', focused);
     this.setState({
       focused: focused,
@@ -330,7 +329,7 @@ class ThreadsScreen extends Component<Props> {
   render() {
     return (
       <Container>
-        <Header onLayout={event => this.headerHeight}>
+        <Header onLayout={(event) => this.headerHeight}>
           <Left style={{flex: 1}}>
             <Title>Messages</Title>
           </Left>
@@ -367,7 +366,7 @@ class ThreadsScreen extends Component<Props> {
           }}>
           <SectionList
             sections={this.listData()}
-            keyExtractor={item =>
+            keyExtractor={(item) =>
               item.thread_id ? `thread_${item.thread_id}` : `search_${item.id}`
             }
             renderItem={this._renderItem}
@@ -408,7 +407,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     app: state.app,
