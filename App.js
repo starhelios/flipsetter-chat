@@ -115,18 +115,18 @@ class Main extends Component {
     clearInterval(this.Heartbeat);
     AppState.removeEventListener('change', this._handleAppStateChange);
 
-    var that = this;
-    ShareMenu.getSharedText((text) => {
-      console.log(text);
-      console.log('LOG');
-      if (text && text.length) {
-        if (text.startsWith('content://media/')) {
-          that.setState({sharedImage: text});
-        } else {
-          that.setState({sharedText: text});
-        }
-      }
-    });
+    // var that = this;
+    // ShareMenu.getSharedText((text) => {
+    //   console.log(text);
+    //   console.log('LOG');
+    //   if (text && text.length) {
+    //     if (text.startsWith('content://media/')) {
+    //       that.setState({sharedImage: text});
+    //     } else {
+    //       that.setState({sharedText: text});
+    //     }
+    //   }
+    // });
   }
 
   render() {

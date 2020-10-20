@@ -16,6 +16,7 @@ import {
 import Images from '../config/Images';
 
 const CustomModal = (props) => {
+  console.log(props);
   return (
     <Modal
       isVisible
@@ -86,7 +87,7 @@ const CustomModal = (props) => {
               ) : (
                 <Image
                   style={{height: hp('22%'), width: wp('45%')}}
-                  source={{uri: item.path}}
+                  source={{uri: 'file://' + item.path}}
                 />
               )}
             </View>

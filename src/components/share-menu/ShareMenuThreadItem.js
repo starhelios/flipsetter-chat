@@ -7,6 +7,8 @@ export class ShareMenuThreadItem extends Component {
   render() {
     const {data, onSendClick} = this.props;
 
+    console.log(data.avatarSourceData);
+
     return (
       <View style={styles.container}>
         <FastImage

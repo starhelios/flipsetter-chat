@@ -208,10 +208,12 @@ class MessagesScreen extends Component {
       });
     }
     // AppState.addEventListener('change', this._handleAppStateChange);
+
+    this.updateFilesToUploadFromParams();
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    const {messages: {messages: oldMessages} = {}} = prevProps;
+    const {messages: {messages: oldMessages} = {} } = prevProps;
     const {messages: {messages: newMessages} = {}} = this.props;
     if (oldMessages[this.activeThread] && newMessages[this.activeThread]) {
       const [oldFirstMessage] = oldMessages[this.activeThread];
@@ -397,7 +399,54 @@ class MessagesScreen extends Component {
       this.props.appHeartbeat();
       this.props.setCallStatus(null);
     }
+
+    if (prevProps.navigation.getParam('dataToShare') !==
+    this.props.navigation.getParam('dataToShare')) {
+      this.updateFilesToUploadFromParams();
+    }
   }
+
+  updateFilesToUploadFromParams = async () => {
+    console.log('START')
+    const dataToShare = this.props.navigation.getParam('dataToShare');
+
+    if (dataToShare) {
+      const imgStat = await this.getFileStat(dataToShare.data);
+
+      this.setState({
+        showModal: true,
+        selectedImages: [{
+          ...imgStat,
+          path: imgStat.path
+        }],
+        fileToUploadArray: this.createImagesToUpload([{
+          path: imgStat.path,
+          mime: dataToShare.mimeType
+        }]),
+      });
+
+    }
+  }
+
+
+  getFileStat = async (path) => {
+    const res = await RNFetchBlob.fs.stat(path);
+    return res;
+  }
+
+  createImagesToUpload = (images) => {
+    return images.map((img) => {
+      const nm = this.generateName();
+      const file = {
+        name: 'img' + nm + '.jpg',
+        type: 'image/jpeg',
+        uri: 'file://' + `${img.path}`,
+      };
+
+      return file;
+    });
+  }
+
 
   // name: Rogelio Leffler
   // email: kamron63@example.com
@@ -549,6 +598,9 @@ class MessagesScreen extends Component {
   async onSend(message = [], type, file) {
     this.setState({openPicker: false, showEmoji: false});
 
+    console.log(file);
+    console.log('FILE')
+
     //Set the message fast, we can update later
     let incoming;
     if (type === 'img' || type === 'image/jpeg') {
@@ -588,8 +640,12 @@ class MessagesScreen extends Component {
         },
         temp_id: await message._id,
       };
-      
+
     }
+
+    // debugger;
+
+    // return;
 
     let nameChangedIncomingData = null
     if(incoming.file) {
@@ -796,6 +852,9 @@ class MessagesScreen extends Component {
 
         const imgs = [file];
 
+        console.log('IMAG')
+        console.log(imag);
+
         this.setState({
           showModal: true,
           selectedImages: [imag],
@@ -814,6 +873,7 @@ class MessagesScreen extends Component {
       multiple: true,
     })
       .then((images) => {
+        console.log(images)
         let imgs = [];
         images.map((res) => {
           let nm = this.generateName();
@@ -1170,7 +1230,6 @@ class MessagesScreen extends Component {
 
   render() {
     const {isLoadingEarlierMessages, hasOldMessages, isLoading, showAlertModal} = this.state;
-    console.log(this.props.threads.threads, 'check the thread types');
     return (
       <Container>
         {/* Alert modal */}
@@ -1184,8 +1243,8 @@ class MessagesScreen extends Component {
           <View style={styles.modalView}>
             <FontAwesome5 onPress={this.handleCloseIconPress} style={styles.closeIcon} name={'times'} size={24} color={'#000000'} />
             <Text style={styles.modalText}>
-              Group video chat coming soon! You can still video chat person to person on here. 
-              To learn more about how to add people to your networks, please contact us at 
+              Group video chat coming soon! You can still video chat person to person on here.
+              To learn more about how to add people to your networks, please contact us at
               <Text style={styles.textStyle} onPress={this.handleEmailClick}> flipsetter.contact@gmail.com</Text>
             </Text>
           </View>
@@ -1235,7 +1294,7 @@ class MessagesScreen extends Component {
                 this.props.threads.threads[this.activeThread].options
                   .admin_call) ||
               this.props.threads.threads[this.activeThread].thread_type ===
-                1 
+                1
               || this.props.threads.threads[this.activeThread].thread_type === 2) && (
               <View
                 style={{

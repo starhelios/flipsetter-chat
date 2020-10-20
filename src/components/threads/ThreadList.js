@@ -122,6 +122,12 @@ class ThreadList extends React.PureComponent {
     let date = moment(this.props.updated_at).isSame(moment(), 'd')
       ? moment(this.props.updated_at).format('h:mm')
       : moment(this.props.updated_at).format('ddd h:mm');
+
+      console.log({
+        uri: `https://${config.api.uri}${this.props.thread.avatar}`,
+        headers: {Authorization: `Bearer ${this.props.auth.accessToken}`},
+        priority: FastImage.priority.normal,
+      });
     return (
       <ListItem thumbnail onPressOut={this._onPress}>
         <Left>

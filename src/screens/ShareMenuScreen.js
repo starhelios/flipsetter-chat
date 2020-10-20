@@ -44,7 +44,6 @@ if (
 class ShareMenuScreen extends Component {
   headerHeight = 0;
   state = {
-    // threads: {...this.props.threads.threads},
     isloading: true,
     refreshing: false,
     searchResults: null,
@@ -58,6 +57,7 @@ class ShareMenuScreen extends Component {
   constructor(props) {
     super(props);
   }
+
 
   listData = () => {
     //init threads
@@ -91,9 +91,18 @@ class ShareMenuScreen extends Component {
     }));
   };
 
+  handleShareClick = (threadId) => {
+    const { navigation } = this.props;
+
+    navigation.navigate('Messages', {
+      dataToShare: navigation.state.params.data,
+      thread: threadId
+    })
+  };
+
   render() {
-    console.log();
-    // conso
+    const {params} = this.props.navigation.state;
+
     return (
       <Container>
         <Header onLayout={(event) => this.headerHeight}>
@@ -102,17 +111,6 @@ class ShareMenuScreen extends Component {
           </Left>
           <Body style={{flex: 1}} />
           <Right style={{flex: 1, marginRight: 0}}>
-            {/* <TouchableOpacity
-              // onPress={() => this.showSearch('toggle')}
-              style={{width: 30}}>
-              <FontAwesome5
-                name={'search'}
-                style={{
-                  fontSize: 24,
-                  color: '#FFF',
-                }}
-              />
-            </TouchableOpacity> */}
           </Right>
         </Header>
         <Animated.View
@@ -125,7 +123,10 @@ class ShareMenuScreen extends Component {
           />
         </Animated.View>
 
-        <ShareMenuThreadList list={this.listData()} />
+        <ShareMenuThreadList
+          list={this.listData()}
+          onSendClick={this.handleShareClick}
+        />
       </Container>
     );
   }

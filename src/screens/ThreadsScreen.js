@@ -68,18 +68,22 @@ class ThreadsScreen extends Component<Props> {
   }
 
   async componentDidMount(): void {
-    //Let's grab the latest threads
 
     await ShareMenu.getInitialShare((data) => {
-      NavigationService.navigate('ShareMenu', {
-        data
-      });
+      if (data) {
+        NavigationService.navigate('ShareMenu', {
+          data,
+        });
+      }
+
     });
 
     await ShareMenu.addNewShareListener((data) => {
-      NavigationService.navigate('ShareMenu', {
-        data
-      });
+      if (data) {
+        NavigationService.navigate('ShareMenu', {
+          data,
+        });
+      }
     });
 
     const {navigation} = this.props;
