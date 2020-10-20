@@ -194,6 +194,7 @@ dependencies {
 //     implementation project(':react-native-ringer-mode')
     // implementation project(':react-native-fs')
 //     implementation project(':react-native-giphy-ui')
+    compile project(':react-native-share-menu')
     implementation project(':react-native-orientation')
     implementation project(':react-native-device-info')
     implementation project(':react-native-reanimated')
@@ -206,6 +207,8 @@ dependencies {
     implementation 'com.facebook.soloader:soloader:0.9.0+'
     //Firebase
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
+
 
 
     //React Navigation

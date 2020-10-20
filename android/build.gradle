@@ -37,7 +37,6 @@ allprojects {
   maven { url "http://giphy.bintray.com/giphy-sdk" }
 
 
-
     }
 }
 

@@ -1,9 +1,11 @@
 package com.flipsetter.mobile;
 
+
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.meedan.ShareMenuPackage;
 import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -18,6 +20,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+
 
 // import com.oney.WebRTCModule.WebRTCModulePackage;
 
@@ -36,7 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-//            packages.add(new WebRTCModulePackage());
+          //  packages.add(new ShareMenuPackage());
 
             // packages.add(new RNFSPackage());
             return packages;
