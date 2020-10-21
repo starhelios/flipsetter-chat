@@ -102,6 +102,8 @@ class Main extends Component {
       this.props.setIsLoggedIn(null);
       this.props.setAccessToken('');
       this.props.setUserID('');
+
+      this.props.logout();
     }
   }
 
@@ -171,8 +173,9 @@ const mapDispatchToProps = {
   setRoute: App.setRoute,
   appHeartbeat: App.appHeartbeat,
   setAccessToken: Auth.setAccessToken,
-    setIsLoggedIn: Auth.setIsLoggedIn,
-    setUserID: User.setUserID,
+  setIsLoggedIn: Auth.setIsLoggedIn,
+  setUserID: User.setUserID,
+  logout: Auth.logout
 };
 
 let Flipsetter = connect(mapStateToProps, mapDispatchToProps)(Main);

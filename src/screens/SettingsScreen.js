@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, Platform, StatusBar,Vibration} from 'react-native';
+import {StyleSheet, Platform, StatusBar,Vibration, AsyncStorage} from 'react-native';
 import { Container, Header, Icon, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Title, Button } from 'native-base';
 import {App, User, Auth} from "../reducers/actions";
 import {connect} from "react-redux";
@@ -14,6 +14,8 @@ class SettingsScreen extends Component {
         this.props.setIsLoggedIn(null);
         this.props.setAccessToken('');
         this.props.setUserID('');
+
+        this.props.logout();
     }
 
 
@@ -80,6 +82,7 @@ const mapDispatchToProps = {
     setAccessToken: Auth.setAccessToken,
     setIsLoggedIn: Auth.setIsLoggedIn,
     setUserID: User.setUserID,
+    logout: Auth.logout
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(SettingsScreen))

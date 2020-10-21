@@ -56,6 +56,10 @@ function setErrorMsg(msg) {
     return { type: actionTypes.SET_ERROR_MSG, payload: msg }
 }
 
+function logout() {
+  return {type: 'LOGOUT'}
+}
+
 
 function login(email, pass, fcm_token, voip_token) {
     //  DeviceInfo.getDeviceName().then(deviceName => {
@@ -74,7 +78,7 @@ function login(email, pass, fcm_token, voip_token) {
                     // username: email,
                     // password: pass,
                     // email:email,
-                    // scope: '', 
+                    // scope: '',
                     email: email,
                     password: pass,
                     client_secret: (config.env === "dev") ? config.dev.client_secret : config.prod.client_secret,
@@ -134,5 +138,5 @@ function forgotPassword(email) {
 }
 
 export default {
-    actionTypes, setUsername, setPassword, forgotPassword, setAccessToken, setRefreshToken, setExpiry, setIsLoggedIn, setErrorMsg, login, register
+    actionTypes, setUsername, setPassword, forgotPassword, setAccessToken, setRefreshToken, setExpiry, setIsLoggedIn, setErrorMsg, login, register,logout
 };
