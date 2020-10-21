@@ -20,6 +20,7 @@ const actionTypes = {
   REGISTER_DEVICE_TO_ACCOUNT: 'REGISTER_DEVICE_TO_ACCOUNT',
   SET_LAST_NOTIFICATION: 'SET_LAST_NOTIFICATION',
   SET_DEVICE_TYPE: 'SET_DEVICE_TYPE',
+  APP_HEARTBEAT_FAIL: 'APP_HEARTBEAT_FAIL'
 };
 
 /*
@@ -70,7 +71,7 @@ function joinDevice(device_id, device_token, voip_token){
     // DeviceInfo.getDeviceName().then(deviceName => {
     //     Constants.DEVICE_NAME = deviceName;
     //   });
-      
+
     //   alert("jj "+Constants.DEVICE_NAME)
 
     return {

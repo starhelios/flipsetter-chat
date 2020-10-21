@@ -57,6 +57,7 @@ export const rootPersistConfig = {
 const appPersistConfig = {
   key: 'app',
   storage: AsyncStorage,
+  blacklist: ['heartbeat'],
 };
 
 const authPersistConfig = {

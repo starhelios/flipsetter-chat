@@ -97,6 +97,12 @@ class Main extends Component {
         async (store) => this.props.appHeartbeat(),
       );
     }
+
+    if (this.props.app.heartbeat?.status === 401) {
+      this.props.setIsLoggedIn(null);
+      this.props.setAccessToken('');
+      this.props.setUserID('');
+    }
   }
 
   componentWillUnmount() {
@@ -164,6 +170,9 @@ const mapDispatchToProps = {
   setAppState: App.setAppState,
   setRoute: App.setRoute,
   appHeartbeat: App.appHeartbeat,
+  setAccessToken: Auth.setAccessToken,
+    setIsLoggedIn: Auth.setIsLoggedIn,
+    setUserID: User.setUserID,
 };
 
 let Flipsetter = connect(mapStateToProps, mapDispatchToProps)(Main);
