@@ -75,7 +75,7 @@ class FirebaseService extends Component<Props> {
     }
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     // if(prevProps.app.fcm_token !== this.props.app.fcm_token || prevProps.app.voip_token !== this.props.app.voip_token || prevProps.app.device_id !== this.props.app.device_id){
     //     await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)
     // }
@@ -100,6 +100,15 @@ class FirebaseService extends Component<Props> {
           );
         },
       );
+    }
+
+    if (this.props.auth.isLoggedIn !== prevProps.auth.isLoggedIn) {
+      if (!this.props.auth.isLoggedIn) {
+        messaging().deleteToken();
+      } else {
+        //subscribe again
+      }
+
     }
   }
 

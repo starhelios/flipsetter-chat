@@ -15,7 +15,7 @@ class SettingsScreen extends Component {
         this.props.setAccessToken('');
         this.props.setUserID('');
 
-        this.props.logout();
+        // this.props.logout();
     }
 
 
