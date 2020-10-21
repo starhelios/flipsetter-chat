@@ -97,36 +97,11 @@ class Main extends Component {
         async (store) => this.props.appHeartbeat(),
       );
     }
-    if (!this.Heartbeat) {
-      this.Heartbeat = setInterval(async () => {
-        if (this.props.user.id && this.props.auth.isLoggedIn) {
-          this.setState(
-            {
-              heartbeat: Date.now(),
-            },
-            () => this.props.appHeartbeat(),
-          );
-        }
-      }, 60000);
-    }
   }
 
   componentWillUnmount() {
     clearInterval(this.Heartbeat);
     AppState.removeEventListener('change', this._handleAppStateChange);
-
-    // var that = this;
-    // ShareMenu.getSharedText((text) => {
-    //   console.log(text);
-    //   console.log('LOG');
-    //   if (text && text.length) {
-    //     if (text.startsWith('content://media/')) {
-    //       that.setState({sharedImage: text});
-    //     } else {
-    //       that.setState({sharedText: text});
-    //     }
-    //   }
-    // });
   }
 
   render() {
