@@ -102,8 +102,6 @@ class Main extends Component {
       this.props.setIsLoggedIn(null);
       this.props.setAccessToken('');
       this.props.setUserID('');
-
-      this.props.logout();
     }
   }
 

@@ -102,13 +102,24 @@ class FirebaseService extends Component<Props> {
       );
     }
 
-    if (this.props.auth.isLoggedIn !== prevProps.auth.isLoggedIn) {
-      if (!this.props.auth.isLoggedIn) {
-        messaging().deleteToken();
-      } else {
-        //subscribe again
-      }
+    if (this.props.auth.isLoggedIn !== prevProps.auth.isLoggedIn && !this.props.auth.isLoggedIn) {
+      try {
+        await messaging().deleteToken();
 
+        await this._checkPermission();
+        const deviceToken = await messaging().getToken();
+        this.props.setDeviceToken(deviceToken);
+        const deviceId = await DeviceInfo.getUniqueId();
+        this.props.setDeviceID(deviceId);
+
+        await this.props.joinDevice(
+          deviceId,
+          deviceToken,
+          this.props.app.voip_token,
+        );
+      } catch (error) {
+        console.log('FCM Token delete error')
+      }
     }
   }
 
@@ -581,6 +592,7 @@ const mapDispatchToProps = {
   setCallerName: Call.setCallerName,
   setCallThreadId: Call.setCallThreadId,
   setCallStatus: Call.setCallStatus,
+  login: Auth.login,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FirebaseService);
