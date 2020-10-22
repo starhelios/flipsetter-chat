@@ -66,7 +66,6 @@ class ThreadList extends React.PureComponent {
           : null;
 
       if (this.activeCall) {
-        console.log(this.activeCall);
         this.setState({
           activeCall: true,
         });
@@ -89,21 +88,17 @@ class ThreadList extends React.PureComponent {
         app.heartbeat.data.states.active_calls != null &&
         typeof app.heartbeat !== 'undefined'
       ) {
-        let check = this.props.app.heartbeat.data.states.active_calls.filter(
-          call => call.thread_id === this.props.thread.thread_id,
-        )[0];
-        // console.log(check);
-        // if (check.length === 1) {
-        //     this.activeCall = check;
-        //     this.setState({
-        //         activeCall: true,
-        //     });
-        // } else if (check.length === 0) {
-        //     this.activeCall = null;
-        //     this.setState({
-        //         activeCall: false,
-        //     })
-        // }
+        this.activeCall =
+          this.props.app.heartbeat &&
+          typeof this.props.app.heartbeat.data.states.active_calls !== 'undefined'
+            ? this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.props.thread.thread_id)[0]
+            : null;
+
+        if (this.activeCall) {
+          this.setState({
+            activeCall: true,
+          });
+        }
       }
     }
   }
