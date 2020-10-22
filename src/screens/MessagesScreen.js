@@ -409,43 +409,68 @@ class MessagesScreen extends Component {
 
 
   updateFilesToUploadFromParams = async () => {
-    const dataToShare = this.props.navigation.getParam('dataToShare');
+    let dataToShare = this.props.navigation.getParam('dataToShare');
+
+    if (typeof dataToShare?.data === 'string') {
+      dataToShare = {
+        ...dataToShare,
+        data: [dataToShare.data]
+      }
+    }
+
     const IMAGE_TYPE = 'image';
     const DOC_TYPE = 'application';
 
+    this.setState({openPicker: false, isDoc: false});
+
     const dataType = dataToShare.mimeType.split('/')[0];
 
-    if (dataToShare) {
-      const imgStat = await this.getFileStat(dataToShare.data);
+    let filesStat = [];
 
-      if (dataType === IMAGE_TYPE) {
-        this.setState({
-          showModal: true,
-          selectedImages: [{
-            ...imgStat,
-            path: imgStat.path
-          }],
-          fileToUploadArray: this.createImagesToUpload([{
-            path: imgStat.path,
-            mime: dataToShare.mimeType
-          }]),
-        });
+    if (dataToShare) {
+      if (Array.isArray(dataToShare?.data)) {
+        if (dataToShare.mimeType === '*/*') {
+          return;
+        }
+
+        const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
+
+        filesStatRes.forEach((stat) => {
+          filesStat.push(stat);
+        })
+      } else {
+        const fileStatRes = await this.getFileStat(dataToShare.data[0]);
+
+        filesStat.push(fileStatRes)
       }
 
-      if (dataType === DOC_TYPE) {
-        const results = [{
-          name: imgStat.filename,
-          type: dataToShare.mimeType,
-          uri: dataToShare.data,
-        }];
+      try {
+        if (dataType === IMAGE_TYPE) {
+          this.setState({
+            showModal: true,
+            selectedImages: filesStat,
+            fileToUploadArray: this.createImagesToUpload(filesStat),
+          });
+        }
 
-        this.setState({
-          doc: true,
-          isDoc: true,
-          showModal: true,
-          selectedImages: results,
-          fileToUploadArray: results,
-        });
+        if (dataType === DOC_TYPE) {
+          console.debug("dataToShare", dataToShare)
+          const results = filesStat.map((stat, idx) => ({
+            name: stat.filename,
+            type: dataToShare.mimeType,
+            uri: dataToShare.data[idx]
+          }))
+
+          this.setState({
+            doc: true,
+            isDoc: true,
+            showModal: true,
+            selectedImages: results,
+            fileToUploadArray: results,
+          });
+        }
+      } catch (error) {
+        console.error(error)
       }
     }
   }

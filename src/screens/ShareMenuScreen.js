@@ -58,6 +58,14 @@ class ShareMenuScreen extends Component {
     super(props);
   }
 
+  _searchFocused = (focused) => {
+    console.log('focused', focused);
+    this.setState({
+      focused: focused,
+      searchHidden: !focused,
+    });
+  };
+
 
   listData = () => {
     //init threads

@@ -16,7 +16,6 @@ import {
 import Images from '../config/Images';
 
 const CustomModal = (props) => {
-  console.log(props);
   return (
     <Modal
       isVisible

@@ -65,8 +65,17 @@
               <data android:mimeType="text/plain" />
               <data android:mimeType="image/*" />
               <data android:mimeType="application/*" />
-              <!-- Any other mime types you want to support -->
             </intent-filter>
+
+            <intent-filter>
+              <action android:name="android.intent.action.SEND_MULTIPLE" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <data android:mimeType="text/plain" />
+              <data android:mimeType="image/*" />
+              <data android:mimeType="application/*" />
+            </intent-filter>
+
+
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
         <!--        services and other addons -->
