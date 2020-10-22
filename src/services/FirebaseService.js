@@ -325,8 +325,14 @@ class FirebaseService extends Component<Props> {
     let body;
 
     // console.log(channel.channelId);
-    let data = JSON.parse(notification._data.extraPayload);
+    let data = JSON.parse(notification.data.extraPayload);
     console.log(notification, 'check the new message', data);
+
+
+    if (data.notification_type === 0 && data.message_type === 90) {
+      this.props.appHeartbeat();
+    }
+
     let check = Object.values(
       this.props.messages.messages[data.thread_id],
     ).filter((message) => {
