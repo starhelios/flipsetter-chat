@@ -406,25 +406,47 @@ class MessagesScreen extends Component {
     }
   }
 
+
+
   updateFilesToUploadFromParams = async () => {
-    console.log('START')
     const dataToShare = this.props.navigation.getParam('dataToShare');
+    const IMAGE_TYPE = 'image';
+    const DOC_TYPE = 'application';
+
+    const dataType = dataToShare.mimeType.split('/')[0];
 
     if (dataToShare) {
       const imgStat = await this.getFileStat(dataToShare.data);
 
-      this.setState({
-        showModal: true,
-        selectedImages: [{
-          ...imgStat,
-          path: imgStat.path
-        }],
-        fileToUploadArray: this.createImagesToUpload([{
-          path: imgStat.path,
-          mime: dataToShare.mimeType
-        }]),
-      });
+      if (dataType === IMAGE_TYPE) {
+        this.setState({
+          showModal: true,
+          selectedImages: [{
+            ...imgStat,
+            path: imgStat.path
+          }],
+          fileToUploadArray: this.createImagesToUpload([{
+            path: imgStat.path,
+            mime: dataToShare.mimeType
+          }]),
+        });
+      }
 
+      if (dataType === DOC_TYPE) {
+        const results = [{
+          name: imgStat.filename,
+          type: dataToShare.mimeType,
+          uri: dataToShare.data,
+        }];
+
+        this.setState({
+          doc: true,
+          isDoc: true,
+          showModal: true,
+          selectedImages: results,
+          fileToUploadArray: results,
+        });
+      }
     }
   }
 
@@ -900,7 +922,7 @@ class MessagesScreen extends Component {
       const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
       });
-      console.log(JSON.stringify(results));
+      console.log(results);
       let docs = [];
       results.map((res) => {
         // alert(JSON.stringify(res))
