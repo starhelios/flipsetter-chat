@@ -7,7 +7,7 @@ import TabBarIcon from '../components/tabbar/TabBarIcon';
 
 // Main Tab Screens
 import ThreadsScreen from '../screens/ThreadsScreen';
-import ContactsScreen from '../screens/ContactsScreen';
+import FriendsScreen from '../screens/FriendsScreen';
 import PhoneContactsScreen from '../screens/PhoneContactsScreen';
 // import EventsScreen from '../screens/EventsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -49,21 +49,21 @@ ThreadsStack.navigationOptions = ({navigation}) => {
   };
 };
 
-const ContactsStack = createStackNavigator(
+const FriendsStack = createStackNavigator(
   {
-    Contacts: ContactsScreen,
+    Friends: FriendsScreen,
   },
   {
     headerMode: 'screen',
   },
 );
 
-ContactsStack.navigationOptions = {
-  tabBarLabel: 'Contacts',
+FriendsStack.navigationOptions = {
+  tabBarLabel: 'Friends',
   tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'address-book' : 'address-book'}
+      name={Platform.OS === 'ios' ? 'users' : 'users'}
     />
   ),
 };
@@ -120,10 +120,11 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator(
   {
     ThreadsStack,
-    ContactsStack,
+    FriendsStack,
     // EventsStack,
-    SettingsStack,
     PhoneContactsStack,
+    SettingsStack,
+
   },
   {
     tabBarComponent: (props) => <TabBar {...props} />,

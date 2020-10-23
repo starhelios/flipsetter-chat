@@ -8,7 +8,7 @@ import FastImage from "react-native-fast-image";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import config from "../config";
 
-class ContactsScreen extends Component<Props> {
+class FriendsScreen extends Component<Props> {
 
     constructor(props) {
         super(props);
@@ -55,7 +55,7 @@ class ContactsScreen extends Component<Props> {
                 <Header>
                     <StatusBar backgroundColor={"#24422e"} />
                     <Left></Left>
-                    <Body><Title>Contacts</Title></Body>
+                    <Body><Title>Friends</Title></Body>
                     <Right></Right>
                 </Header>
                 <FlatList
@@ -85,4 +85,4 @@ const mapDispatchToProps = {
     getList: Friends.getList,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(ContactsScreen))
+export default connect(mapStateToProps, mapDispatchToProps)(withSocketContext(FriendsScreen))
