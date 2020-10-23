@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   Container,
   Header,
@@ -19,13 +20,12 @@ import {
 } from 'native-base';
 import {connect} from 'react-redux';
 import {withSocketContext} from '../components/Socket';
-import FastImage from 'react-native-fast-image';
-import config from '../config';
 
 import {PermissionsAndroid} from 'react-native';
 
 import Contacts from 'react-native-contacts';
-import {noUserAvatar} from '../images';
+
+import SendSMS from 'react-native-sms';
 
 class PhoneContactsStack extends Component {
   constructor(props) {
@@ -34,6 +34,7 @@ class PhoneContactsStack extends Component {
 
   state = {
     contactList: [],
+    sentInvitations: [],
   };
 
   async componentDidMount() {
@@ -50,9 +51,11 @@ class PhoneContactsStack extends Component {
       }
 
       const res = await Contacts.getAll();
-      console.debug('contats', res);
+      const sentInvitations = await AsyncStorage.getItem('sentInvitations');
+
       this.setState({
-        contactList: res,
+        contactList: res.filter((data) => data.phoneNumbers.length),
+        sentInvitations: sentInvitations ? JSON.parse(sentInvitations) : [],
       });
     } catch (error) {
       console.log(error.message);
@@ -63,9 +66,53 @@ class PhoneContactsStack extends Component {
     return item.recordID;
   };
 
-  _handleInvitePress = (recordId) => {};
+  _handleInvitePress = (recordID) => {
+    const foundContact = this.state.contactList.find(
+      (cont) => recordID === cont.recordID,
+    );
+    const isInvitationSent = this.state.sentInvitations.some(
+      (data) => data.recordID === recordID,
+    );
+
+    if (!foundContact || isInvitationSent) {
+      return;
+    }
+
+    SendSMS.send(
+      {
+        body: 'Some message',
+        recipients: [foundContact.phoneNumbers[0].number],
+        successTypes: ['sent', 'queued'],
+        allowAndroidSendWithoutReadPermission: true,
+      },
+      async (completed, cancelled, error) => {
+        if (completed) {
+          const updatedSentInvitations = [
+            ...this.state.sentInvitations,
+            {
+              recordID,
+              phone: foundContact.phoneNumbers[0].number,
+            },
+          ];
+
+          AsyncStorage.setItem(
+            'sentInvitations',
+            JSON.stringify(updatedSentInvitations),
+          );
+
+          this.setState({
+            sentInvitations: updatedSentInvitations,
+          });
+        }
+      },
+    );
+  };
 
   _renderItem = ({item}) => {
+    const isInvitationSent = this.state.sentInvitations.some(
+      (data) => data.recordID === item.recordID,
+    );
+
     return (
       <ListItem thumbnail>
         <Left>
@@ -83,10 +130,16 @@ class PhoneContactsStack extends Component {
         <Body>
           <View style={styles.body}>
             <Text style={styles.name}>{item.displayName}</Text>
-            <TouchableOpacity style={styles.btn}>
-              <Text
-                style={styles.btnText}
-                onPress={() => this.handleInvitePress(item.recordID)}>
+            <TouchableOpacity
+              onPress={() => this._handleInvitePress(item.recordID)}
+              activeOpacity={isInvitationSent ? 0.5 : 1}
+              style={[
+                styles.btn,
+                {
+                  opacity: isInvitationSent ? 0.5 : 1,
+                },
+              ]}>
+              <Text style={styles.btnText} disabled={isInvitationSent}>
                 Invite
               </Text>
             </TouchableOpacity>

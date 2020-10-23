@@ -17,6 +17,8 @@ target 'mobile' do
 
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
+  pod 'react-native-sms', :path => '../node_modules/react-native-sms'
+
   post_install do |installer|
     flipper_post_install(installer)
     installer.pods_project.targets.each do |target|

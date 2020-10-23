@@ -109,7 +109,6 @@ const combinedReducers = combineReducers({
   search: persistReducer(searchPersistConfig, searchReducer),
   call: persistReducer(callPersistConfig, callReducer),
   whiteboard: whiteboardReducer,
-
 });
 
 const rootReducer = (state, action) => {
