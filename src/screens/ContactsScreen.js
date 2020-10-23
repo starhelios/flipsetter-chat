@@ -24,7 +24,6 @@ class ContactsScreen extends Component<Props> {
     }
 
     _renderItem = ({item}) => {
-        console.log("Contact", `${config.api.uri}${item.avatar}`);
         return(
             <ListItem thumbnail>
                 <Left>
