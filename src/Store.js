@@ -57,6 +57,7 @@ export const rootPersistConfig = {
 const appPersistConfig = {
   key: 'app',
   storage: AsyncStorage,
+  blacklist: ['heartbeat'],
 };
 
 const authPersistConfig = {
@@ -98,7 +99,7 @@ const callPersistConfig = {
 };
 
 /** * Root Reducer ** */
-const rootReducer = combineReducers({
+const combinedReducers = combineReducers({
   app: persistReducer(appPersistConfig, appReducer),
   auth: persistReducer(authPersistConfig, authReducer),
   user: persistReducer(userPersistConfig, userReducer),
@@ -110,6 +111,14 @@ const rootReducer = combineReducers({
   whiteboard: whiteboardReducer,
 
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = undefined
+  }
+
+  return combinedReducers(state, action)
+}
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 export const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk, axiosMiddleware(client, axiosMiddlewareConfig))));

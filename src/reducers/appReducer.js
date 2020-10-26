@@ -35,6 +35,13 @@ export default function (state = initialState, action) {
       return {...state, device_type: action.payload};
     case App.actionTypes.APP_HEARTBEAT_SUCCESS:
       return {...state, heartbeat: action.payload};
+    case App.actionTypes.APP_HEARTBEAT_FAIL: {
+      return {...state, heartbeat: {
+        ...state.heartbeat,
+        error: action.error
+      }};
+    }
+
     default:
       return state;
   }

@@ -415,10 +415,12 @@ class WebRTC extends Component<Props> {
                     {/*})*/}
                     {/*}*/}
 
-                    {   this.state.remoteSpeaker &&
-                    <RTCView style={{...styles.remoteVideo, height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}} streamURL={this.state.remoteList[this.state.remoteSpeaker]} objectFit={"contain"}/>
+                    {this.state.remoteSpeaker &&
+                        <RTCView objectFit="cover" style={{height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}} streamURL={this.state.remoteList[this.state.remoteSpeaker]}/>
                     }
-                    <RTCView style={{...styles.localVideo}} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
+
+                    <RTCView style={styles.localVideo} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
+
                     <View style={{position: "absolute", bottom: 25,height: 100, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}}>
                         <TouchableOpacity onPress={() => this._leaveCall()} style={{backgroundColor:"red", width: 50, height: 50, borderRadius: 25,alignItems: "center", justifyContent: "center"}}>
                             <Icon name={'phone'} size={30} style={{transform: [{rotate:'-135deg'}]}}/>
@@ -479,17 +481,10 @@ const styles = StyleSheet.create({
     localVideo: {
         height: 125,
         width: 125,
-        bottom: 75,
-        right: 25,
+        bottom: 15,
+        right: 15,
         position: "absolute",
-        zIndex: 1,
-        borderRadius: 5,
-        borderColor: '#ff8080',
-        borderWidth: 1,
-    },
-    remoteVideo: {
-        zIndex:0,
-        // width: config.layout.window.width,
+        zIndex: 2
     },
     remoteVideoWhiteboard:{
     }

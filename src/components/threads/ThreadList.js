@@ -51,6 +51,7 @@ class ThreadList extends React.PureComponent {
     console.log(this.props);
     const {app} = this.props;
     //const {active_calls} = app.heartbeat.data.states;
+
     if (
       app.heartbeat != null &&
       app.heartbeat.data != null &&
@@ -61,10 +62,9 @@ class ThreadList extends React.PureComponent {
       this.activeCall =
         this.props.app.heartbeat &&
         typeof this.props.app.heartbeat.data.states.active_calls !== 'undefined'
-          ? this.props.app.heartbeat.data.states.active_calls ||
-            [].filter(call => call.thread_id === this.props.thread.thread_id)[0]
+          ? this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.props.thread.thread_id)[0]
           : null;
-      // console.log("Call", this.activeCall);
+
       if (this.activeCall) {
         this.setState({
           activeCall: true,
@@ -88,21 +88,17 @@ class ThreadList extends React.PureComponent {
         app.heartbeat.data.states.active_calls != null &&
         typeof app.heartbeat !== 'undefined'
       ) {
-        let check = this.props.app.heartbeat.data.states.active_calls.filter(
-          call => call.thread_id === this.props.thread.thread_id,
-        )[0];
-        // console.log(check);
-        // if (check.length === 1) {
-        //     this.activeCall = check;
-        //     this.setState({
-        //         activeCall: true,
-        //     });
-        // } else if (check.length === 0) {
-        //     this.activeCall = null;
-        //     this.setState({
-        //         activeCall: false,
-        //     })
-        // }
+        this.activeCall =
+          this.props.app.heartbeat &&
+          typeof this.props.app.heartbeat.data.states.active_calls !== 'undefined'
+            ? this.props.app.heartbeat.data.states.active_calls.filter(call => call.thread_id === this.props.thread.thread_id)[0]
+            : null;
+
+        if (this.activeCall) {
+          this.setState({
+            activeCall: true,
+          });
+        }
       }
     }
   }
@@ -145,7 +141,7 @@ class ThreadList extends React.PureComponent {
             style={{fontWeight: this.props.thread.unread ? '700' : 'normal'}}>
             {this.props.name}
           </Text>
-          {this.state.activeCall ? (
+          {this.state.activeCall && this.activeCall ? (
             <Text>
               There is an active{' '}
               {this.activeCall.call_type === 1

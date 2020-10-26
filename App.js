@@ -97,36 +97,17 @@ class Main extends Component {
         async (store) => this.props.appHeartbeat(),
       );
     }
-    if (!this.Heartbeat) {
-      this.Heartbeat = setInterval(async () => {
-        if (this.props.user.id && this.props.auth.isLoggedIn) {
-          this.setState(
-            {
-              heartbeat: Date.now(),
-            },
-            () => this.props.appHeartbeat(),
-          );
-        }
-      }, 60000);
+
+    if (this.props.app.heartbeat?.status === 401) {
+      this.props.setIsLoggedIn(null);
+      this.props.setAccessToken('');
+      this.props.setUserID('');
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.Heartbeat);
     AppState.removeEventListener('change', this._handleAppStateChange);
-
-    // var that = this;
-    // ShareMenu.getSharedText((text) => {
-    //   console.log(text);
-    //   console.log('LOG');
-    //   if (text && text.length) {
-    //     if (text.startsWith('content://media/')) {
-    //       that.setState({sharedImage: text});
-    //     } else {
-    //       that.setState({sharedText: text});
-    //     }
-    //   }
-    // });
   }
 
   render() {
@@ -189,6 +170,10 @@ const mapDispatchToProps = {
   setAppState: App.setAppState,
   setRoute: App.setRoute,
   appHeartbeat: App.appHeartbeat,
+  setAccessToken: Auth.setAccessToken,
+  setIsLoggedIn: Auth.setIsLoggedIn,
+  setUserID: User.setUserID,
+  logout: Auth.logout
 };
 
 let Flipsetter = connect(mapStateToProps, mapDispatchToProps)(Main);

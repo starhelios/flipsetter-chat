@@ -75,7 +75,7 @@ class FirebaseService extends Component<Props> {
     }
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     // if(prevProps.app.fcm_token !== this.props.app.fcm_token || prevProps.app.voip_token !== this.props.app.voip_token || prevProps.app.device_id !== this.props.app.device_id){
     //     await this.props.joinDevice(this.props.app.device_id, (this.props.app.fcm_token) ? this.props.app.fcm_token : null, (this.props.app.voip_token) ? this.props.app.voip_token: null)
     // }
@@ -100,6 +100,26 @@ class FirebaseService extends Component<Props> {
           );
         },
       );
+    }
+
+    if (this.props.auth.isLoggedIn !== prevProps.auth.isLoggedIn && !this.props.auth.isLoggedIn) {
+      try {
+        await messaging().deleteToken();
+
+        await this._checkPermission();
+        const deviceToken = await messaging().getToken();
+        this.props.setDeviceToken(deviceToken);
+        const deviceId = await DeviceInfo.getUniqueId();
+        this.props.setDeviceID(deviceId);
+
+        await this.props.joinDevice(
+          deviceId,
+          deviceToken,
+          this.props.app.voip_token,
+        );
+      } catch (error) {
+        console.log('FCM Token delete error')
+      }
     }
   }
 
@@ -305,8 +325,14 @@ class FirebaseService extends Component<Props> {
     let body;
 
     // console.log(channel.channelId);
-    let data = JSON.parse(notification._data.extraPayload);
+    let data = JSON.parse(notification.data.extraPayload);
     console.log(notification, 'check the new message', data);
+
+
+    if (data.notification_type === 0 && data.message_type === 90) {
+      this.props.appHeartbeat();
+    }
+
     let check = Object.values(
       this.props.messages.messages[data.thread_id],
     ).filter((message) => {
@@ -572,6 +598,7 @@ const mapDispatchToProps = {
   setCallerName: Call.setCallerName,
   setCallThreadId: Call.setCallThreadId,
   setCallStatus: Call.setCallStatus,
+  login: Auth.login,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FirebaseService);
