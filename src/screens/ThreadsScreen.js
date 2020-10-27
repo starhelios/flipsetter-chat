@@ -9,6 +9,7 @@ import {
   UIManager,
   Linking
 } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 import SplashScreen from 'react-native-splash-screen';
 import {
   Container,
@@ -31,6 +32,9 @@ import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import ShareMenu from 'react-native-share-menu';
 import NavigationService from '../services/NavigationService';
+
+import { stat, readFile } from 'react-native-fs';
+import * as mime from 'react-native-mime-types';
 
 if (
   Platform.OS === 'android' &&
@@ -69,40 +73,55 @@ class ThreadsScreen extends Component<Props> {
   }
 
 
-  handleOpenURL =  (e) =>  {
+  getFileStat = async (path) => {
+    const res = await RNFetchBlob.fs.stat(path);
+    return res;
+  }
+
+
+  handleOpenURL =  async (e) =>  {
     console.debug('handleopenurl', e);
+    const path = decodeURI(e.url.substring(e.url.search('file:///') + 7));
+
+    try {
+      const res  = await this.getFileStat(path);
+
+      NavigationService.navigate('ShareMenu', {
+        data: {
+          data: path,
+          mimeType: mime.lookup(res.filename)
+        },
+      });
+    } catch (error) {
+      console.debug('handleOpenurl', error)
+    }
   }
 
   async componentDidMount(): void {
-
-    try {
-      if(Platform.OS === 'ios'){
-        Linking.addEventListener('url', this.handleOpenURL);
-      }
-    } catch (error) {
-      console.error(error)
+    if (Platform.OS === 'ios') {
+      Linking.addEventListener('url', this.handleOpenURL);
+    } else {
+      await ShareMenu.getInitialShare((data) => {
+        console.debug('data1', data)
+        if (data) {
+          NavigationService.navigate('ShareMenu', {
+            data,
+          });
+        }
+  
+      });
+  
+      await ShareMenu.addNewShareListener((data) => {
+        console.debug('data2', data)
+        if (data) {
+          NavigationService.navigate('ShareMenu', {
+            data,
+          });
+        }
+      });
     }
-
-    
-
-    await ShareMenu.getInitialShare((data) => {
-      console.debug('data1', data)
-      if (data) {
-        NavigationService.navigate('ShareMenu', {
-          data,
-        });
-      }
-
-    });
-
-    await ShareMenu.addNewShareListener((data) => {
-      console.debug('data2', data)
-      if (data) {
-        NavigationService.navigate('ShareMenu', {
-          data,
-        });
-      }
-    });
+//com.flipsetter.mobile://page1/file:///
+    const str = '/Users/admin/Library/Developer/CoreSimulator/Devices/AC6FCBB8-197C-4B75-9035-AFCA9715A83E/data/Media/PhotoData/OutgoingTemp/7FD6F989-5626-45C8-9240-12EA28E012A7/IMG_0001.JPG';
 
     const {navigation} = this.props;
 
