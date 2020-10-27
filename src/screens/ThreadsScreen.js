@@ -70,6 +70,7 @@ class ThreadsScreen extends Component<Props> {
   async componentDidMount(): void {
 
     await ShareMenu.getInitialShare((data) => {
+      console.debug('sharemenu', data)
       if (data) {
         NavigationService.navigate('ShareMenu', {
           data,
@@ -79,6 +80,7 @@ class ThreadsScreen extends Component<Props> {
     });
 
     await ShareMenu.addNewShareListener((data) => {
+      console.debug('sharemenu', data)
       if (data) {
         NavigationService.navigate('ShareMenu', {
           data,
