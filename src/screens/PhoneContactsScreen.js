@@ -6,6 +6,7 @@ import {
   Image,
   View,
   StyleSheet,
+  Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
@@ -64,15 +65,24 @@ class PhoneContactsStack extends Component {
 
   async componentDidMount() {
     try {
-      const isGranted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        {
-          title: 'Contacts',
-        },
-      );
+      if (Platform.OS === 'android') {
+        const isGranted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Contacts',
+          },
+        );
 
-      if (!isGranted) {
-        throw new Error('Permission is not granted');
+        if (!isGranted) {
+          throw new Error('Permission is not granted');
+        }
+
+      } else {
+        const permission = await Contacts.requestPermission();
+
+        if (permission !== 'authorized') {
+          throw new Error('Permission is not granted');
+        }
       }
 
       const res = await Contacts.getAll();
@@ -213,8 +223,9 @@ class PhoneContactsStack extends Component {
           data={this.state.contactList}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
-          maxToRenderPerBatch={1}
-          noIndent={true}
+          // maxToRenderPerBatch={1}
+          // noIndent={true}
+          extraData={this.state}
         />
       </Container>
     );
