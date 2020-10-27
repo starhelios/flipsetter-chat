@@ -29,8 +29,7 @@
 #import <AppCenterReactNative.h>
 #import <AppCenterReactNativeAnalytics.h>
 #import <AppCenterReactNativeCrashes.h>
-
-#import <RNShareMenu/ShareMenuManager.h>
+#import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
@@ -140,11 +139,11 @@ completion();
 //             restorationHandler:restorationHandler];
 //}
 
-- (BOOL)application:(UIApplication *)app
-        openURL:(NSURL *)url
-        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+- (BOOL)application:(UIApplication *)application
+openURL:(NSURL *)url
+options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [ShareMenuManager application:app openURL:url options:options];
+return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 #if RCT_DEV

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* mobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* mobileTests.m */; };
 		07E94BB8388747C4A6BBC7A7 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B319272AE79640D5AD47A324 /* MaterialCommunityIcons.ttf */; };
@@ -42,6 +43,9 @@
 		81BDF77BC6E34505A0B9F9F2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3377E7880D904F39B2352ECC /* EvilIcons.ttf */; };
 		81F481F5EDAD40C282120CB9 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 910F495ED7E449DD8BC8A177 /* Zocial.ttf */; };
 		82A789390005477CBD650BA1 /* Nunito-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C884C38B1004EBAB3456739 /* Nunito-BlackItalic.ttf */; };
+		846DA6102547324B00E7B035 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846DA60F2547324B00E7B035 /* ShareViewController.swift */; };
+		846DA6132547324B00E7B035 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 846DA6112547324B00E7B035 /* MainInterface.storyboard */; };
+		846DA6172547324B00E7B035 /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 846DA60D2547324B00E7B035 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		87A7EB9623C6A7030092B26F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A7EB9523C6A7030092B26F /* GoogleService-Info.plist */; };
 		87A9CDA0241ADD820094E284 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A9CD9F241ADD820094E284 /* AppCenter-Config.plist */; };
 		87AE10AA7ECD4885BCF0E2EE /* Nunito-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76EEA3A8F6904CC9AD0FA029 /* Nunito-ExtraBold.ttf */; };
@@ -77,6 +81,13 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "mobile-tvOS";
 		};
+		846DA6152547324B00E7B035 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 846DA60C2547324B00E7B035;
+			remoteInfo = ShareExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,6 +97,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				846DA6172547324B00E7B035 /* ShareExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +151,11 @@
 		76EEA3A8F6904CC9AD0FA029 /* Nunito-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraBold.ttf"; path = "../src/assets/fonts/Nunito-ExtraBold.ttf"; sourceTree = "<group>"; };
 		7BFC6BD0855447168392C0A3 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		7C80DAFB8A81431F94634FDE /* Nunito-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraLight.ttf"; path = "../src/assets/fonts/Nunito-ExtraLight.ttf"; sourceTree = "<group>"; };
+		846DA60D2547324B00E7B035 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		846DA60F2547324B00E7B035 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		846DA6122547324B00E7B035 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		846DA6142547324B00E7B035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		846DA61B2547335A00E7B035 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		87A7EB9523C6A7030092B26F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		87A9CD9F241ADD820094E284 /* AppCenter-Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppCenter-Config.plist"; sourceTree = "<group>"; };
 		87E7375023BF2EB600B550AF /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
@@ -152,13 +169,7 @@
 		A73B5EF76581BE0F64C00B3B /* libPods-mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B319272AE79640D5AD47A324 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		B89184E553EC4F1F8601B4F1 /* Nunito-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Black.ttf"; path = "../src/assets/fonts/Nunito-Black.ttf"; sourceTree = "<group>"; };
-		BB31599024F6F71400FD59AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		BB31599224F6F71400FD59AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BB31599A24F6F7C800FD59AA /* ShareExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShareExtension-Bridging-Header.h"; sourceTree = "<group>"; };
-		BB31599B24F6F7C800FD59AA /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = "../../node_modules/react-native-share-menu/ios/ShareViewController.swift"; sourceTree = "<group>"; };
-		BB3837A824FAE07E0002D72D /* ReactShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReactShareViewController.swift; path = "../../node_modules/react-native-share-menu/ios/ReactShareViewController.swift"; sourceTree = "<group>"; };
 		BB58B0C224DB27EB00572D1C /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		BB8B3DDB24FD5385005AC260 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		BBDD97F324D4C581001586F0 /* dingsoundeffect.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = dingsoundeffect.mp3; path = ../android/app/src/main/res/raw/dingsoundeffect.mp3; sourceTree = "<group>"; };
 		C0AA152026D94883AF92252E /* Nunito-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Light.ttf"; path = "../src/assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		C1207E3192A24E658E55C3B3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -202,6 +213,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2D02E48D1E0B4A5D006451C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DA60A2547324B00E7B035 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -291,7 +309,7 @@
 				13B07FAE1A68108700A75B9A /* mobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* mobileTests */,
-				BB31598C24F6F71400FD59AA /* ShareExtension */,
+				846DA60E2547324B00E7B035 /* ShareExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				2C55D1348C865FF4BB97BF87 /* Pods */,
@@ -309,8 +327,20 @@
 				00E356EE1AD99517003FC87E /* mobileTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* mobile-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* mobile-tvOSTests.xctest */,
+				846DA60D2547324B00E7B035 /* ShareExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		846DA60E2547324B00E7B035 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				846DA61B2547335A00E7B035 /* ShareExtension.entitlements */,
+				846DA60F2547324B00E7B035 /* ShareViewController.swift */,
+				846DA6112547324B00E7B035 /* MainInterface.storyboard */,
+				846DA6142547324B00E7B035 /* Info.plist */,
+			);
+			path = ShareExtension;
 			sourceTree = "<group>";
 		};
 		9863DA52E37F41299B8DB7B1 /* Resources */ = {
@@ -359,19 +389,6 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		BB31598C24F6F71400FD59AA /* ShareExtension */ = {
-			isa = PBXGroup;
-			children = (
-				BB8B3DDB24FD5385005AC260 /* ShareExtension.entitlements */,
-				BB3837A824FAE07E0002D72D /* ReactShareViewController.swift */,
-				BB31599B24F6F7C800FD59AA /* ShareViewController.swift */,
-				BB31598F24F6F71400FD59AA /* MainInterface.storyboard */,
-				BB31599224F6F71400FD59AA /* Info.plist */,
-				BB31599A24F6F7C800FD59AA /* ShareExtension-Bridging-Header.h */,
-			);
-			path = ShareExtension;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -411,6 +428,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				846DA6162547324B00E7B035 /* PBXTargetDependency */,
 			);
 			name = mobile;
 			productName = mobile;
@@ -454,6 +472,23 @@
 			productReference = 2D02E4901E0B4A5D006451C7 /* mobile-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		846DA60C2547324B00E7B035 /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 846DA61A2547324B00E7B035 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				846DA6092547324B00E7B035 /* Sources */,
+				846DA60A2547324B00E7B035 /* Frameworks */,
+				846DA60B2547324B00E7B035 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareExtension;
+			productName = ShareExtension;
+			productReference = 846DA60D2547324B00E7B035 /* ShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -461,7 +496,7 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Original;
-				LastSwiftUpdateCheck = 1160;
+				LastSwiftUpdateCheck = 1170;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
@@ -483,6 +518,11 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
+					846DA60C2547324B00E7B035 = {
+						CreatedOnToolsVersion = 11.7;
+						DevelopmentTeam = G25A5SCYVZ;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "mobile" */;
@@ -503,6 +543,7 @@
 				00E356ED1AD99517003FC87E /* mobileTests */,
 				2D02E47A1E0B4A5D006451C7 /* mobile-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* mobile-tvOSTests */,
+				846DA60C2547324B00E7B035 /* ShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -575,6 +616,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DA60B2547324B00E7B035 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846DA6132547324B00E7B035 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -792,6 +841,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		846DA6092547324B00E7B035 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846DA6102547324B00E7B035 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -805,6 +862,11 @@
 			target = 2D02E47A1E0B4A5D006451C7 /* mobile-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
+		846DA6162547324B00E7B035 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 846DA60C2547324B00E7B035 /* ShareExtension */;
+			targetProxy = 846DA6152547324B00E7B035 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -817,10 +879,10 @@
 			path = mobile;
 			sourceTree = "<group>";
 		};
-		BB31598F24F6F71400FD59AA /* MainInterface.storyboard */ = {
+		846DA6112547324B00E7B035 /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				BB31599024F6F71400FD59AA /* Base */,
+				846DA6122547324B00E7B035 /* Base */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -1206,6 +1268,65 @@
 			};
 			name = Release;
 		};
+		846DA6182547324B00E7B035 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = G25A5SCYVZ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flipsetter.mobile.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		846DA6192547324B00E7B035 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = G25A5SCYVZ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flipsetter.mobile.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1250,6 +1371,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		846DA61A2547324B00E7B035 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846DA6182547324B00E7B035 /* Debug */,
+				846DA6192547324B00E7B035 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

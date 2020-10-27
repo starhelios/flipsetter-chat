@@ -7,6 +7,7 @@ import {
   Animated,
   Easing,
   UIManager,
+  Linking
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {
@@ -67,9 +68,25 @@ class ThreadsScreen extends Component<Props> {
     // })
   }
 
+
+  handleOpenURL =  (e) =>  {
+    console.debug('handleopenurl', e);
+  }
+
   async componentDidMount(): void {
 
+    try {
+      if(Platform.OS === 'ios'){
+        Linking.addEventListener('url', this.handleOpenURL);
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
+    
+
     await ShareMenu.getInitialShare((data) => {
+      console.debug('data1', data)
       if (data) {
         NavigationService.navigate('ShareMenu', {
           data,
@@ -79,6 +96,7 @@ class ThreadsScreen extends Component<Props> {
     });
 
     await ShareMenu.addNewShareListener((data) => {
+      console.debug('data2', data)
       if (data) {
         NavigationService.navigate('ShareMenu', {
           data,
