@@ -6,7 +6,7 @@ import {
   Image,
   View,
   StyleSheet,
-  Platform
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
@@ -26,7 +26,7 @@ import {PermissionsAndroid} from 'react-native';
 
 import Contacts from 'react-native-contacts';
 
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import SendSMS from 'react-native-sms';
 
@@ -78,7 +78,6 @@ class PhoneContactsStack extends Component {
         if (!isGranted) {
           throw new Error('Permission is not granted');
         }
-
       } else {
         const permission = await Contacts.requestPermission();
 
@@ -109,10 +108,13 @@ class PhoneContactsStack extends Component {
       (cont) => recordID === cont.recordID,
     );
     const foundInvitation = this.state.sentInvitations.find(
-      (data) => data.recordID === recordID
+      (data) => data.recordID === recordID,
     );
 
-    if (!foundContact || (foundInvitation && foundInvitation.platforms.includes(platform))) {
+    if (
+      !foundContact ||
+      (foundInvitation && foundInvitation.platforms.includes(platform))
+    ) {
       return;
     }
 
@@ -120,14 +122,17 @@ class PhoneContactsStack extends Component {
     const metadata = resolveAssetSource(image);
     const url = metadata.uri;
 
-    const additionalFields = platform === 'ios' ? {} : {
-      attachment: {
-        url: url,
-        iosType: 'public.jpeg',
-        iosFilename: 'testFlight.png',
-        androidType: 'image/*'
-    }
-    }
+    const additionalFields =
+      platform === 'ios'
+        ? {}
+        : {
+            attachment: {
+              url: url,
+              iosType: 'public.jpeg',
+              iosFilename: 'testFlight.png',
+              androidType: 'image/*',
+            },
+          };
 
     SendSMS.send(
       {
@@ -139,12 +144,16 @@ class PhoneContactsStack extends Component {
       },
       async (completed, cancelled, error) => {
         if (completed) {
-          const updatedPlatform = this.state.sentInvitations.find((inv) => inv.platforms)
+          const updatedPlatform = this.state.sentInvitations.find(
+            (inv) => inv.platforms,
+          );
           const updatedSentInvitations = [
             ...this.state.sentInvitations,
             {
               recordID,
-              platforms: foundInvitation ? [...foundInvitation.platforms, platform] : [platform],
+              platforms: foundInvitation
+                ? [...foundInvitation.platforms, platform]
+                : [platform],
               phone: foundContact.phoneNumbers[0].number,
             },
           ];
@@ -167,33 +176,39 @@ class PhoneContactsStack extends Component {
       <TouchableOpacity
         onPress={() => this._handleInvitePress(recordID, platform)}
         disabled={isDisabled}
-        activeOpacity={isDisabled ? 0.5 : 1}
+        activeOpacity={isDisabled ? 0.3 : 1}
         style={[
           styles.btn,
           {
-            opacity: isDisabled ? 0.5 : 1,
+            opacity: isDisabled ? 0.3 : 1,
           },
         ]}>
         <View style={{alignItems: 'center'}}>
           <Image
-              style={{width: 20, height: 20}}
-              source={platform === 'ios' ? require('../images/pictures/ios.png') : require('../images/pictures/android.png')}
-            />
+            style={{width: 20, height: 20}}
+            source={
+              platform === 'ios'
+                ? require('../images/pictures/ios.png')
+                : require('../images/pictures/android.png')
+            }
+          />
           <Text style={styles.btnText} disabled={isDisabled}>
             Invite
           </Text>
         </View>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   _renderItem = ({item}) => {
     const isInvitationAndroidSent = this.state.sentInvitations.some(
-      (data) => data.recordID === item.recordID && data.platforms.includes('android'),
+      (data) =>
+        data.recordID === item.recordID && data.platforms.includes('android'),
     );
 
     const isInvitationIosSent = this.state.sentInvitations.some(
-      (data) => data.recordID === item.recordID && data.platforms.includes('ios'),
+      (data) =>
+        data.recordID === item.recordID && data.platforms.includes('ios'),
     );
 
     return (
@@ -210,15 +225,20 @@ class PhoneContactsStack extends Component {
             }
           />
         </Left>
-        <Body>
-          <View style={styles.body}>
-            <Text style={styles.name}>{`${item?.givenName} ${item?.familyName}`}</Text>
-            <View style={{flexDirection: 'row'}}>
-              {this._renderInviteBtn(item.recordID, 'android', isInvitationAndroidSent)}
-              {this._renderInviteBtn(item.recordID, 'ios', isInvitationIosSent)}
-            </View>
+        <View style={styles.body}>
+          <Text
+            style={
+              styles.name
+            }>{`${item?.givenName} ${item?.familyName}`}</Text>
+          <View style={{flexDirection: 'row'}}>
+            {this._renderInviteBtn(
+              item.recordID,
+              'android',
+              isInvitationAndroidSent,
+            )}
+            {this._renderInviteBtn(item.recordID, 'ios', isInvitationIosSent)}
           </View>
-        </Body>
+        </View>
         <Right></Right>
       </ListItem>
     );
@@ -239,8 +259,6 @@ class PhoneContactsStack extends Component {
           data={this.state.contactList}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
-          // maxToRenderPerBatch={1}
-          // noIndent={true}
           extraData={this.state}
         />
       </Container>
@@ -267,7 +285,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 10,
     marginLeft: 10,
-    // paddingLeft: 27,
     paddingVertical: 5,
     borderWidth: 2,
     borderColor: 'grey',
@@ -276,7 +293,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
   },
-  btnText: {textTransform: 'uppercase', fontSize: 14, },
-  body: {flexDirection: 'row', alignItems: 'center'},
+  btnText: {textTransform: 'uppercase', fontSize: 12},
+  body: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: 0.8,
+    marginLeft: 15,
+    paddingVertical: 5,
+  },
   name: {flex: 1},
 });
