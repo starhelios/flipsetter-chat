@@ -212,7 +212,7 @@ class PhoneContactsStack extends Component {
         </Left>
         <Body>
           <View style={styles.body}>
-            <Text style={styles.name}>{item.displayName}</Text>
+            <Text style={styles.name}>{`${item?.givenName} ${item?.familyName}`}</Text>
             <View style={{flexDirection: 'row'}}>
               {this._renderInviteBtn(item.recordID, 'android', isInvitationAndroidSent)}
               {this._renderInviteBtn(item.recordID, 'ios', isInvitationIosSent)}
