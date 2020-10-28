@@ -326,6 +326,8 @@ PODS:
   - React-jsinspector (0.63.2)
   - react-native-cameraroll (4.0.1):
     - React
+  - react-native-contacts (6.0.3):
+    - React-Core
   - react-native-document-picker (3.5.4):
     - React
   - react-native-draw-view (1.0.0):
@@ -346,6 +348,8 @@ PODS:
     - React-Core
     - Toast (~> 4.0.0)
   - react-native-slider (3.0.3):
+    - React
+  - react-native-sms (1.11.0):
     - React
   - react-native-splash-screen (3.2.0):
     - React
@@ -532,6 +536,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
+  - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-draw-view (from `../node_modules/react-native-draw-view`)
   - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
@@ -542,6 +547,7 @@ DEPENDENCIES:
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
+  - react-native-sms (from `../node_modules/react-native-sms`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webrtc (from `../node_modules/react-native-webrtc`)
@@ -655,6 +661,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-community/cameraroll"
+  react-native-contacts:
+    :path: "../node_modules/react-native-contacts"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-draw-view:
@@ -675,6 +683,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-simple-toast"
   react-native-slider:
     :path: "../node_modules/@react-native-community/slider"
+  react-native-sms:
+    :path: "../node_modules/react-native-sms"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-video:
@@ -796,6 +806,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
   react-native-cameraroll: 9d2b7c1707204d2040d2812f960c6cebdbd9f670
+  react-native-contacts: 81059c05ae61884092dade66536987274b81aed9
   react-native-document-picker: c5752781fbc0c126c627c1549b037c139444a4cf
   react-native-draw-view: bb1083e2bd236c764c028ac870bd615018161817
   react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
@@ -806,6 +817,7 @@ SPEC CHECKSUMS:
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-simple-toast: b986e6c1befdc211af3df1bae293278a44e32990
   react-native-slider: b733e17fdd31186707146debf1f04b5d94aa1a93
+  react-native-sms: 31fbb9d6ebb565ad32e409eaf9dc70329936a129
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: aa527b0acb37f94c4491e70df0274cb26979405d
   react-native-webrtc: 9bedc89699291d72c2c2a30050e101a0e14b781b
@@ -850,6 +862,6 @@ SPEC CHECKSUMS:
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   YoutubePlayer-in-WKWebView: af2f5929fc78882d94bfdfeea999b661b78d9717
 
-PODFILE CHECKSUM: 48f59e82236a1c24c2a0d6b5a1c29f7a16afb59d
+PODFILE CHECKSUM: 7ce7d3d0f8ee5fa460aab4bb30d6464f981b0b32
 
 COCOAPODS: 1.10.0
