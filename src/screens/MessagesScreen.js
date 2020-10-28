@@ -18,6 +18,7 @@ import map from 'lodash/map';
 import get from 'lodash/get';
 import CameraRoll from '@react-native-community/cameraroll';
 import ShareMenu, {ShareMenuReactView} from 'react-native-share-menu';
+import * as mime from 'react-native-mime-types';
 
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
@@ -442,8 +443,6 @@ class MessagesScreen extends Component {
 
           const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
 
-          console.log(filesStatRes);
-
           filesStatRes.forEach((stat) => {
             filesStat.push(stat);
           })
@@ -462,12 +461,14 @@ class MessagesScreen extends Component {
         }
 
         if (dataType === DOC_TYPE) {
-          console.debug("dataToShare", filesStat)
-          const results = filesStat.map((stat, idx) => ({
-            name: stat.filename,
-            type: dataToShare.mimeType,
-            uri: dataToShare.data[idx]
-          }))
+          const results = filesStat.map((stat, idx) => {
+            let mimeType = dataToShare.mimeType.endsWith('*') ? mime.lookup(stat.filename) : dataToShare.mimeType;
+            return {
+              name: stat.filename,
+              type: mimeType,
+              uri: dataToShare.data[idx]
+            }
+          })
 
           this.setState({
             doc: true,
