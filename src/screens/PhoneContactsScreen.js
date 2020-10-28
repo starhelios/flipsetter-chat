@@ -123,7 +123,7 @@ class PhoneContactsStack extends Component {
     const url = metadata.uri;
 
     const additionalFields =
-      platform === 'ios'
+      platform === 'android'
         ? {}
         : {
             attachment: {
