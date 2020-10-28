@@ -26,6 +26,8 @@ import {PermissionsAndroid} from 'react-native';
 
 import Contacts from 'react-native-contacts';
 
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
+
 import SendSMS from 'react-native-sms';
 
 const IOS_TEXT_MESSAGE = `Step 1: Be sure to update your Iphone to the latest iOS which can be found in your Settings
@@ -114,8 +116,22 @@ class PhoneContactsStack extends Component {
       return;
     }
 
+    const image = require('../images/pictures/testFlight.png');
+    const metadata = resolveAssetSource(image);
+    const url = metadata.uri;
+
+    const additionalFields = platform === 'ios' ? {} : {
+      attachment: {
+        url: url,
+        iosType: 'public.jpeg',
+        iosFilename: 'testFlight.png',
+        androidType: 'image/*'
+    }
+    }
+
     SendSMS.send(
       {
+        ...additionalFields,
         body: platform === 'ios' ? IOS_TEXT_MESSAGE : ANDROID_TEXT_MESSAGE,
         recipients: [foundContact.phoneNumbers[0].number],
         successTypes: ['sent', 'queued'],
