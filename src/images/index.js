@@ -58,6 +58,7 @@ import spacePatternImg from './pictures/patterns/space_pattern.jpg';
 import watterPatternImg from './pictures/patterns/water_pattern.jpg';
 import woodPatternImg from './pictures/patterns/wood_pattern.jpg';
 import wood2PatternImg from './pictures/patterns/wood_pattern2.jpg';
+import noUserAvatar from './pictures/no-user-image-icon.jpg';
 
 export {
   addParticipantsIcon,
@@ -117,4 +118,5 @@ export {
   watterPatternImg,
   wood2PatternImg,
   woodPatternImg,
+  noUserAvatar,
 };

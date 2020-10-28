@@ -108,9 +108,9 @@ class ThreadsScreen extends Component<Props> {
             data,
           });
         }
-  
+
       });
-  
+
       await ShareMenu.addNewShareListener((data) => {
         console.debug('data2', data)
         if (data) {
@@ -120,8 +120,6 @@ class ThreadsScreen extends Component<Props> {
         }
       });
     }
-//com.flipsetter.mobile://page1/file:///
-    const str = '/Users/admin/Library/Developer/CoreSimulator/Devices/AC6FCBB8-197C-4B75-9035-AFCA9715A83E/data/Media/PhotoData/OutgoingTemp/7FD6F989-5626-45C8-9240-12EA28E012A7/IMG_0001.JPG';
 
     const {navigation} = this.props;
 

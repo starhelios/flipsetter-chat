@@ -1,13 +1,14 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator } from 'react-navigation-stack';
+import {Platform} from 'react-native';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {createStackNavigator} from 'react-navigation-stack';
 //
 import TabBarIcon from '../components/tabbar/TabBarIcon';
 
 // Main Tab Screens
 import ThreadsScreen from '../screens/ThreadsScreen';
-import ContactsScreen from '../screens/ContactsScreen';
+import FriendsScreen from '../screens/FriendsScreen';
+import PhoneContactsScreen from '../screens/PhoneContactsScreen';
 // import EventsScreen from '../screens/EventsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ShareMenuScreen from '../screens/ShareMenuScreen';
@@ -21,15 +22,16 @@ import CallScreen from '../screens/CallScreen';
 
 import TabBar from '../components/tabbar/TabBar';
 //
-const ThreadsStack = createStackNavigator({
-  Threads: ThreadsScreen,
-  Messages: MessagesScreen,
-  ShareMenu: ShareMenuScreen
-}, {
+const ThreadsStack = createStackNavigator(
+  {
+    Threads: ThreadsScreen,
+    Messages: MessagesScreen,
+    ShareMenu: ShareMenuScreen,
+  },
+  {},
+);
 
-});
-
-ThreadsStack.navigationOptions = ({ navigation }) => {
+ThreadsStack.navigationOptions = ({navigation}) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -38,7 +40,7 @@ ThreadsStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible,
     tabBarLabel: 'Threads',
-    tabBarIcon: ({ focused }) => (
+    tabBarIcon: ({focused}) => (
       <TabBarIcon
         focused={focused}
         name={Platform.OS === 'ios' ? 'comment' : 'comment'}
@@ -47,15 +49,37 @@ ThreadsStack.navigationOptions = ({ navigation }) => {
   };
 };
 
-const ContactsStack = createStackNavigator({
-  Contacts: ContactsScreen,
-}, {
-  headerMode: 'screen',
-});
+const FriendsStack = createStackNavigator(
+  {
+    Friends: FriendsScreen,
+  },
+  {
+    headerMode: 'screen',
+  },
+);
 
-ContactsStack.navigationOptions = {
-  tabBarLabel: 'Contacts',
-  tabBarIcon: ({ focused }) => (
+FriendsStack.navigationOptions = {
+  tabBarLabel: 'Friends',
+  tabBarIcon: ({focused}) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'users' : 'users'}
+    />
+  ),
+};
+
+const PhoneContactsStack = createStackNavigator(
+  {
+    PhoneContacts: PhoneContactsScreen,
+  },
+  {
+    headerMode: 'screen',
+  },
+);
+
+PhoneContactsStack.navigationOptions = {
+  tabBarLabel: 'PhoneContacts',
+  tabBarIcon: ({focused}) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? 'address-book' : 'address-book'}
@@ -79,38 +103,34 @@ ContactsStack.navigationOptions = {
 //     ),
 // };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
-}, {
-  headerMode: 'screen',
-});
+const SettingsStack = createStackNavigator(
+  {
+    Settings: SettingsScreen,
+  },
+  {
+    headerMode: 'screen',
+  },
+);
 
 SettingsStack.navigationOptions = {
   tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name="cog"
-    />
-  ),
+  tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name="cog" />,
 };
 
-export default createBottomTabNavigator({
-  ThreadsStack,
-  ContactsStack,
-  // EventsStack,
-  SettingsStack,
-
-}, {
-  tabBarComponent: (props) => (
-    <TabBar
-      {...props}
-    />
-  ),
-  tabBarOptions: {
-    showLabel: false,
-    keyboardHidesTabBar: false,
+export default createBottomTabNavigator(
+  {
+    ThreadsStack,
+    FriendsStack,
+    // EventsStack,
+    PhoneContactsStack,
+    SettingsStack,
 
   },
-
-});
+  {
+    tabBarComponent: (props) => <TabBar {...props} />,
+    tabBarOptions: {
+      showLabel: false,
+      keyboardHidesTabBar: false,
+    },
+  },
+);
