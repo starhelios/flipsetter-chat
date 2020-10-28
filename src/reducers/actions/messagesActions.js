@@ -17,6 +17,7 @@ const actionTypes = {
   MARK_READ: 'MARK_READ',
   MARK_READ_SUCCESS: 'MARK_READ_SUCCESS',
   CLEAR_MESSAGES: 'CLEAR_MESSAGES',
+  UPDATE_TO_UPLOAD_FILES_IOS: 'UPDATE_TO_UPLOAD_FILES_IOS'
 };
 
 /*
@@ -122,6 +123,10 @@ export function removeMessage(thread, message) {
   return {type: actionTypes.REMOVE_MESSAGE, payload: {thread, message}};
 }
 
+export function updateToUploadFilesIos(data) {
+  return {type: actionTypes.UPDATE_TO_UPLOAD_FILES_IOS, payload: data}
+}
+
 function clearMessages() {
   return {type: actionTypes.CLEAR_MESSAGES};
 }
@@ -137,4 +142,5 @@ export default {
   addMessages,
   removeMessage,
   clearMessages,
+  updateToUploadFilesIos
 };

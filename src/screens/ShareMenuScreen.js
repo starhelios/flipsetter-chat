@@ -98,15 +98,31 @@ class ShareMenuScreen extends Component {
   handleShareClick = (threadId) => {
     const { navigation } = this.props;
 
-    navigation.navigate('Messages', {
-      dataToShare: navigation.state.params.data,
-      thread: threadId
-    })
+    if (!navigation.state.params?.data) {
+      const data = {...this.props.toUploadFilesIos};
+      console.debug('final', this.props.toUploadFilesIos);
+
+      this.props.updateToUploadFilesIos({
+        data: [],
+        mimeType: null
+      })
+
+      navigation.navigate('Messages', {
+        dataToShare: data,
+        thread: threadId
+      })
+
+    } else {
+      navigation.navigate('Messages', {
+        dataToShare: navigation.state.params.data,
+        thread: threadId
+      })
+    }
+
+
   };
 
   render() {
-    const {params} = this.props.navigation.state;
-
     return (
       <Container>
         <Header onLayout={(event) => this.headerHeight}>
@@ -156,6 +172,7 @@ const mapStateToProps = (state) => {
     user: state.user,
     threads: state.threads,
     search: state.search,
+    toUploadFilesIos: state.messages.toUploadFilesIos
   };
 };
 
@@ -170,6 +187,7 @@ const mapDispatchToProps = {
   setActiveThread: Threads.setActiveThread,
   getUser: User.getUser,
   getMessages: Messages.getMessages,
+  updateToUploadFilesIos: Messages.updateToUploadFilesIos
 };
 
 export default connect(

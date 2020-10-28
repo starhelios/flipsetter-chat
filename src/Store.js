@@ -87,6 +87,7 @@ const threadsPersistConfig = {
 const messagesPersistConfig = {
   key: 'messages',
   storage: AsyncStorage,
+  blacklist: ['toUploadFilesIos']
 };
 
 const searchPersistConfig = {

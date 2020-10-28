@@ -7,6 +7,10 @@ import {update} from 'lodash';
 
 const initialState = {
   messages: {},
+  toUploadFilesIos: {
+    data: [],
+    mimeType: null
+  }
 };
 
 export default function (state = initialState, action) {
@@ -139,6 +143,9 @@ export default function (state = initialState, action) {
       return {...state};
     case Messages.actionTypes.CLEAR_MESSAGES:
       return {...state, messages: {}};
+
+    case Messages.actionTypes.UPDATE_TO_UPLOAD_FILES_IOS:
+      return {...state, toUploadFilesIos: {...state.toUploadFilesIos, ...action.payload}}
     default:
       return state;
   }

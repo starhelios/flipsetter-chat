@@ -81,24 +81,52 @@ class ThreadsScreen extends Component<Props> {
 
   handleOpenURL =  async (e) =>  {
     console.debug('handleopenurl', e);
+    const isUrl = e.url.search('http');
+
+    if (isUrl !== -1) {
+      const path = e.url.substring(e.url.search('http'));
+
+      NavigationService.navigate('ShareMenu', {
+        data: {
+          data: path,
+          mimeType: 'text/plain'
+        },
+      });
+
+      return;
+    }
+
     const path = decodeURI(e.url.substring(e.url.search('file:///') + 7));
 
     try {
       const res  = await this.getFileStat(path);
 
+      console.debug('toUploadFilesIos', this.props.toUploadFilesIos);
+
+      this.props.updateToUploadFilesIos({
+        data: [...this.props.toUploadFilesIos.data, path],
+        mimeType: mime.lookup(res.filename)
+      })
+
       NavigationService.navigate('ShareMenu', {
-        data: {
-          data: path,
-          mimeType: mime.lookup(res.filename)
-        },
+        data: null,
       });
     } catch (error) {
       console.debug('handleOpenurl', error)
     }
   }
 
+
+
   async componentDidMount(): void {
+
     if (Platform.OS === 'ios') {
+      const initialUrl = await Linking.getInitialURL();
+
+      if (initialUrl) {
+        this.handleOpenURL(initialUrl);
+      }
+
       Linking.addEventListener('url', this.handleOpenURL);
     } else {
       await ShareMenu.getInitialShare((data) => {
@@ -453,6 +481,7 @@ const mapStateToProps = (state) => {
     user: state.user,
     threads: state.threads,
     search: state.search,
+    toUploadFilesIos: state.messages.toUploadFilesIos
   };
 };
 
@@ -467,6 +496,8 @@ const mapDispatchToProps = {
   setActiveThread: Threads.setActiveThread,
   getUser: User.getUser,
   getMessages: Messages.getMessages,
+  updateToUploadFilesIos: Messages.updateToUploadFilesIos
+
 };
 
 export default connect(
