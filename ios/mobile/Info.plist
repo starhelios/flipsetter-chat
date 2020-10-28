@@ -128,5 +128,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSContactsUsageDescription</key>
+	<string>Reason for accessing contacts</string>
 </dict>
 </plist>
