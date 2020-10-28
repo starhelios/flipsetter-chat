@@ -80,7 +80,7 @@ const CustomModal = (props) => {
                       fontWeight: 'bold',
                       fontSize: wp('3%'),
                     }}>
-                    {item.name}
+                    {item.name?.length > 25 ? item.name.substring(0, 25) + '...' : item.name}
                   </Text>
                 </View>
               ) : (

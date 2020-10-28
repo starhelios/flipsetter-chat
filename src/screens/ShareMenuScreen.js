@@ -18,19 +18,15 @@ import {
   Text,
   Title,
   View,
+  Button
 } from 'native-base';
 import {connect} from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {withNavigationFocus} from 'react-navigation';
 
-import ThreadList from '../components/threads/ThreadList';
 import {withSocketContext} from '../components/Socket';
 import {App, Auth, User, Threads, Messages} from '../reducers/actions';
 import SearchBar from '../components/SearchBar';
-import SearchResults from '../components/SearchResults';
-import ShareMenu from 'react-native-share-menu';
-import NavigationService from '../services/NavigationService';
-
 import ShareMenuThreadList from '../components/share-menu/ShareMenuThreadList';
 import config from '../config';
 
@@ -115,7 +111,12 @@ class ShareMenuScreen extends Component {
       <Container>
         <Header onLayout={(event) => this.headerHeight}>
           <Left style={{flex: 1}}>
-            <Title>Share with:</Title>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Button style={{paddingRight: 20}} title="" transparent onPress={() => this.props.navigation.goBack()}>
+                <FontAwesome5 name={'chevron-left'} size={24} color={'#FFF'} />
+              </Button>
+              <Title>Share with:</Title>
+            </View>
           </Left>
           <Body style={{flex: 1}} />
           <Right style={{flex: 1, marginRight: 0}}>

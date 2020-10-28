@@ -18,6 +18,7 @@ import map from 'lodash/map';
 import get from 'lodash/get';
 import CameraRoll from '@react-native-community/cameraroll';
 import ShareMenu, {ShareMenuReactView} from 'react-native-share-menu';
+import * as mime from 'react-native-mime-types';
 
 // import imageToBlob from 'react-native-image-to-blob'
 // Import the react-native-sound module
@@ -420,31 +421,37 @@ class MessagesScreen extends Component {
 
     const IMAGE_TYPE = 'image';
     const DOC_TYPE = 'application';
+    const TEXT_TYPE = 'text';
 
     this.setState({openPicker: false, isDoc: false});
 
     const dataType = dataToShare.mimeType.split('/')[0];
 
+    if (dataType === TEXT_TYPE) {
+      this.setState({typedMsg: dataToShare.data[0]});
+      return;
+    }
+
     let filesStat = [];
 
     if (dataToShare) {
-      if (Array.isArray(dataToShare?.data)) {
-        if (dataToShare.mimeType === '*/*') {
-          return;
+      try {
+        if (Array.isArray(dataToShare?.data)) {
+          if (dataToShare.mimeType === '*/*') {
+            return;
+          }
+
+          const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
+
+          filesStatRes.forEach((stat) => {
+            filesStat.push(stat);
+          })
+        } else {
+          const fileStatRes = await this.getFileStat(dataToShare.data[0]);
+
+          filesStat.push(fileStatRes)
         }
 
-        const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
-
-        filesStatRes.forEach((stat) => {
-          filesStat.push(stat);
-        })
-      } else {
-        const fileStatRes = await this.getFileStat(dataToShare.data[0]);
-
-        filesStat.push(fileStatRes)
-      }
-
-      try {
         if (dataType === IMAGE_TYPE) {
           this.setState({
             showModal: true,
@@ -454,12 +461,14 @@ class MessagesScreen extends Component {
         }
 
         if (dataType === DOC_TYPE) {
-          console.debug("dataToShare", dataToShare)
-          const results = filesStat.map((stat, idx) => ({
-            name: stat.filename,
-            type: dataToShare.mimeType,
-            uri: dataToShare.data[idx]
-          }))
+          const results = filesStat.map((stat, idx) => {
+            let mimeType = dataToShare.mimeType.endsWith('*') ? mime.lookup(stat.filename) : dataToShare.mimeType;
+            return {
+              name: stat.filename,
+              type: mimeType,
+              uri: dataToShare.data[idx]
+            }
+          })
 
           this.setState({
             doc: true,
