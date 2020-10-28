@@ -420,31 +420,39 @@ class MessagesScreen extends Component {
 
     const IMAGE_TYPE = 'image';
     const DOC_TYPE = 'application';
+    const TEXT_TYPE = 'text';
 
     this.setState({openPicker: false, isDoc: false});
 
     const dataType = dataToShare.mimeType.split('/')[0];
 
+    if (dataType === TEXT_TYPE) {
+      this.setState({typedMsg: dataToShare.data[0]});
+      return;
+    }
+
     let filesStat = [];
 
     if (dataToShare) {
-      if (Array.isArray(dataToShare?.data)) {
-        if (dataToShare.mimeType === '*/*') {
-          return;
+      try {
+        if (Array.isArray(dataToShare?.data)) {
+          if (dataToShare.mimeType === '*/*') {
+            return;
+          }
+
+          const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
+
+          console.log(filesStatRes);
+
+          filesStatRes.forEach((stat) => {
+            filesStat.push(stat);
+          })
+        } else {
+          const fileStatRes = await this.getFileStat(dataToShare.data[0]);
+
+          filesStat.push(fileStatRes)
         }
 
-        const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
-
-        filesStatRes.forEach((stat) => {
-          filesStat.push(stat);
-        })
-      } else {
-        const fileStatRes = await this.getFileStat(dataToShare.data[0]);
-
-        filesStat.push(fileStatRes)
-      }
-
-      try {
         if (dataType === IMAGE_TYPE) {
           this.setState({
             showModal: true,
@@ -454,7 +462,7 @@ class MessagesScreen extends Component {
         }
 
         if (dataType === DOC_TYPE) {
-          console.debug("dataToShare", dataToShare)
+          console.debug("dataToShare", filesStat)
           const results = filesStat.map((stat, idx) => ({
             name: stat.filename,
             type: dataToShare.mimeType,
