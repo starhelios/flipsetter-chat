@@ -79,12 +79,12 @@ class ThreadsScreen extends Component<Props> {
   }
 
 
-  handleOpenURL =  async (e) =>  {
+  handleOpenURL =  async (url) =>  {
     console.debug('handleopenurl', e);
-    const isUrl = e.url.search('http');
+    const isUrl = url.search('http');
 
     if (isUrl !== -1) {
-      const path = e.url.substring(e.url.search('http'));
+      const path = url.substring(url.search('http'));
 
       NavigationService.navigate('ShareMenu', {
         data: {
@@ -96,7 +96,7 @@ class ThreadsScreen extends Component<Props> {
       return;
     }
 
-    const path = decodeURI(e.url.substring(e.url.search('file:///') + 7));
+    const path = decodeURI(url.substring(url.search('file:///') + 7));
 
     try {
       const res  = await this.getFileStat(path);
@@ -127,7 +127,7 @@ class ThreadsScreen extends Component<Props> {
         this.handleOpenURL(initialUrl);
       }
 
-      Linking.addEventListener('url', this.handleOpenURL);
+      Linking.addEventListener('url', (e) => this.handleOpenURL(e.url));
     } else {
       await ShareMenu.getInitialShare((data) => {
         console.debug('data1', data)
