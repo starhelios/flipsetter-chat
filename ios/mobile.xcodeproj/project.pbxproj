@@ -52,6 +52,7 @@
 		87E7375123BF2EB600B550AF /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375023BF2EB600B550AF /* CallKit.framework */; };
 		87E7375323BF2EBC00B550AF /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375223BF2EBC00B550AF /* Intents.framework */; };
 		87E7376023BF31B700B550AF /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7375E23BF31B700B550AF /* PushKit.framework */; };
+		8B0FFB1ADD106DC2D91BE6DD /* libPods-ShareExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADCD58960F5159A662F7DD3 /* libPods-ShareExtension.a */; };
 		AB05FF821C7540B5A84DC967 /* Nunito-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C80DAFB8A81431F94634FDE /* Nunito-ExtraLight.ttf */; };
 		AF30C56AC0A049DF939BDA6D /* Nunito-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B89184E553EC4F1F8601B4F1 /* Nunito-Black.ttf */; };
 		B1D19681AF574AA39B226F2D /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AC23D3419C541C28A2FB788 /* Fontisto.ttf */; };
@@ -118,7 +119,6 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = mobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = mobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = mobile/main.m; sourceTree = "<group>"; };
-		185BC99A24D9E886001C5A82 /* mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mobile-Bridging-Header.h"; sourceTree = "<group>"; };
 		185EAA6224DDCD85002DFD14 /* react_native_giphy_ui.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = react_native_giphy_ui.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		185EAA6424DDCD9D002DFD14 /* react_native_giphy_ui.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = react_native_giphy_ui.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18B29C3E24DE12E200DC3E22 /* click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = click.mp3; path = ../android/app/src/main/res/raw/click.mp3; sourceTree = "<group>"; };
@@ -137,6 +137,8 @@
 		4811146227D34F40829B49CC /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		48F6B4AE5E1E49CFB6C44082 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		4AC23D3419C541C28A2FB788 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		4ADCD58960F5159A662F7DD3 /* libPods-ShareExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShareExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E23078B254A76220018AB19 /* ShareExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShareExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		4E459EB82532B4C1009857F9 /* incallmanager_ringtone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = incallmanager_ringtone.mp3; sourceTree = "<group>"; };
 		52ABEBC023F24F0CB99422D9 /* Nunito-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Nunito-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		54F7CD1F09CC44DC820D5949 /* Nunito-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Bold.ttf"; path = "../src/assets/fonts/Nunito-Bold.ttf"; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		6F61EE591FE44A54B8AA445B /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		72FDA7FE663F497783EF834F /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-SemiBold.ttf"; path = "../src/assets/fonts/Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
 		76EEA3A8F6904CC9AD0FA029 /* Nunito-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraBold.ttf"; path = "../src/assets/fonts/Nunito-ExtraBold.ttf"; sourceTree = "<group>"; };
+		78C13820C692055ADA50C792 /* Pods-ShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.release.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.release.xcconfig"; sourceTree = "<group>"; };
 		7BFC6BD0855447168392C0A3 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		7C80DAFB8A81431F94634FDE /* Nunito-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraLight.ttf"; path = "../src/assets/fonts/Nunito-ExtraLight.ttf"; sourceTree = "<group>"; };
 		846DA60D2547324B00E7B035 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +177,7 @@
 		C0AA152026D94883AF92252E /* Nunito-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Light.ttf"; path = "../src/assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		C1207E3192A24E658E55C3B3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		C1F443BA75DF4C62B552EB65 /* Nunito-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-BoldItalic.ttf"; path = "../src/assets/fonts/Nunito-BoldItalic.ttf"; sourceTree = "<group>"; };
+		C2A4F0316E7B7EC625424058 /* Pods-ShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.debug.xcconfig"; path = "Target Support Files/Pods-ShareExtension/Pods-ShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		C7FB37293BC34B4ABA5DBB95 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		D46BAAEC5D344009B3774AFA /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		E276F278255B40A3B3E51371 /* Nunito-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-LightItalic.ttf"; path = "../src/assets/fonts/Nunito-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -223,6 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B0FFB1ADD106DC2D91BE6DD /* libPods-ShareExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +272,8 @@
 			children = (
 				E9F33A39D99604E5ABAF35D0 /* Pods-mobile.debug.xcconfig */,
 				6CA2B38C5FDB5ECE85E71EF6 /* Pods-mobile.release.xcconfig */,
+				C2A4F0316E7B7EC625424058 /* Pods-ShareExtension.debug.xcconfig */,
+				78C13820C692055ADA50C792 /* Pods-ShareExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -284,6 +291,7 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				A73B5EF76581BE0F64C00B3B /* libPods-mobile.a */,
+				4ADCD58960F5159A662F7DD3 /* libPods-ShareExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -301,7 +309,6 @@
 				4E459EB82532B4C1009857F9 /* incallmanager_ringtone.mp3 */,
 				18B29C4024DE131900DC3E22 /* messagealert.mp3 */,
 				18B29C3E24DE12E200DC3E22 /* click.mp3 */,
-				185BC99A24D9E886001C5A82 /* mobile-Bridging-Header.h */,
 				18FCFA0624DDB57C00840C9F /* swiftGifhy.swift */,
 				BBDD97F324D4C581001586F0 /* dingsoundeffect.mp3 */,
 				87A9CD9F241ADD820094E284 /* AppCenter-Config.plist */,
@@ -339,6 +346,7 @@
 				846DA60F2547324B00E7B035 /* ShareViewController.swift */,
 				846DA6112547324B00E7B035 /* MainInterface.storyboard */,
 				846DA6142547324B00E7B035 /* Info.plist */,
+				4E23078B254A76220018AB19 /* ShareExtension-Bridging-Header.h */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -476,9 +484,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 846DA61A2547324B00E7B035 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
 			buildPhases = (
+				141AA115FA40F8638FF7EDBF /* [CP] Check Pods Manifest.lock */,
 				846DA6092547324B00E7B035 /* Sources */,
 				846DA60A2547324B00E7B035 /* Frameworks */,
 				846DA60B2547324B00E7B035 /* Resources */,
+				93488DE5016B633533EE31CF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -520,7 +530,7 @@
 					};
 					846DA60C2547324B00E7B035 = {
 						CreatedOnToolsVersion = 11.7;
-						DevelopmentTeam = G25A5SCYVZ;
+						DevelopmentTeam = PY2JP9KZ76;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -700,6 +710,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mobile/Pods-mobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		141AA115FA40F8638FF7EDBF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShareExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -762,6 +794,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mobile/Pods-mobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93488DE5016B633533EE31CF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ShareExtension/Pods-ShareExtension-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShareExtension/Pods-ShareExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -1270,6 +1320,7 @@
 		};
 		846DA6182547324B00E7B035 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2A4F0316E7B7EC625424058 /* Pods-ShareExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1281,7 +1332,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = G25A5SCYVZ;
+				DEVELOPMENT_TEAM = PY2JP9KZ76;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
@@ -1300,6 +1351,7 @@
 		};
 		846DA6192547324B00E7B035 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 78C13820C692055ADA50C792 /* Pods-ShareExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1312,7 +1364,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = G25A5SCYVZ;
+				DEVELOPMENT_TEAM = PY2JP9KZ76;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;

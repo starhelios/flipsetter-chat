@@ -23,19 +23,19 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key>
-			<string>com.flipsetter.mobile</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>flipsetter</string>
-			</array>
-		</dict>
-		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.flipsetter.mobile</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.flipsetter.mobile</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flipsetter</string>
 			</array>
 		</dict>
 	</array>
@@ -129,6 +129,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSContactsUsageDescription</key>
-	<string>Reason for accessing contacts</string>
+	<string>Collaborate is requesting access to your contacts</string>
 </dict>
 </plist>
