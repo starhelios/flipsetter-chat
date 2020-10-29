@@ -119,7 +119,7 @@ class PhoneContactsStack extends Component {
       return;
     }
 
-    const image = require('../images/pictures/testFlight.png');
+    const image = require('../images/pictures/testFlight.jpg');
     const metadata = resolveAssetSource(image);
     const url = metadata.uri;
 
@@ -130,7 +130,7 @@ class PhoneContactsStack extends Component {
             attachment: {
               url: url,
               iosType: 'public.jpeg',
-              iosFilename: 'testFlight.png',
+              iosFilename: 'Image.jpeg',
               androidType: 'image/*',
             },
           };

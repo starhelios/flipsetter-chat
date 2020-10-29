@@ -443,13 +443,18 @@ class MessagesScreen extends Component {
 
           const filesStatRes = await Promise.all(dataToShare.data.map((data) => this.getFileStat(data)));
 
-          filesStatRes.forEach((stat) => {
-            filesStat.push(stat);
+          filesStatRes.forEach((stat, idx) => {
+            filesStat.push({
+              ...stat, absolutePath: dataToShare.data[idx]
+            });
           })
         } else {
           const fileStatRes = await this.getFileStat(dataToShare.data[0]);
 
-          filesStat.push(fileStatRes)
+          filesStat.push({
+            ...fileStatRes,
+            absolutePath: dataToShare?.data[0]
+          })
         }
 
         if (dataType === IMAGE_TYPE) {
@@ -495,8 +500,8 @@ class MessagesScreen extends Component {
       const nm = this.generateName();
       const file = {
         name: 'img' + nm + '.jpg',
-        type: 'image/jpeg',
-        uri: 'file://' + `${img.path}`,
+        type: mime.lookup(img.filename),
+        uri: img.absolutePath,
       };
 
       return file;
