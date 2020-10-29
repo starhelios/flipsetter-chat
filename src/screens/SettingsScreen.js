@@ -52,8 +52,10 @@ class SettingsScreen extends Component {
             <Container>
                 <Header style={{backgroundColor: "#24422e"}}>
                     <StatusBar backgroundColor={"#24422e"} />
-                    <Left></Left>
-                    <Body><Title>Settings</Title></Body>
+                    <Left style={{flex: 1}}>
+                      <Title>Settings</Title>
+                    </Left>
+                    <Body style={{flex: 1}} />
                     <Right></Right>
                 </Header>
                 <Content>

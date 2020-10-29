@@ -54,8 +54,10 @@ class FriendsScreen extends Component<Props> {
             <Container>
                 <Header>
                     <StatusBar backgroundColor={"#24422e"} />
-                    <Left></Left>
-                    <Body><Title>Friends</Title></Body>
+                    <Left style={{flex: 1}}>
+                        <Title>Friends</Title>
+                    </Left>
+                    <Body style={{flex: 1}} />
                     <Right></Right>
                 </Header>
                 <FlatList

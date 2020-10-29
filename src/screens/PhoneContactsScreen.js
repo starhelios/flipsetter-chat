@@ -249,10 +249,10 @@ class PhoneContactsStack extends Component {
       <Container>
         <Header>
           <StatusBar backgroundColor={'#24422e'} />
-          <Left></Left>
-          <Body>
-            <Title>Contacts</Title>
-          </Body>
+          <Left style={{flex: 1}}>
+              <Title>Contacts</Title>
+          </Left>
+          <Body style={{flex: 1}} />
           <Right></Right>
         </Header>
         <FlatList

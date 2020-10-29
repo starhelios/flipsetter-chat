@@ -479,9 +479,9 @@ PODS:
     - React
   - RNVoipPushNotification (2.1.0):
     - React-Core
-  - SDWebImage (5.9.4):
-    - SDWebImage/Core (= 5.9.4)
-  - SDWebImage/Core (5.9.4)
+  - SDWebImage (5.9.3):
+    - SDWebImage/Core (= 5.9.3)
+  - SDWebImage/Core (5.9.3)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -853,7 +853,7 @@ SPEC CHECKSUMS:
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   RNVoipPushNotification: be6f70cac9d1fd73e020063093f635f64d97c9c6
-  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
@@ -864,4 +864,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7ce7d3d0f8ee5fa460aab4bb30d6464f981b0b32
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.9.0.beta.3
