@@ -80,7 +80,6 @@ class ThreadsScreen extends Component<Props> {
 
 
   handleOpenURL =  async (url) =>  {
-    console.debug('handleopenurl', e);
     const isUrl = url.search('http');
 
     if (isUrl !== -1) {
@@ -100,8 +99,6 @@ class ThreadsScreen extends Component<Props> {
 
     try {
       const res  = await this.getFileStat(path);
-
-      console.debug('toUploadFilesIos', this.props.toUploadFilesIos);
 
       this.props.updateToUploadFilesIos({
         data: [...this.props.toUploadFilesIos.data, path],
