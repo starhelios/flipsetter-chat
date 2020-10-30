@@ -30,31 +30,42 @@ import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
 import SendSMS from 'react-native-sms';
 
-const IOS_TEXT_MESSAGE = `Step 1: Be sure to update your iPhone to the latest iOS which can be found in your Settings
-Step 2: Download and install TestFlight (a free app that deposits the Collaborate app file)
-Step 3: After your install TestFlight on your phone, click on the link - (iPhone link) and it will prompt you to the install
+const IOS_TEXT_MESSAGE = `Hi! I’m using Collaborate, come join me and so many other people on this app! Compliments of FlipSetter!
+
+To download the app to your iPhone takes two simple steps. Before you do, please be sure to update your iPhone to the latest iOS.
+
+Step 1: Download and install TestFlight from the App Store (a free that deposits the Collaborate app file)
+Step 2: After you install TestFlight on your phone, click on this link - https://testflight.apple.com/join/IiU7e88E
+
+If you have any questions or comments, please email us at flipsetter.contact@gmail.com and include the following parts to your email:
+
+First and Last Name:
+Email:
+Phone (make and model):
+Comments or issues: Please be as specific as possible and include any screenshots / images, so we can further assist you.
+All information is kept 100% confidential 
+
+Our story - https://youtu.be/Gu-OvZlv1do`;
+
+const ANDROID_TEXT_MESSAGE = `Hi! I’m using Collaborate, come join me and so many other people on this app! Compliments of FlipSetter!
+
+To download the app to your Android takes three simple steps. Before you do, please be sure to update your Android to the latest software update. 
+
+Step 1: Go to Google Drive and access the – FlipSetter public test group folder
+Step 2: Then click on – FlipSetter-Collaborate.apk
+Step 3: When you click on it, choose “Open with Package Installer”
+
+*** Upon install, make sure you “Deny” the app from making phone calls. This is a very important step! ***
 
 If you have any questions or comments, please email us at f̲l̲i̲p̲s̲e̲t̲t̲e̲r̲.̲c̲o̲n̲t̲a̲c̲t̲@̲g̲m̲a̲i̲l̲.̲c̲o̲m̲ and include the following parts to your email:
 
-Name:
+First and Last Name:
 Email:
-Phone Type:
-Problem, Comment or Issue:
+Phone (make and model):
+Comments or issues: Please be as specific as possible and include any screenshots / images, so we can further assist you.
+All information is kept 100% confidential 
 
-All information is kept 100% confidential`;
-
-const ANDROID_TEXT_MESSAGE = `Step 1: Go to your Google Drive
-Step 2: Go to the folder you were given acess to - Public Test Group
-Step 3: Click on the app file and click on Open With Package Installer (it will prompt the download)
-
-If you have any questions or comments, please email us at f̲l̲i̲p̲s̲e̲t̲t̲e̲r̲.̲c̲o̲n̲t̲a̲c̲t̲@̲g̲m̲a̲i̲l̲.̲c̲o̲m̲ and include the following parts to your email:
-
-Name:
-Email:
-Phone Type:
-Problem, Comment or Issue:
-
-All information is kept 100% confidential`;
+Our story - https://youtu.be/Gu-OvZlv1do`;
 
 class PhoneContactsStack extends Component {
   constructor(props) {
