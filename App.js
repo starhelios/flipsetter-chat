@@ -28,6 +28,7 @@ import Analytics from 'appcenter-analytics';
 import ShareMenu from 'react-native-share-menu';
 import SplashScreen from 'react-native-splash-screen';
 import RNFetchBlob from 'rn-fetch-blob';
+import * as mime from 'react-native-mime-types';
 
 let socket;
 enableScreens();
