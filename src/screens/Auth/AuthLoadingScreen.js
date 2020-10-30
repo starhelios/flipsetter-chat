@@ -15,6 +15,8 @@ import logo from '../../components/assets/Logo.png';
 import DeviceInfo from 'react-native-device-info';
 import Constants from '../../components/Constants';
 
+import NavigationService from '../../services/NavigationService';
+
 class AuthLoadingScreen extends React.Component {
     componentDidMount(){
         setTimeout(() => {
@@ -31,10 +33,16 @@ class AuthLoadingScreen extends React.Component {
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
         if(this.props.auth.isLoggedIn && this.props.auth.accessToken){
-        this.props.navigation.navigate('Main');
+          const currentRoute = NavigationService.getCurrentRoute();
+
+          if (currentRoute?.routeName !== 'ShareMenu') {
+            this.props.navigation.navigate('Main');
+          }
+
 
         }
         else{
+
             this.props.navigation.navigate('Login');
         }
         // // AuthService.delete();
