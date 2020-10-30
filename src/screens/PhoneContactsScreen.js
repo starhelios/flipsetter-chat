@@ -244,6 +244,15 @@ class PhoneContactsStack extends Component {
     );
   };
 
+  _sortContacts = (contacts) => {
+    return contacts.sort((a, b) => {
+      const aFullName = `${a?.givenName.trim()} ${a?.familyName?.trim()}`;
+      const bFullName = `${b?.givenName.trim()} ${b?.familyName?.trim()}`;
+
+      return aFullName.localeCompare(bFullName)
+    })
+  }
+
   render() {
     return (
       <Container>
@@ -256,7 +265,7 @@ class PhoneContactsStack extends Component {
           <Right></Right>
         </Header>
         <FlatList
-          data={this.state.contactList}
+          data={this._sortContacts(this.state.contactList)}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           extraData={this.state}
