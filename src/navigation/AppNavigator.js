@@ -1,4 +1,4 @@
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator, } from 'react-navigation';
 import AuthLoadingScreen from '../screens/Auth/AuthLoadingScreen';
 
 import MainTabNavigator from './MainTabNavigator';
@@ -6,12 +6,24 @@ import AuthStack from './AuthStack';
 import CallStack from './CallStack';
 import WhiteboardStack from './WhiteboardStack';
 
+import ShareMenu from '../screens/ShareMenuScreen';
+
+import { createStackNavigator } from 'react-navigation-stack';
+
+const MainStack = createStackNavigator({
+  Main: MainTabNavigator,
+  ShareMenu: ShareMenu,
+}, {
+  initialRouteName: 'Main',
+  headerMode: 'none',
+});
+
 export default createAppContainer(createSwitchNavigator(
   {
     // You could add another route here for authentication.
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     AuthLoading: AuthLoadingScreen,
-    Main: MainTabNavigator,
+    Main: MainStack,
     WhiteboardStack,
     Auth: AuthStack,
     Call: CallStack,

@@ -245,6 +245,15 @@ class PhoneContactsStack extends Component {
     );
   };
 
+  _sortContacts = (contacts) => {
+    return contacts.sort((a, b) => {
+      const aFullName = `${a?.givenName.trim()} ${a?.familyName?.trim()}`;
+      const bFullName = `${b?.givenName.trim()} ${b?.familyName?.trim()}`;
+
+      return aFullName.localeCompare(bFullName)
+    })
+  }
+
   render() {
     return (
       <Container>
@@ -257,7 +266,7 @@ class PhoneContactsStack extends Component {
           <Right></Right>
         </Header>
         <FlatList
-          data={this.state.contactList}
+          data={this._sortContacts(this.state.contactList)}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           extraData={this.state}
@@ -287,14 +296,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginLeft: 10,
     paddingVertical: 5,
-    borderWidth: 2,
-    borderColor: 'grey',
+    backgroundColor: '#E4E4E4',
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
   },
-  btnText: {textTransform: 'uppercase', fontSize: 12},
+  btnText: {textTransform: 'uppercase', fontSize: 12, fontWeight: '700'},
   body: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -29,6 +29,7 @@ import {App, Auth, User, Threads, Messages} from '../reducers/actions';
 import SearchBar from '../components/SearchBar';
 import ShareMenuThreadList from '../components/share-menu/ShareMenuThreadList';
 import config from '../config';
+import NavigationService from '../services/NavigationService';
 
 if (
   Platform.OS === 'android' &&
@@ -52,6 +53,10 @@ class ShareMenuScreen extends Component {
 
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    SplashScreen.hide();
   }
 
   _searchFocused = (focused) => {
@@ -128,7 +133,7 @@ class ShareMenuScreen extends Component {
         <Header onLayout={(event) => this.headerHeight}>
           <Left style={{flex: 1}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Button style={{paddingRight: 20}} title="" transparent onPress={() => this.props.navigation.goBack()}>
+              <Button style={{paddingRight: 20}} title="" transparent onPress={() => NavigationService.navigate('Main')}>
                 <FontAwesome5 name={'chevron-left'} size={24} color={'#FFF'} />
               </Button>
               <Title>Share with:</Title>

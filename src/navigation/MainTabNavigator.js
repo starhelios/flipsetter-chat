@@ -26,7 +26,6 @@ const ThreadsStack = createStackNavigator(
   {
     Threads: ThreadsScreen,
     Messages: MessagesScreen,
-    ShareMenu: ShareMenuScreen,
   },
   {},
 );

@@ -30,7 +30,6 @@ import {withSocketContext} from '../components/Socket';
 import {App, Auth, User, Threads, Messages} from '../reducers/actions';
 import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
-import ShareMenu from 'react-native-share-menu';
 import NavigationService from '../services/NavigationService';
 
 import { stat, readFile } from 'react-native-fs';
@@ -72,80 +71,7 @@ class ThreadsScreen extends Component<Props> {
     // })
   }
 
-
-  getFileStat = async (path) => {
-    const res = await RNFetchBlob.fs.stat(path);
-    return res;
-  }
-
-
-  handleOpenURL =  async (url) =>  {
-    const isUrl = url.search('http');
-
-    if (isUrl !== -1) {
-      const path = url.substring(url.search('http'));
-
-      NavigationService.navigate('ShareMenu', {
-        data: {
-          data: path,
-          mimeType: 'text/plain'
-        },
-      });
-
-      return;
-    }
-
-    const path = decodeURI(url.substring(url.search('file:///') + 7));
-
-    try {
-      const res  = await this.getFileStat(path);
-
-      this.props.updateToUploadFilesIos({
-        data: [...this.props.toUploadFilesIos.data, path],
-        mimeType: mime.lookup(res.filename)
-      })
-
-      NavigationService.navigate('ShareMenu', {
-        data: null,
-      });
-    } catch (error) {
-      console.debug('handleOpenurl', error)
-    }
-  }
-
-
-
   async componentDidMount(): void {
-
-    if (Platform.OS === 'ios') {
-      const initialUrl = await Linking.getInitialURL();
-
-      if (initialUrl) {
-        this.handleOpenURL(initialUrl);
-      }
-
-      Linking.addEventListener('url', (e) => this.handleOpenURL(e.url));
-    } else {
-      await ShareMenu.getInitialShare((data) => {
-        console.debug('data1', data)
-        if (data) {
-          NavigationService.navigate('ShareMenu', {
-            data,
-          });
-        }
-
-      });
-
-      await ShareMenu.addNewShareListener((data) => {
-        console.debug('data2', data)
-        if (data) {
-          NavigationService.navigate('ShareMenu', {
-            data,
-          });
-        }
-      });
-    }
-
     const {navigation} = this.props;
 
     this.focusListener = navigation.addListener('didFocus', async () => {
