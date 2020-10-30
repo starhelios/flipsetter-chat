@@ -54,6 +54,10 @@ class ShareMenuScreen extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    SplashScreen.hide();
+  }
+
   _searchFocused = (focused) => {
     console.log('focused', focused);
     this.setState({

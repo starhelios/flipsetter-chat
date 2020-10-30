@@ -7,7 +7,7 @@
 
 import React, {Component} from 'react';
 
-import {AppState, YellowBox, StatusBar} from 'react-native';
+import {AppState, YellowBox, StatusBar, Linking} from 'react-native';
 import {connect, Provider} from 'react-redux';
 import 'react-native-gesture-handler';
 import {PersistGate} from 'redux-persist/es/integration/react';
@@ -25,11 +25,11 @@ import getTheme from './src/native-base-theme/components';
 import material from './src/native-base-theme/variables/material';
 import appActions from './src/reducers/actions/appActions';
 import Analytics from 'appcenter-analytics';
-// import ShareMenu from 'react-native-share-menu';
+import ShareMenu from 'react-native-share-menu';
+import SplashScreen from 'react-native-splash-screen';
+
 let socket;
 enableScreens();
-
-import ShareMenu from 'react-native-share-menu';
 
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
@@ -51,6 +51,36 @@ class Main extends Component {
   };
 
   async componentDidMount() {
+    if (Platform.OS === 'ios') {
+      const initialUrl = await Linking.getInitialURL();
+
+      if (initialUrl) {
+        this.handleOpenURL(initialUrl);
+      }
+
+      Linking.addEventListener('url', (e) => this.handleOpenURL(e.url));
+    } else {
+      ShareMenu.getInitialShare((data) => {
+        console.debug('data1', data)
+        if (data) {
+          NavigationService.navigate('ShareMenu', {
+            data,
+          });
+        }
+
+      });
+
+      ShareMenu.addNewShareListener((data) => {
+        console.debug('data2', data)
+        if (data) {
+          NavigationService.navigate('ShareMenu', {
+            data,
+          });
+        }
+      });
+    }
+
+
     await Analytics.setEnabled(true);
 
     await Analytics.trackEvent('Analytics Started');
@@ -109,6 +139,47 @@ class Main extends Component {
     clearInterval(this.Heartbeat);
     AppState.removeEventListener('change', this._handleAppStateChange);
   }
+
+
+  getFileStat = async (path) => {
+    const res = await RNFetchBlob.fs.stat(path);
+    return res;
+  }
+
+  handleOpenURL =  async (url) =>  {
+    const isUrl = url.search('http');
+
+    if (isUrl !== -1) {
+      const path = url.substring(url.search('http'));
+
+      NavigationService.navigate('ShareMenu', {
+        data: {
+          data: path,
+          mimeType: 'text/plain'
+        },
+      });
+
+      return;
+    }
+
+    const path = decodeURI(url.substring(url.search('file:///') + 7));
+
+    try {
+      const res  = await this.getFileStat(path);
+
+      this.props.updateToUploadFilesIos({
+        data: [...this.props.toUploadFilesIos.data, path],
+        mimeType: mime.lookup(res.filename)
+      })
+
+      NavigationService.navigate('ShareMenu', {
+        data: null,
+      });
+    } catch (error) {
+      console.debug('handleOpenurl', error)
+    }
+  }
+
 
   render() {
     return (
