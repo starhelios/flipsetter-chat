@@ -27,6 +27,7 @@ import appActions from './src/reducers/actions/appActions';
 import Analytics from 'appcenter-analytics';
 import ShareMenu from 'react-native-share-menu';
 import SplashScreen from 'react-native-splash-screen';
+import RNFetchBlob from 'rn-fetch-blob';
 
 let socket;
 enableScreens();
@@ -233,6 +234,7 @@ const mapStateToProps = (state) => {
     threads: state.threads,
     user: state.user,
     messages: state.messages,
+    toUploadFilesIos: state.messages.toUploadFilesIos
   };
 };
 
@@ -244,7 +246,8 @@ const mapDispatchToProps = {
   setAccessToken: Auth.setAccessToken,
   setIsLoggedIn: Auth.setIsLoggedIn,
   setUserID: User.setUserID,
-  logout: Auth.logout
+  logout: Auth.logout,
+  updateToUploadFilesIos: Messages.updateToUploadFilesIos
 };
 
 let Flipsetter = connect(mapStateToProps, mapDispatchToProps)(Main);
@@ -257,3 +260,4 @@ const MyApp = () => {
   );
 };
 export default MyApp;
+
