@@ -25,7 +25,7 @@ class FriendsScreen extends Component<Props> {
 
     _renderItem = ({item}) => {
         return(
-            <ListItem thumbnail>
+            <ListItem style={{paddingTop: 10}} thumbnail>
                 <Left>
                     <FastImage
                         source={{

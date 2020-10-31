@@ -30,40 +30,45 @@ import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
 import SendSMS from 'react-native-sms';
 
-const IOS_TEXT_MESSAGE = `Hi! I’m using Collaborate, come join me and so many other people on this app! Compliments of FlipSetter!
+const IOS_TEXT_MESSAGE = `**** iPhone ****
 
-To download the app to your iPhone takes two simple steps. Before you do, please be sure to update your iPhone to the latest iOS.
+Hi, I’m using Collaborate. Join me and other people on this app by FlipSetter!
 
-Step 1: Download and install TestFlight from the App Store (a free that deposits the Collaborate app file)
-Step 2: After you install TestFlight on your phone, click on this link - https://testflight.apple.com/join/IiU7e88E
+Before you download it, update your phone to the latest version.
 
-If you have any questions or comments, please email us at flipsetter.contact@gmail.com and include the following parts to your email:
+Step 1: Download TestFlight from the App Store
+Step 2: After installing TestFlight, click here - https://testflight.apple.com/join/IiU7e88E
+
+If you need to message us, please email us at flipsetter.contact@gmail.com and include the following parts:
 
 First and Last Name:
 Email:
 Phone (make and model):
-Comments or issues: Please be as specific as possible and include any screenshots / images, so we can further assist you.
-All information is kept 100% confidential 
+Comments or issues: Be as specific as possible and include any screenshots / images, so we can assist you.
+
+All information is kept 100% confidential
 
 Our story - https://youtu.be/Gu-OvZlv1do`;
 
-const ANDROID_TEXT_MESSAGE = `Hi! I’m using Collaborate, come join me and so many other people on this app! Compliments of FlipSetter!
+const ANDROID_TEXT_MESSAGE = `**** Android ****
 
-To download the app to your Android takes three simple steps. Before you do, please be sure to update your Android to the latest software update. 
+Hi, I’m using Collaborate. Join me and other people on this app by FlipSetter!
 
-Step 1: Go to Google Drive and access the – FlipSetter public test group folder
-Step 2: Then click on – FlipSetter-Collaborate.apk
-Step 3: When you click on it, choose “Open with Package Installer”
+Before you download it, update your phone to the latest version.
 
-*** Upon install, make sure you “Deny” the app from making phone calls. This is a very important step! ***
+Step 1: Click on – FlipSetter-Collaborate.apk
+Step 2: Click on it, choose “Open with Package Installer”
 
-If you have any questions or comments, please email us at f̲l̲i̲p̲s̲e̲t̲t̲e̲r̲.̲c̲o̲n̲t̲a̲c̲t̲@̲g̲m̲a̲i̲l̲.̲c̲o̲m̲ and include the following parts to your email:
+*** Upon install, make sure you “Deny” the app from making phone calls ***
+
+If you need to message us, please email us at flipsetter.contact@gmail.com and include the following parts:
 
 First and Last Name:
 Email:
 Phone (make and model):
-Comments or issues: Please be as specific as possible and include any screenshots / images, so we can further assist you.
-All information is kept 100% confidential 
+Comments or issues: Be as specific as possible and include any screenshots / images, so we can assist you.
+
+All information is kept 100% confidential
 
 Our story - https://youtu.be/Gu-OvZlv1do`;
 
@@ -130,21 +135,21 @@ class PhoneContactsStack extends Component {
       return;
     }
 
-    const image = require('../images/pictures/testFlight.jpg');
-    const metadata = resolveAssetSource(image);
-    const url = metadata.uri;
+    // const image = require('../images/pictures/testFlight.jpg');
+    // const metadata = resolveAssetSource(image);
+    // const url = metadata.uri;
 
-    const additionalFields =
-      platform === 'android'
-        ? {}
-        : {
-            attachment: {
-              url: url,
-              iosType: 'public.jpeg',
-              iosFilename: 'Image.jpeg',
-              androidType: 'image/*',
-            },
-          };
+    const additionalFields = {};
+      // platform === 'android'
+      //   ? {}
+      //   : {
+      //       attachment: {
+      //         url: url,
+      //         iosType: 'public.jpeg',
+      //         iosFilename: 'Image.jpeg',
+      //         androidType: 'image/*',
+      //       },
+      //     };
 
     SendSMS.send(
       {
@@ -224,7 +229,7 @@ class PhoneContactsStack extends Component {
     );
 
     return (
-      <ListItem thumbnail>
+      <ListItem style={{paddingTop: 10}} thumbnail>
         <Left>
           <Image
             style={{width: 56, height: 56}}
