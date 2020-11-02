@@ -12,7 +12,6 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 const MainStack = createStackNavigator({
   Main: MainTabNavigator,
-  ShareMenu: ShareMenu,
 }, {
   initialRouteName: 'Main',
   headerMode: 'none',
@@ -22,6 +21,7 @@ export default createAppContainer(createSwitchNavigator(
   {
     // You could add another route here for authentication.
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
+    ShareMenu: ShareMenu,
     AuthLoading: AuthLoadingScreen,
     Main: MainStack,
     WhiteboardStack,

@@ -24,7 +24,7 @@ class ShareViewController: SLComposeServiceViewController {
                         if let shareURL = url as? NSURL {
                             // Do stuff with your URL now.
                             let url = NSURL(string: "com.flipsetter.mobile://page1/\(shareURL)")
-                            alert(url)
+                            
                             let selectorOpenURL = sel_registerName("openURL:")
                             let context = NSExtensionContext()
                             context.open(url! as URL, completionHandler: nil)
