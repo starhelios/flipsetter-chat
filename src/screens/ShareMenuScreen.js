@@ -105,7 +105,6 @@ class ShareMenuScreen extends Component {
 
     if (!navigation.state.params?.data) {
       const data = {...this.props.toUploadFilesIos};
-      console.debug('final', this.props.toUploadFilesIos);
 
       this.props.updateToUploadFilesIos({
         data: [],

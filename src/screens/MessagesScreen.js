@@ -427,7 +427,7 @@ class MessagesScreen extends Component {
 
     const dataType = dataToShare.mimeType.split('/')[0];
 
-    if (dataType === TEXT_TYPE) {
+    if (dataType && dataType === TEXT_TYPE) {
       this.setState({typedMsg: dataToShare.data[0]});
       return;
     }

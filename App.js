@@ -150,7 +150,7 @@ class Main extends Component {
 
   handleOpenURL =  async (url) =>  {
     const isUrl = url.search('http');
-
+    console.log('handleOpenurl ', isUrl)
     if (isUrl !== -1) {
       const path = url.substring(url.search('http'));
 
@@ -175,7 +175,10 @@ class Main extends Component {
       })
 
       NavigationService.navigate('ShareMenu', {
-        data: null,
+        data: {
+          data: path,
+          mimeType: mime.lookup(res.filename)
+        },
       });
     } catch (error) {
       console.debug('handleOpenurl', error)
