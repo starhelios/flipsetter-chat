@@ -419,7 +419,7 @@ class WebRTC extends Component<Props> {
                         <RTCView objectFit="cover" style={{height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}} streamURL={this.state.remoteList[this.state.remoteSpeaker]}/>
                     }
 
-                    <RTCView style={styles.localVideo} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
+                    <RTCView style={config.layout.window.width / 2 - 25 > 140? styles.localVideoV1: styles.localVideoV2} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
 
                     <View style={{position: "absolute", bottom: 25,height: 100, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}}>
                         <TouchableOpacity onPress={() => this._leaveCall()} style={{backgroundColor:"red", width: 50, height: 50, borderRadius: 25,alignItems: "center", justifyContent: "center"}}>
@@ -478,10 +478,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#0f0'
     },
-    localVideo: {
+    localVideoV1: {
         height: 125,
         width: 125,
         bottom: 15,
+        right: 15,
+        position: "absolute",
+        zIndex: 2
+    },
+    localVideoV2: {
+        height: 110,
+        width: 110,
+        bottom: 30,
         right: 15,
         position: "absolute",
         zIndex: 2
