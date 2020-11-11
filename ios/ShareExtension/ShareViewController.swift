@@ -1,81 +1,151 @@
+
+import MobileCoreServices
 import UIKit
 import Social
-import SafariServices
-import MobileCoreServices
+import RNShareMenu
 
 class ShareViewController: SLComposeServiceViewController {
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    didSelectPost()
+  }
 
-    override func isContentValid() -> Bool {
-        // Do validation of contentText and/or NSExtensionContext attachments here
-        return true
+  override func isContentValid() -> Bool {
+    return true
+  }
+  
+  override func configurationItems() -> [Any]! {
+      return []
+  }
+
+  override func didSelectPost() {
+    guard let item = extensionContext?.inputItems.first as? NSExtensionItem else {
+      cancelRequest()
+      return
     }
 
-    override func viewDidLoad() {
-        didSelectPost()
+    handlePost(item)
+  }
+
+  func handlePost(_ item: NSExtensionItem) {
+    guard let provider = item.attachments?.first else {
+      cancelRequest()
+      return
     }
-
-    override func didSelectPost() {
-        if let item = extensionContext?.inputItems.first as? NSExtensionItem {
-            if let attachments = item.attachments {
-                for attachment: NSItemProvider in attachments {
-                    if attachment.hasItemConformingToTypeIdentifier("public.url") {
-                        attachment.loadItem(forTypeIdentifier: "public.url", options: nil, completionHandler: { (url, error) in
-                        
-                        if let shareURL = url as? NSURL {
-                            // Do stuff with your URL now.
-                            let url = NSURL(string: "com.flipsetter.mobile://page1/\(shareURL)")
-                            
-                            let selectorOpenURL = sel_registerName("openURL:")
-                            let context = NSExtensionContext()
-                            context.open(url! as URL, completionHandler: nil)
-                            var responder = self.parent as UIResponder?
-
-                            while (responder != nil){
-                                if responder?.responds(to: selectorOpenURL) == true{
-                                    responder?.perform(selectorOpenURL, with: url)
-                                }
-                                responder = responder!.next
-                            }
-                        }
-                        self.extensionContext?.completeRequest(returningItems: [], completionHandler:nil)
-                        //super.didSelectCancel()
-                        })
-                    }
-
-                    if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
-                        attachment.loadItem(forTypeIdentifier: (kUTTypeImage as String), options: nil, completionHandler: { (item, error) in
-                        if let resultURL = item as? NSURL {
-                            // if let itemImage = item as? UIImage{
-                            let url = NSURL(string: "com.flipsetter.mobile://page1/\(resultURL)")
-                            let selectorOpenURL = sel_registerName("openURL:")
-                            let context = NSExtensionContext()
-                            context.open(url! as URL, completionHandler: nil)
-                            var responder = self.parent as UIResponder?
-
-                            while (responder != nil){
-                                if responder?.responds(to: selectorOpenURL) == true{
-                                    responder?.perform(selectorOpenURL, with: url)
-                                }
-                                responder = responder!.next
-                            }
-                        }
-                        self.extensionContext?.completeRequest(returningItems: [], completionHandler:nil)
-                        //super.didSelectCancel()
-                        })
-                    }
-                }
-            }
-        }
-    // self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+    
+    if provider.isText {
+      storeText(withProvider: provider)
+    } else if provider.isURL {
+      storeUrl(withProvider: provider)
+    } else {
+      storeFile(withProvider: provider)
     }
-    //    override func configurationItems() -> [Any]! {
-    //        // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-    //        return []
-    //    }
-    override func didSelectCancel() {
-        super.didSelectCancel()
+  }
+  
+  func storeText(withProvider provider: NSItemProvider) {
+    
+    provider.loadItem(forTypeIdentifier: kUTTypeText as String, options: nil) { (data, error) in
+      guard (error == nil) else {
+        self.exit(withError: error.debugDescription)
+        return
+      }
+      guard let text = data as? String else {
+        self.exit(withError: COULD_NOT_FIND_STRING_ERROR)
+        return
+      }
+      self.openHostApp(text)
     }
-    //  func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-    //    dismiss(animated: true)
-    //  }
+  }
+  
+  func storeUrl(withProvider provider: NSItemProvider) {
+    
+    provider.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { (data, error) in
+      guard (error == nil) else {
+        self.exit(withError: error.debugDescription)
+        return
+      }
+      guard let url = data as? URL else {
+        self.exit(withError: COULD_NOT_FIND_URL_ERROR)
+        return
+      }
+      
+      self.openHostApp(url.absoluteString)
+    }
+  }
+  
+  func storeFile(withProvider provider: NSItemProvider) {
+    
+    provider.loadItem(forTypeIdentifier: kUTTypeData as String, options: nil) { (data, error) in
+      guard (error == nil) else {
+        self.exit(withError: error.debugDescription)
+        return
+      }
+      guard let url = data as? URL else {
+        self.exit(withError: COULD_NOT_FIND_IMG_ERROR)
+        return
+      }
+     
+      guard let groupFileManagerContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.flipsetter.mobile") else {
+        self.exit(withError: NO_APP_GROUP_ERROR)
+        return
+      }
+      
+//      let mimeType = url.extractMimeType()
+      let fileExtension = url.pathExtension
+      let fileName = UUID().uuidString
+      let filePath = groupFileManagerContainer.appendingPathComponent("\(fileName).\(fileExtension)")
+      guard self.moveFileToDisk(from: url, to: filePath) else {
+        self.exit(withError: COULD_NOT_SAVE_FILE_ERROR)
+        return
+      }
+      
+      self.openHostApp(filePath.absoluteString)
+    }
+  }
+
+  func moveFileToDisk(from srcUrl: URL, to destUrl: URL) -> Bool {
+    do {
+      if FileManager.default.fileExists(atPath: destUrl.path) {
+        try FileManager.default.removeItem(at: destUrl)
+      }
+      try FileManager.default.copyItem(at: srcUrl, to: destUrl)
+    } catch (let error) {
+      print("Could not save file from \(srcUrl) to \(destUrl): \(error)")
+      return false
+    }
+    
+    return true
+  }
+  
+  func exit(withError error: String) {
+    print("Error: \(error)")
+    cancelRequest()
+  }
+  
+  internal func openHostApp(_ text: String) {
+    let url = NSURL(string: "com.flipsetter.mobile://page1/\(text)")
+    let selectorOpenURL = sel_registerName("openURL:")
+    let context = NSExtensionContext()
+    context.open(url! as URL, completionHandler: nil)
+    
+    var responder: UIResponder? = self.parent
+    while responder != nil {
+      if responder?.responds(to: selectorOpenURL) == true {
+        responder?.perform(selectorOpenURL, with: url)
+      }
+      responder = responder!.next
+    }
+    
+    completeRequest()
+  }
+  
+  func completeRequest() {
+    extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+  }
+  
+  func cancelRequest() {
+    extensionContext!.cancelRequest(withError: NSError())
+  }
 }
