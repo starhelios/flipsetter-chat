@@ -86,7 +86,7 @@ const CustomModal = (props) => {
               ) : (
                 <Image
                   style={{height: hp('22%'), width: wp('45%')}}
-                  source={{uri: item.absolutePath}}
+                  source={{uri: item.path}}
                 />
               )}
             </View>
