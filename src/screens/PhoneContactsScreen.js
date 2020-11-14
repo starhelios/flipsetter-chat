@@ -30,7 +30,7 @@ import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 
 import SendSMS from 'react-native-sms';
 
-const IOS_TEXT_MESSAGE = `**** iPhone ****
+const IOS_TEXT_MESSAGE = `For iPhone:
 
 Hi, I’m using Collaborate. Join me and other people on this app by FlipSetter!
 
@@ -50,13 +50,13 @@ All information is kept 100% confidential
 
 Our story - https://youtu.be/Gu-OvZlv1do`;
 
-const ANDROID_TEXT_MESSAGE = `**** Android ****
+const ANDROID_TEXT_MESSAGE = `For Android:
 
 Hi, I’m using Collaborate. Join me and other people on this app by FlipSetter!
 
 Before you download it, update your phone to the latest version.
 
-Step 1: Click on – FlipSetter-Collaborate.apk
+Step 1: Click on – https://drive.google.com/file/d/1hTmgL_9ZiHuSs3cMmxDfZyXTgf1ahrcs/view?usp=sharing
 Step 2: Click on it, choose “Open with Package Installer”
 
 *** Upon install, make sure you “Deny” the app from making phone calls ***
