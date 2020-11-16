@@ -56,7 +56,7 @@ Hi, I’m using Collaborate. Join me and other people on this app by FlipSetter!
 
 Before you download it, update your phone to the latest version.
 
-Step 1: Click on – https://drive.google.com/file/d/1hTmgL_9ZiHuSs3cMmxDfZyXTgf1ahrcs/view?usp=sharing
+Step 1: Click on – https://drive.google.com/drive/folders/1ZvRDaTC-01tFu_PrzGPwlWGeEL5sLU27
 Step 2: Click on it, choose “Open with Package Installer”
 
 *** Upon install, make sure you “Deny” the app from making phone calls ***
