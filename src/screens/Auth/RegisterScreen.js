@@ -11,6 +11,7 @@ import {
     View,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import Tooltips from 'react-native-tooltips'
 import ActivityLoader from '../../components/ActivityLoader';
 import { App, Auth, User } from "../../reducers/actions";
 import { connect } from "react-redux";
@@ -18,6 +19,7 @@ import { withSocketContext } from "../../components/Socket";
 
 import { Container, Header,  Left, Body, Right, Text} from 'native-base';
 import { withNavigationFocus } from 'react-navigation';
+import { getPasswordStrength } from '../../helper';
 
 var Sound = require('react-native-sound');
 const window = Dimensions.get('window');
@@ -33,6 +35,8 @@ class RegisterScreen extends React.Component {
             email: '',
             password: '',
             verifyPassword: '',
+            visible: false,
+            color: '#000000'
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
@@ -47,6 +51,12 @@ class RegisterScreen extends React.Component {
             this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
             this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
         }
+        setTimeout(() => {
+            this.setState({
+                inputRef: this.target,
+                parentRef: this.parent
+            })
+        }, 1000)
 
     }
 
@@ -108,15 +118,14 @@ class RegisterScreen extends React.Component {
         }
     }
 
-    checkPassword=(value)=>{
-    let reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    ;
-    if (reg.test(value) === true) {
-        return false
-    }
-    else {
-        return true
-    }
+    checkPassword=(value)=> {
+    let reg = /^(?=\S?[A-Z])(?=\S?[a-z])((?=\S?[0-9])|(?=\S?[^\w*]))\S{8,}$/;
+        if (reg.test(value) === true) {
+            return false
+        }
+        else {
+            return true
+        }
     }
 
     register = async () => {
@@ -220,6 +229,9 @@ class RegisterScreen extends React.Component {
                     <Text style={styles.backText}>with FlipSetter</Text>
                     <Text style={styles.error}>{this.state.msg}</Text>
                 </View>
+                <View ref={(parent) => {
+                    this.parent = parent
+                }}>
                 <TextInput
                     value={this.state.first}
                     onChangeText={(first) => this.setState({ first })}
@@ -254,17 +266,47 @@ class RegisterScreen extends React.Component {
                     onSubmitEditing={() => {this.passwordInput.focus();}}
                     blurOnSubmit={false}
                 />
-                <TextInput
-                    value={this.state.password}
-                    onChangeText={(password) => this.setState({ password })}
-                    placeholder={'Password'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    textContentType={'newPassword'}
-                    secureTextEntry={true}
-                    ref={(input) => this.passwordInput = input}
-                    onSubmitEditing={() => {this.verifyPasswordInput.focus();}}
-                    blurOnSubmit={false}
+                <View collapsable={false} ref={(input) => this.target = input}>
+                    <TextInput
+                        value={this.state.password}
+                        onChangeText={(password) => {
+                            const { status, color} = getPasswordStrength(password);
+                            this.setState({ 
+                                password,
+                                visible: true,
+                                color,
+                                status
+                            })
+                        }}
+                        placeholder={'Password'}
+                        placeholderTextColor={'#919191'}
+                        style={styles.input}
+                        textContentType={'newPassword'}
+                        secureTextEntry={true}
+                        ref={(input) => this.passwordInput = input}
+                        onBlur={() => this.setState({ visible: false })}
+                        onSubmitEditing={() => { 
+                            this.setState({ 
+                                visible: false
+                            }, () => {
+                            this.verifyPasswordInput.focus();
+                        })
+                    }}
+                        blurOnSubmit={false}
+                    />
+                </View>
+                <Tooltips 
+                    tintColor={this.state.color} 
+                    text={`Password strength: ${this.state.status}`} 
+                    visible={this.state.visible} 
+                    parent={this.state.parentRef} 
+                    target={this.state.inputRef} 
+                    duration={1500} 
+                    autoHide={true} 
+                    onHide={() => {
+                        console.log("On Hide");
+                    }}
+                    clickToHide={false}
                 />
                 <TextInput
                     value={this.state.verifyPassword}
@@ -278,6 +320,9 @@ class RegisterScreen extends React.Component {
                     onSubmitEditing={this.register}
                     blurOnSubmit={false}
                 />
+
+                </View>
+                
                 <TouchableOpacity
                     title={'Register'}
                     onPress={this.register}
