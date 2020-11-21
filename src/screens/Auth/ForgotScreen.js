@@ -23,6 +23,7 @@ import logo from '../../components/assets/Logo.png';
 // import AuthService from "../../services/AuthService";
 
 const window = Dimensions.get('window');
+const windowWidth = window.width;
 const MARGIN_TOP = window.height / 10;
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width / 5;
@@ -34,7 +35,8 @@ class ForgotScreen extends React.Component {
         this.state = {
             email: null,
             msg: '',
-            loading: false
+            loading: false,
+            showSuccessMessage: false
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
@@ -133,7 +135,7 @@ class ForgotScreen extends React.Component {
 
     reset = async () => {
         this.setState({ loading: true })
-this.ringPhn();
+        this.ringPhn();
         if (!this.state.email) {
             Toast.show('Enter Your Email', Toast.LONG);
             this.setState({loading:false, msg: "Enter Your Email" });
@@ -145,22 +147,29 @@ this.ringPhn();
         else {
             let response = await this.props.forgotPassword(this.state.email)
             this.setState({ loading: false })
-
+            console.log(response, 'check the response here')
             switch (response.type) {
                 case "FORGOT_SUCCESS":
-
-                    // this.setState({loading:false,msg: "Please check your email address"});
-                    this.setState({loading:false,msg: response.payload.data.message},()=>
-                    Toast.show(response.payload.data.message, Toast.LONG),
-                    this.props.navigation.goBack()
-                    )
+                    this.setState({
+                        loading:false,
+                        msg: response.payload.data.message,
+                        email: null,
+                        showSuccessMessage: true
+                    }, ()=> {
+                        Toast.show(response.payload.data.message, Toast.LONG),
+                        Keyboard.dismiss()
+                        // this.props.navigation.goBack()
+                    })
                     break;
 
                 case "FORGOT_FAIL":
-
-                    this.setState({loading:false,msg: 'Please Check Your Email Address'},()=>
-                    Toast.show('Please Check Your Email Address', Toast.LONG)
-                    )
+                    this.setState({
+                        loading:false,
+                        msg: (
+                            (response?.error?.response?.data?.errors?.email && response.error.response.data.errors.email.length) ? response.error.response.data.errors.email[0] : 'Something went wrong!!') || 'Something went wrong!!'
+                    }, ()=> {
+                        Toast.show('Please Check Your Email Address', Toast.LONG)
+                    })
                     break;
 
             }
@@ -172,6 +181,7 @@ this.ringPhn();
     }
 
     render() {
+        const { showSuccessMessage } = this.state;
         return (
             <Container style={styles.container}>
                 {this.state.loading ? <ActivityLoader /> : null}
@@ -183,10 +193,10 @@ this.ringPhn();
                 <Animated.View style={[styles.contentContainer, { paddingBottom: this.keyboardHeight }]} onStartShouldSetResponder={() => this.resetInput.blur()}>
                     <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight, }]} />
 
-                    <Text style={styles.error}>{this.state.msg}</Text>
+                    <Text style={styles.error}>{!showSuccessMessage && this.state.msg}</Text>
                     <TextInput
                         value={this.state.email}
-                        onChangeText={(email) => this.setState({ email })}
+                        onChangeText={(email) => this.setState({ email, showSuccessMessage: false, msg: '' })}
                         placeholder={'Email Address'}
                         placeholderTextColor={"#878787"}
                         style={styles.input}
@@ -196,9 +206,28 @@ this.ringPhn();
                         title={'Login'}
                         onPress={this.reset}
                         style={styles.loginButton}
-                        underlayColor='#04b600'
-                    ><Text style={styles.resetText}>Reset Password</Text></TouchableOpacity>
-                    <Text style={[styles.resetText, { padding: 10 }]} onPress={this._login}>Login</Text>
+                        underlayColor='#25422e'
+                    >
+                        <Text style={styles.resetText}>
+                            Reset Password
+                        </Text>
+                    </TouchableOpacity>
+                    <Text style={[styles.resetText, { padding: 10 }]} onPress={this._login}>
+                        Login
+                    </Text>
+                    {showSuccessMessage && 
+                        <View style={[styles.successMessageView]}>
+                            <Text style={[styles.successMessageText]}>
+                                Reset Link Sent 
+                            </Text>
+                            <Text style={[styles.successMessageText]}>
+                                Your reset code has been sent. Please follow the instructions within the email to complete your password reset. 
+                            </Text>
+                            <Text style={[styles.successMessageText]}>
+                                *Make sure to check your SPAM and JUNK folders too!
+                            </Text>
+                        </View>
+                    }
                 </Animated.View>
             </Container>
         );
@@ -210,20 +239,28 @@ this.ringPhn();
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#3d833e',
+        backgroundColor: '#25422e',
 
     },
     header: {
-        backgroundColor: '#3d833e',
+        backgroundColor: '#25422e',
     },
     contentContainer: {
         flex: 1,
         alignItems: 'center',
-        // justifyContent: 'center',
-
+    },
+    successMessageView: {
+        marginTop: 15,
+        width: windowWidth - 50,
+        paddingHorizontal: 30,
+    },
+    successMessageText: {
+        marginTop: 10,
+        color: '#ffffff'
     },
     error: {
-
+        marginBottom: 10,
+        color: '#FFFFFF'
     },
     logo: {
         height: IMAGE_HEIGHT,
@@ -232,7 +269,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: MARGIN_TOP
     },
-
     input: {
         backgroundColor: '#FFFFFF',
         width: window.width - 30,
@@ -250,7 +286,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#000',
-        backgroundColor: "#04b600",
+        backgroundColor: "#25422e",
         // backgroundColor:'red'
     },
     resetText: {

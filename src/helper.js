@@ -5,10 +5,10 @@ export const getPasswordStrength = (password) => {
   const good = /^(?=\S*?[a-z])(?=\S*?[0-9])\S{8,}$/;
   // Must contain at least one upper case letter, one lower case
   // letter and (one number OR one special char).
-  const better = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w\*]))\S{8,}$/;
+  const better = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w*]))\S{8,}$/;
   //   Must contain at least one upper case letter, one lower case
   //    letter and (one number AND one special char).
-  const best = /^(?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9])(?=\S*?[^\w\*])\S{8,}$/;
+  const best = /^(?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9])(?=\S*?[^\w*])\S{8,}$/;
 
   let status = 'weak';
   let color = '#d9534f';

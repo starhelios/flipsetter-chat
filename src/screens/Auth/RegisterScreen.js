@@ -119,7 +119,7 @@ class RegisterScreen extends React.Component {
     }
 
     checkPassword=(value)=> {
-    let reg = /^(?=\S?[A-Z])(?=\S?[a-z])((?=\S?[0-9])|(?=\S?[^\w*]))\S{8,}$/;
+    let reg = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w*]))\S{8,}$/;
         if (reg.test(value) === true) {
             return false
         }
