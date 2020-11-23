@@ -13,10 +13,10 @@ export const getPasswordStrength = (password) => {
   let status = 'weak';
   let color = '#d9534f';
   if (best.test(password)) {
-    status = '<i class="fas fa-thumbs-up"></i> Very Strong!';
+    status = 'Very Strong!';
     color = '#5cb85c';
   } else if (better.test(password)) {
-    status = '<i class="fas fa-hand-point-right"></i> Strong';
+    status = 'Strong';
     color = '#5cb85c';
   } else if (good.test(password)) {
     status = 'still Weak';

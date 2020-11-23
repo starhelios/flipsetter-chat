@@ -51,13 +51,14 @@ class RegisterScreen extends React.Component {
             this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
             this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
         }
-        setTimeout(() => {
-            this.setState({
-                inputRef: this.target,
-                parentRef: this.parent
-            })
-        }, 1000)
-
+        if(Platform.OS === 'android') {
+            setTimeout(() => {
+                this.setState({
+                    inputRef: this.target,
+                    parentRef: this.parent
+                })
+            }, 1000)
+        }
     }
 
     componentWillUnmount() {
@@ -204,6 +205,27 @@ class RegisterScreen extends React.Component {
         this.props.navigation.goBack();
     }
 
+    onChangePassword = (password) => {
+        const { status, color } = getPasswordStrength(password);
+        if(Platform.OS === 'ios'){
+            this.setState({ visible: false }, () => {
+                this.setState({
+                    password,
+                    visible: true,
+                    color,
+                    status
+                })
+            })
+        } else {
+            this.setState({
+                password,
+                visible: true,
+                color,
+                status
+            })
+        }
+    }
+
     render() {
         return (
         <Container style={{flex:1}} onStartShouldSetResponder={() => {
@@ -269,21 +291,14 @@ class RegisterScreen extends React.Component {
                 <View collapsable={false} ref={(input) => this.target = input}>
                     <TextInput
                         value={this.state.password}
-                        onChangeText={(password) => {
-                            const { status, color} = getPasswordStrength(password);
-                            this.setState({ 
-                                password,
-                                visible: true,
-                                color,
-                                status
-                            })
-                        }}
+                        onChangeText={(password) => this.onChangePassword(password)}
                         placeholder={'Password'}
                         placeholderTextColor={'#919191'}
                         style={styles.input}
                         textContentType={'newPassword'}
                         secureTextEntry={true}
                         ref={(input) => this.passwordInput = input}
+                        onFocus={() => this.setState({inputRef: this.target,parentRef: this.parent})}
                         onBlur={() => this.setState({ visible: false })}
                         onSubmitEditing={() => { 
                             this.setState({ 
@@ -301,7 +316,7 @@ class RegisterScreen extends React.Component {
                     visible={this.state.visible} 
                     parent={this.state.parentRef} 
                     target={this.state.inputRef} 
-                    duration={1500} 
+                    //duration={1500} 
                     autoHide={true} 
                     onHide={() => {
                         console.log("On Hide");
