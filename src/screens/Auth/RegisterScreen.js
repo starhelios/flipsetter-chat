@@ -26,6 +26,8 @@ const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
 
+const PASSWORD_TEXT = 'Password must be at least 8 characters long, contain one upper case letter, one lower case letter and (one number OR one special character). May not contain spaces.';
+
 class RegisterScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -337,6 +339,9 @@ class RegisterScreen extends React.Component {
                 />
 
                 </View>
+                <View style={styles.password}>
+                    <Text style={styles.passwordText}>{PASSWORD_TEXT}</Text>
+                </View>
                 
                 <TouchableOpacity
                     title={'Register'}
@@ -383,6 +388,15 @@ const styles = StyleSheet.create({
         marginTop:10,
         color:'#ffffff',
 
+    },
+    passwordText : {
+        fontSize: 14,
+        marginTop: 3,
+        color: '#ffffff',
+        marginBottom: 5,
+    },
+    password: {
+        width: 300,
     },
     signup:{
         fontSize:15,

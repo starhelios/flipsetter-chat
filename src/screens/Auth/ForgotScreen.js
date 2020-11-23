@@ -15,6 +15,7 @@ import Toast from 'react-native-simple-toast';
 import { withSocketContext } from "../../components/Socket";
 import { connect } from "react-redux";
 import { withNavigationFocus } from 'react-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import ActivityLoader from '../../components/ActivityLoader';
 import { App, Auth, User } from "../../reducers/actions";
@@ -36,7 +37,7 @@ class ForgotScreen extends React.Component {
             email: null,
             msg: '',
             loading: false,
-            showSuccessMessage: false
+            showSuccessMessage: true
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
@@ -217,9 +218,12 @@ class ForgotScreen extends React.Component {
                     </Text>
                     {showSuccessMessage && 
                         <View style={[styles.successMessageView]}>
-                            <Text style={[styles.successMessageText]}>
-                                Reset Link Sent 
-                            </Text>
+                            <View style={styles.checkmarkView}>
+                                <Text style={[styles.successMessageText]}>
+                                    Reset Link Sent 
+                                </Text>
+                                <Icon style={styles.checkIcon} name="checkmark-circle-outline" size={30} color="#FFFFFF" />
+                            </View>
                             <Text style={[styles.successMessageText]}>
                                 Your reset code has been sent. Please follow the instructions within the email to complete your password reset. 
                             </Text>
@@ -295,7 +299,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white'
 
-    }
+    },
+    checkIcon: {
+        marginLeft: 10,
+        marginTop: 3,
+    },
+    checkmarkView: {
+        flexDirection: 'row'
+    },
 
 });
 
