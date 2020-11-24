@@ -26,8 +26,7 @@ const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
 
-const PASSWORD_TEXT = 'Password must be at least 8 characters long, contain one upper case letter, one lower case letter and (one number OR one special character). May not contain spaces.';
-
+const PASSWORD_TEXT = '*Password must be at least 8 characters long, contain one upper case letter, one lower case letter and (one number OR one special character). May NOT contain spaces.';
 class RegisterScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -250,7 +249,7 @@ class RegisterScreen extends React.Component {
             <KeyboardAvoidingView style={[styles.container, {flex:1}]} behavior={(Platform.OS === 'ios') && 'padding'} enabled>
                 <View style={styles.logo}>
                     <Text style={styles.logoText}>Register</Text>
-                    <Text style={styles.backText}>with FlipSetter</Text>
+                    <Text style={styles.backText}>with Collaborate</Text>
                     <Text style={styles.error}>{this.state.msg}</Text>
                 </View>
                 <View ref={(parent) => {
@@ -394,6 +393,7 @@ const styles = StyleSheet.create({
         marginTop: 3,
         color: '#ffffff',
         marginBottom: 5,
+        fontWeight: 'bold',
     },
     password: {
         width: 300,

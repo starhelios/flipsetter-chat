@@ -37,7 +37,7 @@ class ForgotScreen extends React.Component {
             email: null,
             msg: '',
             loading: false,
-            showSuccessMessage: true
+            showSuccessMessage: false
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
@@ -222,7 +222,7 @@ class ForgotScreen extends React.Component {
                                 <Text style={[styles.successMessageText]}>
                                     Reset Link Sent 
                                 </Text>
-                                <Icon style={styles.checkIcon} name="checkmark-circle-outline" size={30} color="#FFFFFF" />
+                            <Icon style={styles.checkIcon} name="ios-checkmark-done-sharp" size={30} color="#FFFFFF" />
                             </View>
                             <Text style={[styles.successMessageText]}>
                                 Your reset code has been sent. Please follow the instructions within the email to complete your password reset. 
