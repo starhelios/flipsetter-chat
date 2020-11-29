@@ -2,7 +2,7 @@ import {Messages} from './actions';
 import {emojify} from 'react-emojione';
 import {AllHtmlEntities as entities} from 'html-entities';
 import config from '../config';
-import {constructProperMessage} from '../helper';
+import {constructProperMessage} from '../helper/index';
 import {update} from 'lodash';
 
 const initialState = {

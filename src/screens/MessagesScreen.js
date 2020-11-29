@@ -873,7 +873,7 @@ class MessagesScreen extends Component {
     type === 1
       ? (response = await this.props.startVideoCall(this.activeThread))
       : (response = await this.props.startWhiteboard(this.activeThread));
-    // console.log("StartCall", response);
+    console.log("StartCall", response);
 
     if (
       response.type === 'START_VIDEO_CALL_SUCCESS' ||

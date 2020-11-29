@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import config from "../config/";
-import {withSocketContext} from "./Socket";
-import {withNavigationFocus, NavigationEvents} from "react-navigation";
-import {RTCView} from 'react-native-webrtc';
-import {AppRegistry, StyleSheet, Text, TouchableHighlight, View, SafeAreaView, TextInput, ListView, ScrollView, Dimensions, Image, Alert, TouchableOpacity} from 'react-native';
-import {Container, Header} from "native-base";
-import {CirclesLoader} from "react-native-indicator";
+import { withSocketContext } from "./Socket";
+import { withNavigationFocus, NavigationEvents } from "react-navigation";
+import { RTCView } from 'react-native-webrtc';
+import { AppRegistry, StyleSheet, Text, TouchableHighlight, View, SafeAreaView, TextInput, ListView, ScrollView, Dimensions, Image, Alert, TouchableOpacity } from 'react-native';
+import { Container, Header } from "native-base";
+import { CirclesLoader } from "react-native-indicator";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Janus from "./Janus";
 import InCallManager from 'react-native-incall-manager';
-import {Friends} from "../reducers/actions";
+import { Friends } from "../reducers/actions";
 import Whiteboard from "./Whiteboard";
 import WhiteboardNew from "../screens/Whiteboard";
+import RNCallKeep from 'react-native-callkeep';
+import Toast from 'react-native-simple-toast';
 
 // let server = "wss://janus.flipsetter.com/janus-ws";
 let server = `${(config.env === "dev") ? `wss://${config.dev.uri}` : `wss://janus.${config.prod.uri}`}/janus-ws`;
-let ice = (config.env === "dev") ? [{urls: "stun:tippindev.com:5349", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ"}, {urls: "turn:tippindev.com:5349", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ"}] : [{urls: "turn:janus.flipsetter.com", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ"}];
+let ice = (config.env === "dev") ? [{ urls: "stun:tippindev.com:5349", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ" }, { urls: "turn:tippindev.com:5349", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ" }] : [{ urls: "turn:janus.flipsetter.com", username: "ajnozari", credential: "8BrBQffgdFHoFRQDucvZ" }];
 class WebRTC extends Component<Props> {
     janus;
 
@@ -29,18 +31,23 @@ class WebRTC extends Component<Props> {
         remoteSpeakerTimeout: null,
         remoteHeight: config.layout.window.height,
         remoteWidth: config.layout.window.width,
+        hideShowVideo: true,
+        muteMic: false,
+        speakerON: true,
     };
 
     constructor(props) {
         super(props);
-        console.log("WebRTC", this.props);
-        InCallManager.start({media: "video"});
+        console.log("RAJJJJJJJJJ ", this.props.call);
+        InCallManager.start({ media: "video" });
         InCallManager.setSpeakerphoneOn(true);
         InCallManager.setKeepScreenOn(true);
     }
 
     componentDidMount(): void {
         this.janusInit();
+        Toast.showWithGravity("You are currently on 'Selfie View'", Toast.LONG, Toast.TOP, [
+            'UIAlertController']);
         // this.constraints = setInterval(async() => {
         //     if(this.state.remoteSpeaker && this.state.remoteListPluginHandle[this.state.remoteSpeaker]){
         //         let video = await this.state.remoteListPluginHandle[this.state.remoteSpeaker].webrtcStuff.pc.getRemoteStreams()[0].getVideoTracks()[0];
@@ -93,7 +100,7 @@ class WebRTC extends Component<Props> {
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-        if(!this.state.remoteSpeaker && Object.keys(this.state.remoteList).length > 0){
+        if (!this.state.remoteSpeaker && Object.keys(this.state.remoteList).length > 0) {
             this.setState({
                 remoteSpeaker: Object.keys(this.state.remoteList)[0],
             })
@@ -155,13 +162,13 @@ class WebRTC extends Component<Props> {
 
     onLocalStream = (stream) => {
         console.log("LOCAL", stream);
-        this.setState({localStream: stream.toURL()});
+        this.setState({ localStream: stream.toURL() });
     }
 
     janusSuccess = () => {
 
-        this.janus.attach( {
-            plugin:"janus.plugin.videoroom",
+        this.janus.attach({
+            plugin: "janus.plugin.videoroom",
             success: (pluginHandle) => {
                 // console.log("success", pluginHandle);
                 this.videoroom = pluginHandle;
@@ -170,31 +177,31 @@ class WebRTC extends Component<Props> {
                     id: this.props.user.id,
                     avatar: this.props.user.avatar,
                 });
-                let register = {request: "join", room: this.props.call.roomId, pin: this.props.call.roomPin, ptype: "publisher", display: display };
-                this.videoroom.send({"message": register});
+                let register = { request: "join", room: this.props.call.roomId, pin: this.props.call.roomPin, ptype: "publisher", display: display };
+                this.videoroom.send({ "message": register });
             },
-            error: (error) => {console.log("attach-error", error)},
-            consentDialog: (on) => {console.log("attach-consent", on)},
-            mediaState: (medium, on) => {console.log("attach-mstate", medium, on)},
-            webrtcState: (on) => {console.log("attach-webrtcState", on)},
+            error: (error) => { console.log("attach-error", error) },
+            consentDialog: (on) => { console.log("attach-consent", on) },
+            mediaState: (medium, on) => { console.log("attach-mstate", medium, on) },
+            webrtcState: (on) => { console.log("attach-webrtcState", on) },
             onmessage: (msg, jsep) => {
                 console.log("Message", msg, jsep);
                 let event = msg["videoroom"];
-                if(event !== undefined && event !== null){
-                    if(event === "joined"){
+                if (event !== undefined && event !== null) {
+                    if (event === "joined") {
                         this.myid = msg["id"];
                         this.mypvtid = msg["private_id"];
                         this.publishOwnFeed(true);
 
                         let list = msg["publishers"];
                         console.log("Joined", list);
-                        for(var f in list) {
-                            console.log("feed",f);
+                        for (var f in list) {
+                            console.log("feed", f);
                             var id = list[f]["id"];
                             var display = list[f]["display"];
 
-                            if(list[f]["talking"] || !this.state.remoteSpeaker){
-                                if(this.state.remoteSpeaker !== id && this.state.remoteSpeakerTimeout + 3000 <= Date.now()){
+                            if (list[f]["talking"] || !this.state.remoteSpeaker) {
+                                if (this.state.remoteSpeaker !== id && this.state.remoteSpeakerTimeout + 3000 <= Date.now()) {
                                     this.setState({
                                         remoteSpeaker: id,
                                         remoteSpeakerTimeout: Date.now(),
@@ -210,30 +217,30 @@ class WebRTC extends Component<Props> {
                             this.newRemoteFeed(id, display);
                         }
                     }
-                    else if (event === "destroyed"){}
-                    else if (event === "event"){
+                    else if (event === "destroyed") { }
+                    else if (event === "event") {
                         // console.log("event", event, msg["result"]);
-                        if(msg["publishers"] !== undefined && msg["publishers"] !== null){
+                        if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
                             console.log("publishers", msg["publishers"]);
                             var list = msg["publishers"];
-                            for(var f in list) {
+                            for (var f in list) {
                                 let id = list[f]["id"]
                                 let display = list[f]["display"]
                                 let talking = list[f]["talking"];
                                 this.newRemoteFeed(id, display);
                             }
                         }
-                        else if(msg["leaving"] !== undefined && msg["leaving"] !== null) {
+                        else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
                             var leaving = msg["leaving"];
                             var remoteFeed = null;
                             let numLeaving = parseInt(msg["leaving"]);
                             // console.log(leaving);
-                            if(this.state.remoteList.hasOwnProperty(numLeaving)){
+                            if (this.state.remoteList.hasOwnProperty(numLeaving)) {
                                 this.state.remoteListPluginHandle[numLeaving].detach();
-                                let remoteList =  {...this.state.remoteList[numLeaving]};
-                                let remoteListPluginHandle = {...delete this.state.remoteListPluginHandle[numLeaving]};
+                                let remoteList = { ...this.state.remoteList[numLeaving] };
+                                let remoteListPluginHandle = { ...delete this.state.remoteListPluginHandle[numLeaving] };
                                 let remoteSpeaker = this.state.remoteSpeaker;
-                                if(numLeaving === remoteSpeaker){
+                                if (numLeaving === remoteSpeaker) {
                                     remoteSpeaker = Object.keys(remoteList)[0];
                                 }
 
@@ -245,9 +252,9 @@ class WebRTC extends Component<Props> {
                                 });
                             }
                         }
-                        else if(msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
+                        else if (msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
                             var unpublished = msg["unpublished"];
-                            if(unpublished === 'ok') {
+                            if (unpublished === 'ok') {
                                 sfutest.hangup();
                                 return;
                             }
@@ -258,12 +265,12 @@ class WebRTC extends Component<Props> {
                             //     this.state.remoteListPluginHandle[numLeaving].detach();
                             //     delete this.state.remoteListPluginHandle.numLeaving
                             // }
-                        } else if(msg["error"] !== undefined && msg["error"] !== null) {
+                        } else if (msg["error"] !== undefined && msg["error"] !== null) {
                         }
                     }
-                    if(event === "talking"){
+                    if (event === "talking") {
                         console.log("talking", event, msg);
-                        if(this.state.remoteSpeaker !== msg["id"] && this.state.remoteSpeakerTimeout + 3000 <= Date.now()){
+                        if (this.state.remoteSpeaker !== msg["id"] && this.state.remoteSpeakerTimeout + 3000 <= Date.now()) {
                             this.setState(state => ({
                                 remoteSpeaker: msg["id"],
                                 remoteSpeakerTimeout: Date.now(),
@@ -273,9 +280,9 @@ class WebRTC extends Component<Props> {
                         }
                     }
                 }
-                if(jsep !== undefined && jsep !== null){
+                if (jsep !== undefined && jsep !== null) {
                     // console.log("handleRemoteJsep", jsep);
-                    this.videoroom.handleRemoteJsep({jsep: jsep});
+                    this.videoroom.handleRemoteJsep({ jsep: jsep });
                 }
             },
             onlocalstream: (stream) => {
@@ -286,7 +293,7 @@ class WebRTC extends Component<Props> {
 
                 }));
                 // console.log("muted",stream);
-                this.setState({localStream: stream, localStreamURL: stream.toURL()});
+                this.setState({ localStream: stream, localStreamURL: stream.toURL() });
             },
             onremotestream: (stream) => {
                 // // console.log("remoteStream", stream);
@@ -303,25 +310,25 @@ class WebRTC extends Component<Props> {
         });
     }
 
-    publishOwnFeed(useAudio){
+    publishOwnFeed(useAudio) {
         this.videoroom.createOffer({
-            media: {audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true},
+            media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true },
             simulcast: true,
             success: (jsep) => {
-                let publish = {request: "configure", audio: useAudio, video: true};
-                this.videoroom.send({message: publish, jsep: jsep});
+                let publish = { request: "configure", audio: useAudio, video: true };
+                this.videoroom.send({ message: publish, jsep: jsep });
             },
             error: (error) => {
-                if(useAudio){
+                if (useAudio) {
                     this.publishOwnFeed(false);
-                }else{
+                } else {
                     //Publish again?
                 }
             }
         })
     }
 
-    newRemoteFeed(id){
+    newRemoteFeed(id) {
         let remoteFeed = null;
         this.janus.attach({
             plugin: "janus.plugin.videoroom",
@@ -329,9 +336,9 @@ class WebRTC extends Component<Props> {
             success: (pluginHandle) => {
                 remoteFeed = pluginHandle;
                 // console.log("remoteFeed", remoteFeed);
-                let subscribe = {request: "join", room: this.props.call.roomId, pin: this.props.call.roomPin, ptype: "listener", feed: id, "private_id": this.mypvtid};
+                let subscribe = { request: "join", room: this.props.call.roomId, pin: this.props.call.roomPin, ptype: "listener", feed: id, "private_id": this.mypvtid };
                 remoteFeed.videoCodec = "H264";
-                remoteFeed.send({message: subscribe});
+                remoteFeed.send({ message: subscribe });
             },
             error: (error) => {
                 // console.log("subscribe-error", error);
@@ -339,23 +346,23 @@ class WebRTC extends Component<Props> {
             onmessage: (msg, jsep) => {
                 // console.log("remote", msg, jsep);
                 var event = msg["videoroom"];
-                if(event !== undefined && event !== null){
-                    if(event === "attached"){
+                if (event !== undefined && event !== null) {
+                    if (event === "attached") {
                         // console.log("attached", msg);
-                    }else if(event === "event"){
+                    } else if (event === "event") {
 
-                    } else{}
+                    } else { }
                 }
 
-                if(jsep !== undefined && jsep !== null){
+                if (jsep !== undefined && jsep !== null) {
                     // console.log("newRemoteJsep", jsep);
                     remoteFeed.createAnswer({
                         jsep: jsep,
-                        media: {audioSend: false, videoSend: false},
+                        media: { audioSend: false, videoSend: false },
                         success: (jsep) => {
                             // console.log("newmessage-jsep", jsep);
                             let body = { request: "start", room: this.props.call.roomId };
-                            remoteFeed.send({message: body, jsep: jsep, success: (response) => {console.log(response)}, error: (e) => {console.log(e)}});
+                            remoteFeed.send({ message: body, jsep: jsep, success: (response) => { console.log(response) }, error: (e) => { console.log(e) } });
                         },
                         error: (error) => {
                             // console.log("createAnswerError", error);
@@ -364,7 +371,7 @@ class WebRTC extends Component<Props> {
                 }
 
             },
-            webrtcState: (on) => {console.log("Janus says this WebRTC PeerConnection (feed #" + remoteFeed + ") is " + (on ? "up" : "down") + " now")},
+            webrtcState: (on) => { console.log("Janus says this WebRTC PeerConnection (feed #" + remoteFeed + ") is " + (on ? "up" : "down") + " now") },
             onlocalstream: (stream) => {
                 //nothing should happen here
 
@@ -392,11 +399,11 @@ class WebRTC extends Component<Props> {
                 let remoteListPluginHandle = this.state.remoteListPluginHandle;
                 delete remoteList[id];
                 delete remoteListPluginHandle[id];
-                console.log("Cleanup", {...remoteList});
+                console.log("Cleanup", { ...remoteList });
 
                 this.setState(state => ({
-                    remoteList: {...remoteList},
-                    remoteListPluginHandle: {...remoteListPluginHandle},
+                    remoteList: { ...remoteList },
+                    remoteListPluginHandle: { ...remoteListPluginHandle },
                     remoteSpeaker: Object.keys(remoteList)[0],
                     remoteSpeakerTimeout: Date.now(),
                 }))
@@ -404,11 +411,21 @@ class WebRTC extends Component<Props> {
         })
     }
 
+    switchMic = (type) => {
+        InCallManager.setMicrophoneMute(type);
+        this.setState({muteMic : type})
+    }
+
+    switchSpeaker = (type) => {
+        InCallManager.setSpeakerphoneOn(type);
+        this.setState({ speakerON: type })
+    }
+
     render() {
-        if(this.props.call.type === 1){
-            return(
+        if (this.props.call.type === 1) {
+            return (
                 // (Object.entries(this.state.remoteList).length > 0) &&
-                <View style={{flex: 1, backgroundColor: "#000"}}>
+                <View style={{ flex: 1, backgroundColor: "#000" }}>
                     {/*{this.state.remoteList && Object.keys(this.state.remoteList).map((key, index) => {*/}
                     {/*    console.log("RemoteList", key)*/}
                     {/*    return <RTCView key={Math.floor(Math.random() * 1000)} streamURL={this.state.remoteList[key]} style={styles.remoteVideo}/>*/}
@@ -416,21 +433,60 @@ class WebRTC extends Component<Props> {
                     {/*}*/}
 
                     {this.state.remoteSpeaker &&
-                        <RTCView objectFit="cover" style={{height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}} streamURL={this.state.remoteList[this.state.remoteSpeaker]}/>
+                        <RTCView objectFit="cover" style={{ height: config.layout.window.height, width: config.layout.window.width, alignItems: "center", justifyContent: "center" }} streamURL={this.state.remoteList[this.state.remoteSpeaker]} />
                     }
 
-                    <RTCView style={config.layout.window.width / 2 - 25 < 140? styles.localVideoV2: styles.localVideoV1} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true}/>
+                    {this.state.hideShowVideo ?
+                        <RTCView style={config.layout.window.width / 2 - 25 < 140 ? styles.localVideoV2 : styles.localVideoV1} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true} />
+                        :
+                        <View style={[styles.localVideoV1, {justifyContent: 'center', alignItems: 'center'}]}>
+                            <Icon name={'user-circle'} color={'green'} size={110} />
+                        </View>
+                    }
 
-                    <View style={{position: "absolute", bottom: 25,height: 100, width: config.layout.window.width, alignItems: "center", justifyContent: "center"}}>
-                        <TouchableOpacity onPress={() => this._leaveCall()} style={{backgroundColor:"red", width: 50, height: 50, borderRadius: 25,alignItems: "center", justifyContent: "center"}}>
-                            <Icon name={'phone'} size={30} style={{transform: [{rotate:'-135deg'}]}}/>
+                    <View style={{ position: "absolute", bottom: 15, right: config.layout.window.width / 5, justifyContent: 'flex-end', zIndex: 9999 }}>
+                        {this.state.hideShowVideo ?
+                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'video'} size={20} style={{ color: 'green' }} />
+                            </TouchableOpacity> :
+                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'video-slash'} size={20} style={{ color: 'red' }} />
+                            </TouchableOpacity>
+                        }
+                    </View>
+
+                    <View style={{ position: "absolute", bottom: 15, right: config.layout.window.width / 12, justifyContent: 'flex-end', zIndex: 9999 }}>
+                        {!this.state.muteMic ?
+                            <TouchableOpacity onPress={() => this.switchMic(true)} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'microphone'} size={20} style={{ color: 'green' }} />
+                            </TouchableOpacity> :
+                            <TouchableOpacity onPress={() => this.switchMic(false)} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'microphone-slash'} size={20} style={{ color: 'red' }} />
+                            </TouchableOpacity>
+                        }
+                    </View>
+
+                    <View style={{ position: "absolute", bottom: 25, left: config.layout.window.width / 2.2 }}>
+                        <TouchableOpacity onPress={() => this._leaveCall()} style={{ backgroundColor: "red", width: 50, height: 50, borderRadius: 25, alignItems: "center", justifyContent: "center" }}>
+                            <Icon name={'phone'} size={30} style={{ transform: [{ rotate: '-135deg' }] }} />
                         </TouchableOpacity>
+                    </View>
+                    
+                    <View style={{ position: "absolute", bottom: 15, left: 5, justifyContent: 'flex-start', zIndex: 9999 }}>
+                        {this.state.speakerON ?
+                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={{  backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'volume-up'} size={20} />
+                            </TouchableOpacity> :
+                            <TouchableOpacity onPress={() => this.switchSpeaker(true)} style={{ backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                                <Icon name={'volume-mute'} size={20} />
+                            </TouchableOpacity>
+                        }
                     </View>
                 </View>);
         }
-        else if(this.props.call.type === 2){
-            return(
-                <View style={{flex: 1}}>
+        else if (this.props.call.type === 2) {
+            return (
+                <View style={{ flex: 1 }}>
                     <WhiteboardNew
                         thread_id={this.props.call.threadId}
                         call_id={this.props.call.id}
@@ -461,7 +517,7 @@ class WebRTC extends Component<Props> {
     }
 
     _leaveCall = () => {
-        console.log("END",this.props);
+        console.log("END", this.props);
 
         this.props.navigation.navigate("Messages", {
             thread: this.props.call.threadId,
@@ -494,7 +550,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 2
     },
-    remoteVideoWhiteboard:{
+    remoteVideoWhiteboard: {
     }
 });
 
