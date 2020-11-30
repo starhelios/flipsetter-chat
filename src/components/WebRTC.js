@@ -15,6 +15,7 @@ import Whiteboard from "./Whiteboard";
 import WhiteboardNew from "../screens/Whiteboard";
 import RNCallKeep from 'react-native-callkeep';
 import Toast from 'react-native-simple-toast';
+import FastImage from 'react-native-fast-image';
 
 // let server = "wss://janus.flipsetter.com/janus-ws";
 let server = `${(config.env === "dev") ? `wss://${config.dev.uri}` : `wss://janus.${config.prod.uri}`}/janus-ws`;
@@ -38,7 +39,6 @@ class WebRTC extends Component<Props> {
 
     constructor(props) {
         super(props);
-        console.log("RAJJJJJJJJJ ", this.props.call);
         InCallManager.start({ media: "video" });
         InCallManager.setSpeakerphoneOn(true);
         InCallManager.setKeepScreenOn(true);
@@ -46,8 +46,7 @@ class WebRTC extends Component<Props> {
 
     componentDidMount(): void {
         this.janusInit();
-        Toast.showWithGravity("You are currently on 'Selfie View'", Toast.LONG, Toast.TOP, [
-            'UIAlertController']);
+        
         // this.constraints = setInterval(async() => {
         //     if(this.state.remoteSpeaker && this.state.remoteListPluginHandle[this.state.remoteSpeaker]){
         //         let video = await this.state.remoteListPluginHandle[this.state.remoteSpeaker].webrtcStuff.pc.getRemoteStreams()[0].getVideoTracks()[0];
@@ -104,6 +103,11 @@ class WebRTC extends Component<Props> {
             this.setState({
                 remoteSpeaker: Object.keys(this.state.remoteList)[0],
             })
+        }
+        if(this.state.hideShowVideo) {
+            Toast.showWithGravity("You are currently on 'Selfie View'", Toast.LONG, Toast.TOP, ['UIAlertController']);
+        } else {
+            Toast.showWithGravity("You are currently on 'Avatar View'", Toast.LONG, Toast.TOP, ['UIAlertController']);
         }
         // if(prevProps.isFocused !== this.props.isFocused && !this.props.isFocused){
         //     InCallManager.stop();
@@ -439,46 +443,58 @@ class WebRTC extends Component<Props> {
                     {this.state.hideShowVideo ?
                         <RTCView style={config.layout.window.width / 2 - 25 < 140 ? styles.localVideoV2 : styles.localVideoV1} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true} />
                         :
-                        <View style={[styles.localVideoV1, {justifyContent: 'center', alignItems: 'center'}]}>
-                            <Icon name={'user-circle'} color={'green'} size={110} />
+                        <View style={[config.layout.window.width / 2 - 25 < 140 ? styles.localVideoV2 : styles.localVideoV1, {justifyContent: 'center', alignItems: 'center'}]}>
+                            {/* <FastImage
+                                source={{
+                                    uri: `https://${config.api.uri}${
+                                        this.props.user.avatar
+                                    }`,
+                                    headers: {
+                                        Authorization: `Bearer ${this.props.auth.accessToken}`,
+                                    },
+                                    priority: FastImage.priority.high,
+                                }}
+                                resizeMode={FastImage.resizeMode.contain}
+                            /> */}
+                            <Icon name={'user-circle'} color={'#ffffff'} size={110} />
                         </View>
                     }
 
-                    <View style={{ position: "absolute", bottom: 15, right: config.layout.window.width / 5, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 70 : 82, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {this.state.hideShowVideo ?
-                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={styles.iconenablestyle}>
                                 <Icon name={'video'} size={20} style={{ color: 'green' }} />
                             </TouchableOpacity> :
-                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={styles.icondisablestyle}>
                                 <Icon name={'video-slash'} size={20} style={{ color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
 
-                    <View style={{ position: "absolute", bottom: 15, right: config.layout.window.width / 12, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 30 : 33, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {!this.state.muteMic ?
-                            <TouchableOpacity onPress={() => this.switchMic(true)} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.switchMic(true)} style={styles.iconenablestyle}>
                                 <Icon name={'microphone'} size={20} style={{ color: 'green' }} />
                             </TouchableOpacity> :
-                            <TouchableOpacity onPress={() => this.switchMic(false)} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.switchMic(false)} style={styles.icondisablestyle}>
                                 <Icon name={'microphone-slash'} size={20} style={{ color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
 
-                    <View style={{ position: "absolute", bottom: 25, left: config.layout.window.width / 2.2 }}>
+                    <View style={{ position: "absolute", bottom: 50, left: config.layout.window.width / 2.2 }}>
                         <TouchableOpacity onPress={() => this._leaveCall()} style={{ backgroundColor: "red", width: 50, height: 50, borderRadius: 25, alignItems: "center", justifyContent: "center" }}>
                             <Icon name={'phone'} size={30} style={{ transform: [{ rotate: '-135deg' }] }} />
                         </TouchableOpacity>
                     </View>
                     
-                    <View style={{ position: "absolute", bottom: 15, left: 5, justifyContent: 'flex-start', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, left: 15, justifyContent: 'flex-start', zIndex: 9999 }}>
                         {this.state.speakerON ?
-                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={{  backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
-                                <Icon name={'volume-up'} size={20} />
+                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={styles.iconenablestyle}>
+                                <Icon name={'volume-up'} size={20} style={{ color: 'green' }} />
                             </TouchableOpacity> :
-                            <TouchableOpacity onPress={() => this.switchSpeaker(true)} style={{ backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
-                                <Icon name={'volume-mute'} size={20} />
+                            <TouchableOpacity onPress={() => this.switchSpeaker(true)} style={styles.icondisablestyle}>
+                                <Icon name={'volume-mute'} size={20} style={{ color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
@@ -533,6 +549,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: '#0f0'
+    },
+    iconenablestyle: {
+        backgroundColor: '#ffffff01',
+        borderColor: 'green',
+        borderWidth: 1,
+        width: 40,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center" 
+    },
+    icondisablestyle: {
+        backgroundColor: '#ffffff01',
+        borderColor: 'red',
+        borderWidth: 1,
+        width: 40,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center" 
     },
     localVideoV1: {
         height: 125,
