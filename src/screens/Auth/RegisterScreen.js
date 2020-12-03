@@ -214,6 +214,7 @@ class RegisterScreen extends React.Component {
                 this.state.inputRef,
                 this.state.parentRef,
                 {
+                    position: 3,
                     text: `Password strength: ${status}`,
                     tintColor: color,
                     clickToHide: false,
