@@ -460,7 +460,7 @@ class WebRTC extends Component<Props> {
                         </View>
                     }
 
-                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 70 : 82, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 73 : 82, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {this.state.hideShowVideo ?
                             <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={styles.iconenablestyle}>
                                 <Icon name={'video'} size={20} style={{ color: 'green' }} />
@@ -471,7 +471,7 @@ class WebRTC extends Component<Props> {
                         }
                     </View>
 
-                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 30 : 33, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 27 : 33, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {!this.state.muteMic ?
                             <TouchableOpacity onPress={() => this.switchMic(true)} style={styles.iconenablestyle}>
                                 <Icon name={'microphone'} size={20} style={{ color: 'green' }} />
