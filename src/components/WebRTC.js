@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import config from "../config/";
 import { withSocketContext } from "./Socket";
 import { withNavigationFocus, NavigationEvents } from "react-navigation";
-import { RTCView } from 'react-native-webrtc';
+import { RTCView, mediaDevices } from 'react-native-webrtc';
 import { AppRegistry, StyleSheet, Text, TouchableHighlight, View, SafeAreaView, TextInput, ListView, ScrollView, Dimensions, Image, Alert, TouchableOpacity } from 'react-native';
 import { Container, Header } from "native-base";
 import { CirclesLoader } from "react-native-indicator";
@@ -413,12 +413,26 @@ class WebRTC extends Component<Props> {
 
     switchMic = (type) => {
         InCallManager.setMicrophoneMute(type);
-        this.setState({muteMic : type})
+        this.setState({ muteMic: type })
     }
 
     switchSpeaker = (type) => {
         InCallManager.setSpeakerphoneOn(type);
         this.setState({ speakerON: type })
+    }
+
+    hideShowVideo = (type) => {
+        this.setState({ hideShowVideo: type })
+            mediaDevices.getUserMedia({
+                audio: true,
+                video: true
+            }).then(stream => {
+                stream.getVideoTracks()[0].enabled = type;
+                this.setState({ localStream: stream, localStreamURL: stream.toURL() });
+                // Got stream!
+            }).catch(error => {
+                // Log error
+            });
     }
 
     render() {
@@ -439,17 +453,17 @@ class WebRTC extends Component<Props> {
                     {this.state.hideShowVideo ?
                         <RTCView style={config.layout.window.width / 2 - 25 < 140 ? styles.localVideoV2 : styles.localVideoV1} zOrder={1} objectFit="cover" streamURL={this.state.localStreamURL} mirror={true} />
                         :
-                        <View style={[styles.localVideoV1, {justifyContent: 'center', alignItems: 'center'}]}>
+                        <View style={[styles.localVideoV1, { justifyContent: 'center', alignItems: 'center' }]}>
                             <Icon name={'user-circle'} color={'green'} size={110} />
                         </View>
                     }
 
                     <View style={{ position: "absolute", bottom: 15, right: config.layout.window.width / 5, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {this.state.hideShowVideo ?
-                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.hideShowVideo(false)} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
                                 <Icon name={'video'} size={20} style={{ color: 'green' }} />
                             </TouchableOpacity> :
-                            <TouchableOpacity onPress={() => this.setState({ hideShowVideo: !this.state.hideShowVideo })} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.hideShowVideo(true)} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
                                 <Icon name={'video-slash'} size={20} style={{ color: 'red' }} />
                             </TouchableOpacity>
                         }
@@ -471,10 +485,10 @@ class WebRTC extends Component<Props> {
                             <Icon name={'phone'} size={30} style={{ transform: [{ rotate: '-135deg' }] }} />
                         </TouchableOpacity>
                     </View>
-                    
+
                     <View style={{ position: "absolute", bottom: 15, left: 5, justifyContent: 'flex-start', zIndex: 9999 }}>
                         {this.state.speakerON ?
-                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={{  backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
+                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={{ backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
                                 <Icon name={'volume-up'} size={20} />
                             </TouchableOpacity> :
                             <TouchableOpacity onPress={() => this.switchSpeaker(true)} style={{ backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
