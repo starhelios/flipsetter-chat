@@ -208,26 +208,28 @@ class RegisterScreen extends React.Component {
 
     onChangePassword = (password) => {
         const { status, color } = getPasswordStrength(password);
-        if(Platform.OS === 'ios'){
-            this.setState({ visible: false }, () => {
-                this.setState({
-                    password,
-                    visible: true,
-                    color,
-                    status
-                })
-            })
-        } else {
-            this.setState({
-                password,
-                visible: true,
-                color,
-                status
-            })
+        if (status !== this.state.status) {
+            Tooltips.Dismiss(this.state.inputRef);
+            Tooltips.Show(
+                this.state.inputRef,
+                this.state.parentRef,
+                {
+                    position: 3,
+                    text: `Password strength: ${status}`,
+                    tintColor: color,
+                    clickToHide: false,
+                    autoHide: false
+                }
+            )
         }
+        this.setState({
+            password,
+            status
+        })
     }
 
     render() {
+        
         return (
         <Container style={{flex:1}} onStartShouldSetResponder={() => {
             // this.passwordInput.blur(); this.usernameInput.blur();
@@ -300,30 +302,16 @@ class RegisterScreen extends React.Component {
                         secureTextEntry={true}
                         ref={(input) => this.passwordInput = input}
                         onFocus={() => this.setState({inputRef: this.target,parentRef: this.parent})}
-                        onBlur={() => this.setState({ visible: false })}
+                        onBlur={() => {
+                            Tooltips.Dismiss(this.state.inputRef);
+                            this.setState({status: ''});
+                        }}
                         onSubmitEditing={() => { 
-                            this.setState({ 
-                                visible: false
-                            }, () => {
                             this.verifyPasswordInput.focus();
-                        })
-                    }}
+                        }}
                         blurOnSubmit={false}
                     />
                 </View>
-                <Tooltips 
-                    tintColor={this.state.color} 
-                    text={`Password strength: ${this.state.status}`} 
-                    visible={this.state.visible} 
-                    parent={this.state.parentRef} 
-                    target={this.state.inputRef} 
-                    //duration={1500} 
-                    autoHide={true} 
-                    onHide={() => {
-                        console.log("On Hide");
-                    }}
-                    clickToHide={false}
-                />
                 <TextInput
                     value={this.state.verifyPassword}
                     onChangeText={(verifyPassword) => this.setState({ verifyPassword })}
