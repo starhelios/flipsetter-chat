@@ -9,8 +9,11 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    ScrollView,
+    Linking
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import Tooltips from 'react-native-tooltips'
 import ActivityLoader from '../../components/ActivityLoader';
 import { App, Auth, User } from "../../reducers/actions";
 import { connect } from "react-redux";
@@ -18,12 +21,14 @@ import { withSocketContext } from "../../components/Socket";
 
 import { Container, Header,  Left, Body, Right, Text} from 'native-base';
 import { withNavigationFocus } from 'react-navigation';
+import { getPasswordStrength } from '../../helper';
 
 var Sound = require('react-native-sound');
 const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 2;
 export const IMAGE_HEIGHT_SMALL = window.width /6;
 
+const PASSWORD_TEXT = '*Password must be at least 8 characters long, contain one upper case letter, one lower case letter and (one number OR one special character). May NOT contain spaces.';
 class RegisterScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -33,6 +38,8 @@ class RegisterScreen extends React.Component {
             email: '',
             password: '',
             verifyPassword: '',
+            visible: false,
+            color: '#000000'
         }
         this.keyboardHeight = new Animated.Value(0);
         this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
@@ -47,7 +54,14 @@ class RegisterScreen extends React.Component {
             this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardDidShow);
             this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardDidHide);
         }
-
+        if(Platform.OS === 'android') {
+            setTimeout(() => {
+                this.setState({
+                    inputRef: this.target,
+                    parentRef: this.parent
+                })
+            }, 1000)
+        }
     }
 
     componentWillUnmount() {
@@ -108,15 +122,14 @@ class RegisterScreen extends React.Component {
         }
     }
 
-    checkPassword=(value)=>{
-    let reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    ;
-    if (reg.test(value) === true) {
-        return false
-    }
-    else {
-        return true
-    }
+    checkPassword=(value)=> {
+    let reg = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w*]))\S{8,}$/;
+        if (reg.test(value) === true) {
+            return false
+        }
+        else {
+            return true
+        }
     }
 
     register = async () => {
@@ -195,7 +208,30 @@ class RegisterScreen extends React.Component {
         this.props.navigation.goBack();
     }
 
+    onChangePassword = (password) => {
+        const { status, color } = getPasswordStrength(password);
+        if (status !== this.state.status) {
+            Tooltips.Dismiss(this.state.inputRef);
+            Tooltips.Show(
+                this.state.inputRef,
+                this.state.parentRef,
+                {
+                    position: 3,
+                    text: `Password strength: ${status}`,
+                    tintColor: color,
+                    clickToHide: false,
+                    autoHide: false
+                }
+            )
+        }
+        this.setState({
+            password,
+            status
+        })
+    }
+
     render() {
+        
         return (
         <Container style={{flex:1}} onStartShouldSetResponder={() => {
             // this.passwordInput.blur(); this.usernameInput.blur();
@@ -208,85 +244,105 @@ class RegisterScreen extends React.Component {
                                 this.verifyPasswordInput.isFocused() && this.verifyPasswordInput.blur()
             ;
         }}>
-            <Header style={styles.header} transparent>
-                <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.backText}>Back</Text></TouchableOpacity></Left>
-                <Body></Body>
-                <Right></Right>
-            </Header>
-            {this.state.loading ? <ActivityLoader/> :null}
-            <KeyboardAvoidingView style={[styles.container, {flex:1}]} behavior={(Platform.OS === 'ios') && 'padding'} enabled>
-                <View style={styles.logo}>
-                    <Text style={styles.logoText}>Register</Text>
-                    <Text style={styles.backText}>with FlipSetter</Text>
-                    <Text style={styles.error}>{this.state.msg}</Text>
-                </View>
-                <TextInput
-                    value={this.state.first}
-                    onChangeText={(first) => this.setState({ first })}
-                    placeholder={'First Name'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    textContentType={'givenName'}
-                    ref={(input) => this.firstInput = input}
-                    onSubmitEditing={() => {this.lastInput.focus();}}
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    value={this.state.last}
-                    onChangeText={(last) => this.setState({ last })}
-                    placeholder={'Last Name'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    textContentType={'familyName'}
-                    ref={(input) => this.lastInput = input}
-                    onSubmitEditing={() => {this.emailInput.focus();}}
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    value={this.state.email}
-                    onChangeText={(email) => this.setState({ email })}
-                    placeholder={'Email'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    autoCompleteType={'email'}
-                    textContentType={'username'}
-                    ref={(input) => this.emailInput = input}
-                    onSubmitEditing={() => {this.passwordInput.focus();}}
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    value={this.state.password}
-                    onChangeText={(password) => this.setState({ password })}
-                    placeholder={'Password'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    textContentType={'newPassword'}
-                    secureTextEntry={true}
-                    ref={(input) => this.passwordInput = input}
-                    onSubmitEditing={() => {this.verifyPasswordInput.focus();}}
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    value={this.state.verifyPassword}
-                    onChangeText={(verifyPassword) => this.setState({ verifyPassword })}
-                    placeholder={'Confirm Password'}
-                    placeholderTextColor={'#919191'}
-                    style={styles.input}
-                    textContentType={'newPassword'}
-                    secureTextEntry={true}
-                    ref={(input) => this.verifyPasswordInput = input}
-                    onSubmitEditing={this.register}
-                    blurOnSubmit={false}
-                />
-                <TouchableOpacity
-                    title={'Register'}
-                    onPress={this.register}
-                    style={styles.loginButton}
-                    underlayColor='#04b600'
-                >
-                    <Text style={[styles.backText,{fontSize:20}]}>Register</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+            <ScrollView style={{ backgroundColor: '#25422e' }}>
+                <Header style={styles.header} transparent>
+                    <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.backText}>Back</Text></TouchableOpacity></Left>
+                    <Body></Body>
+                    <Right></Right>
+                </Header>
+                {this.state.loading ? <ActivityLoader/> :null}
+                <KeyboardAvoidingView style={[styles.container, {flex:1}]} behavior={(Platform.OS === 'ios') && 'padding'} enabled>
+                    <View style={styles.logo}>
+                        <Text style={styles.logoText}>Register with Collaborate</Text>
+                        <Text style={styles.logoSmallText}>You can log into Collaborate and <Text style={[styles.logoSmallText, {textDecorationLine: 'underline'}]} onPress={ ()=> Linking.openURL('https://flipsetter.com') }>www.flipsetter.com</Text> with the same email and password</Text>
+                        <Text style={styles.error}>{this.state.msg}</Text>
+                    </View>
+                    <View ref={(parent) => {
+                        this.parent = parent
+                    }}>
+                    <TextInput
+                        value={this.state.first}
+                        onChangeText={(first) => this.setState({ first })}
+                        placeholder={'First Name'}
+                        placeholderTextColor={'#919191'}
+                        style={styles.input}
+                        textContentType={'givenName'}
+                        ref={(input) => this.firstInput = input}
+                        onSubmitEditing={() => {this.lastInput.focus();}}
+                        blurOnSubmit={false}
+                    />
+                    <TextInput
+                        value={this.state.last}
+                        onChangeText={(last) => this.setState({ last })}
+                        placeholder={'Last Name'}
+                        placeholderTextColor={'#919191'}
+                        style={styles.input}
+                        textContentType={'familyName'}
+                        ref={(input) => this.lastInput = input}
+                        onSubmitEditing={() => {this.emailInput.focus();}}
+                        blurOnSubmit={false}
+                    />
+                    <TextInput
+                        value={this.state.email}
+                        onChangeText={(email) => this.setState({ email })}
+                        placeholder={'Email'}
+                        placeholderTextColor={'#919191'}
+                        style={styles.input}
+                        autoCompleteType={'email'}
+                        textContentType={'username'}
+                        ref={(input) => this.emailInput = input}
+                        onSubmitEditing={() => {this.passwordInput.focus();}}
+                        blurOnSubmit={false}
+                    />
+                    <View collapsable={false} ref={(input) => this.target = input}>
+                        <TextInput
+                            value={this.state.password}
+                            onChangeText={(password) => this.onChangePassword(password)}
+                            placeholder={'Password'}
+                            placeholderTextColor={'#919191'}
+                            style={styles.input}
+                            textContentType={'newPassword'}
+                            secureTextEntry={true}
+                            ref={(input) => this.passwordInput = input}
+                            onFocus={() => this.setState({inputRef: this.target,parentRef: this.parent})}
+                            onBlur={() => {
+                                Tooltips.Dismiss(this.state.inputRef);
+                                this.setState({status: ''});
+                            }}
+                            onSubmitEditing={() => { 
+                                this.verifyPasswordInput.focus();
+                            }}
+                            blurOnSubmit={false}
+                        />
+                    </View>
+                    <TextInput
+                        value={this.state.verifyPassword}
+                        onChangeText={(verifyPassword) => this.setState({ verifyPassword })}
+                        placeholder={'Confirm Password'}
+                        placeholderTextColor={'#919191'}
+                        style={styles.input}
+                        textContentType={'newPassword'}
+                        secureTextEntry={true}
+                        ref={(input) => this.verifyPasswordInput = input}
+                        onSubmitEditing={this.register}
+                        blurOnSubmit={false}
+                    />
+
+                    </View>
+                    <View style={styles.password}>
+                        <Text style={styles.passwordText}>{PASSWORD_TEXT}</Text>
+                    </View>
+                    
+                    <TouchableOpacity
+                        title={'Register'}
+                        onPress={this.register}
+                        style={styles.loginButton}
+                        underlayColor='#04b600'
+                    >
+                        <Text style={[styles.backText, {fontSize:20}]}>Register</Text>
+                    </TouchableOpacity>
+                </KeyboardAvoidingView>
+            </ScrollView>
         </Container>
         );
     }
@@ -309,6 +365,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white'
     },
+    logoSmallText: {
+        paddingTop: 10,
+        width: 290,
+        alignItems:'center',
+        textAlign: 'left',
+        fontSize: 15,
+        fontWeight: '600',
+        color: 'white'
+    },
     error: {
         color: '#000',
         alignItems: 'center',
@@ -322,7 +387,17 @@ const styles = StyleSheet.create({
         fontSize:25,
         marginTop:10,
         color:'#ffffff',
-
+        fontWeight: 'bold',
+    },
+    passwordText : {
+        fontSize: 14,
+        marginTop: 3,
+        color: '#ffffff',
+        marginBottom: 5,
+        fontWeight: 'bold',
+    },
+    password: {
+        width: 300,
     },
     signup:{
         fontSize:15,
@@ -342,6 +417,7 @@ const styles = StyleSheet.create({
 
     },
     loginButton: {
+        marginBottom: 70,
         height:30,
         width:100,
         borderRadius:15,

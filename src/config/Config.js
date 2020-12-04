@@ -1,6 +1,7 @@
 const config = {
-  env: (__DEV__) ? 'dev' : 'prod',
+  //env: (__DEV__) ? 'dev' : 'prod',
   // env:"dev",
+  env: 'prod',
   prefix: '/api/v1',
   prod: {
     uri: 'flipsetter.com',
