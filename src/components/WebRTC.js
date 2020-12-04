@@ -474,24 +474,24 @@ class WebRTC extends Component<Props> {
                         </View>
                     }
 
-                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 73 : 82, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 70 : 80, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {this.state.hideShowVideo ?
-                            <TouchableOpacity onPress={() => this.hideShowVideo(false)} style={{ backgroundColor: "#696969", borderColor: 'green', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
-                                <Icon name={'video'} size={20} style={{ color: 'green' }} />
+                            <TouchableOpacity onPress={() => this.hideShowVideo(false)} style={styles.iconenablestyle}>
+                                <Icon name={'video'} size={30} style={{ paddingBottom: 10, color: 'green' }} />
                             </TouchableOpacity> :
-                            <TouchableOpacity onPress={() => this.hideShowVideo(true)} style={{ backgroundColor: "#696969", borderColor: 'red', borderWidth: 1, width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
-                                <Icon name={'video-slash'} size={20} style={{ color: 'red' }} />
+                            <TouchableOpacity onPress={() => this.hideShowVideo(true)} style={styles.icondisablestyle}>
+                                <Icon name={'video-slash'} size={30} style={{ paddingBottom: 10, color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
 
-                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 27 : 33, justifyContent: 'flex-end', zIndex: 9999 }}>
+                    <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, right: config.layout.window.width / 2 - 25 < 140 ? 22 : 28, justifyContent: 'flex-end', zIndex: 9999 }}>
                         {!this.state.muteMic ?
                             <TouchableOpacity onPress={() => this.switchMic(true)} style={styles.iconenablestyle}>
-                                <Icon name={'microphone'} size={20} style={{ color: 'green' }} />
+                                <Icon name={'microphone'} size={30} style={{ paddingBottom: 10, color: 'green' }} />
                             </TouchableOpacity> :
                             <TouchableOpacity onPress={() => this.switchMic(false)} style={styles.icondisablestyle}>
-                                <Icon name={'microphone-slash'} size={20} style={{ color: 'red' }} />
+                                <Icon name={'microphone-slash'} size={30} style={{ paddingBottom: 10, color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
@@ -501,22 +501,14 @@ class WebRTC extends Component<Props> {
                             <Icon name={'phone'} size={30} style={{ transform: [{ rotate: '-135deg' }] }} />
                         </TouchableOpacity>
                     </View>
-<<<<<<< HEAD
-
-                    <View style={{ position: "absolute", bottom: 15, left: 5, justifyContent: 'flex-start', zIndex: 9999 }}>
-                        {this.state.speakerON ?
-                            <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={{ backgroundColor: 'white', width: 40, height: 35, alignItems: "center", justifyContent: "center" }}>
-                                <Icon name={'volume-up'} size={20} />
-=======
                     
                     <View style={{ position: "absolute", bottom: config.layout.window.width / 2 - 25 < 140 ? 25: 15, left: 15, justifyContent: 'flex-start', zIndex: 9999 }}>
                         {this.state.speakerON ?
                             <TouchableOpacity onPress={() => this.switchSpeaker(false)} style={styles.iconenablestyle}>
-                                <Icon name={'volume-up'} size={20} style={{ color: 'green' }} />
->>>>>>> f48b714824d4d13bb4d11c7c9dbbc85ff94fac00
+                                <Icon name={'volume-up'} size={30} style={{ paddingBottom: 10, color: 'green' }} />
                             </TouchableOpacity> :
                             <TouchableOpacity onPress={() => this.switchSpeaker(true)} style={styles.icondisablestyle}>
-                                <Icon name={'volume-mute'} size={20} style={{ color: 'red' }} />
+                                <Icon name={'volume-mute'} size={30} style={{ paddingBottom: 10, color: 'red' }} />
                             </TouchableOpacity>
                         }
                     </View>
@@ -574,8 +566,6 @@ const styles = StyleSheet.create({
     },
     iconenablestyle: {
         backgroundColor: '#ffffff01',
-        borderColor: 'green',
-        borderWidth: 1,
         width: 40,
         height: 40,
         alignItems: "center",
@@ -583,8 +573,6 @@ const styles = StyleSheet.create({
     },
     icondisablestyle: {
         backgroundColor: '#ffffff01',
-        borderColor: 'red',
-        borderWidth: 1,
         width: 40,
         height: 40,
         alignItems: "center",

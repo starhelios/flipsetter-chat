@@ -185,54 +185,56 @@ class ForgotScreen extends React.Component {
         const { showSuccessMessage } = this.state;
         return (
             <Container style={styles.container}>
-                {this.state.loading ? <ActivityLoader /> : null}
-                <Header style={styles.header} transparent>
-                <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.resetText}>Back</Text></TouchableOpacity></Left>
-                    <Body></Body>
-                    <Right></Right>
-                </Header>
-                <Animated.View style={[styles.contentContainer, { paddingBottom: this.keyboardHeight }]} onStartShouldSetResponder={() => this.resetInput.blur()}>
-                    <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight, }]} />
+                <ScrollView style={{ backgroundColor: '#25422e' }}>
+                    {this.state.loading ? <ActivityLoader /> : null}
+                    <Header style={styles.header} transparent>
+                    <Left><TouchableOpacity onPress={() => this.goBackk()}><Text style={styles.resetText}>Back</Text></TouchableOpacity></Left>
+                        <Body></Body>
+                        <Right></Right>
+                    </Header>
+                    <Animated.View style={[styles.contentContainer, { paddingBottom: this.keyboardHeight }]} onStartShouldSetResponder={() => this.resetInput.blur()}>
+                        <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight, }]} />
 
-                    <Text style={styles.error}>{!showSuccessMessage && this.state.msg}</Text>
-                    <TextInput
-                        value={this.state.email}
-                        onChangeText={(email) => this.setState({ email, showSuccessMessage: false, msg: '' })}
-                        placeholder={'Email Address'}
-                        placeholderTextColor={"#878787"}
-                        style={styles.input}
-                        ref={(input) => this.resetInput = input}
-                    />
-                    <TouchableOpacity
-                        title={'Login'}
-                        onPress={this.reset}
-                        style={styles.loginButton}
-                        underlayColor='#25422e'
-                    >
-                        <Text style={styles.resetText}>
-                            Reset Password
+                        <Text style={styles.error}>{!showSuccessMessage && this.state.msg}</Text>
+                        <TextInput
+                            value={this.state.email}
+                            onChangeText={(email) => this.setState({ email, showSuccessMessage: false, msg: '' })}
+                            placeholder={'Email Address'}
+                            placeholderTextColor={"#878787"}
+                            style={styles.input}
+                            ref={(input) => this.resetInput = input}
+                        />
+                        <TouchableOpacity
+                            title={'Login'}
+                            onPress={this.reset}
+                            style={styles.loginButton}
+                            underlayColor='#25422e'
+                        >
+                            <Text style={styles.resetText}>
+                                Reset Password
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={[styles.resetText, { padding: 10 }]} onPress={this._login}>
+                            Login
                         </Text>
-                    </TouchableOpacity>
-                    <Text style={[styles.resetText, { padding: 10 }]} onPress={this._login}>
-                        Login
-                    </Text>
-                    {showSuccessMessage && 
-                        <View style={[styles.successMessageView]}>
-                            <View style={styles.checkmarkView}>
+                        {showSuccessMessage && 
+                            <View style={[styles.successMessageView]}>
+                                <View style={styles.checkmarkView}>
+                                    <Text style={[styles.successMessageText]}>
+                                        Reset Link Sent 
+                                    </Text>
+                                <Icon style={styles.checkIcon} name="ios-checkmark-done-sharp" size={30} color="#FFFFFF" />
+                                </View>
                                 <Text style={[styles.successMessageText]}>
-                                    Reset Link Sent 
+                                    Your reset code has been sent. Please follow the instructions within the email to complete your password reset. 
                                 </Text>
-                            <Icon style={styles.checkIcon} name="ios-checkmark-done-sharp" size={30} color="#FFFFFF" />
+                                <Text style={[styles.successMessageText, {marginBottom: 100}]}>
+                                    *Make sure to check your SPAM and JUNK folders too!
+                                </Text>
                             </View>
-                            <Text style={[styles.successMessageText]}>
-                                Your reset code has been sent. Please follow the instructions within the email to complete your password reset. 
-                            </Text>
-                            <Text style={[styles.successMessageText]}>
-                                *Make sure to check your SPAM and JUNK folders too!
-                            </Text>
-                        </View>
-                    }
-                </Animated.View>
+                        }
+                    </Animated.View>
+                </ScrollView>
             </Container>
         );
     }
@@ -242,7 +244,7 @@ class ForgotScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: '#25422e',
 
     },
@@ -256,7 +258,7 @@ const styles = StyleSheet.create({
     successMessageView: {
         marginTop: 15,
         width: windowWidth - 50,
-        paddingHorizontal: 30,
+        paddingTop: 20,
     },
     successMessageText: {
         marginTop: 10,
